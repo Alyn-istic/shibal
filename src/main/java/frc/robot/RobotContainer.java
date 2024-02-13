@@ -11,8 +11,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Commands.Drivetrain.TankDriveCmd;
-import frc.robot.Commands.Drivetrain.Routines.MoveOutOfZoneTimed;
 import frc.robot.Commands.IntakeShooter.IntakeCmd;
+import frc.robot.Commands.Routines.ExitZoneTimed;
+import frc.robot.Commands.Routines.RoutineLog;
 import frc.robot.Commands.Routines.ScoreInAmpTimed;
 import frc.robot.Constants.DriverConstants;
 //import frc.robot.Subsystems.ArmSubsystem;
@@ -54,19 +55,18 @@ public class RobotContainer {
 
   // This is used to map commands to the Command Xbox Controller.
   private void configureBindings() {
-    //commandController.a().whileTrue(new ScoreInAmpTimed(driveSub, intakeShooterSub));
     commandController.b().whileTrue(new IntakeCmd(intakeShooterSub, () -> 1));
   }
 
   public Command getAutonomousCommand() {
     switch (autoChooser.getSelected()) {
       case "MOVE_OUT_OF_ZONE":
-        return new MoveOutOfZoneTimed(driveSub); // Return the auto command that moves out of the zone
+        return new ExitZoneTimed(driveSub); // Return the auto command that moves out of the zone
       case "SCORE_IN_AMP_SENSORS":
         return null; // Returns the auto command that moves robot to amp, and shoots loaded note, using sensors.
       case "SCORE_IN_AMP_TIMED":
         return new ScoreInAmpTimed(driveSub, intakeShooterSub); // Returns the auto command that moves robot to amp, and shoots loaded note, using timers.
     }
-    return Commands.print("No auto command"); 
+    return new RoutineLog("No auto selected.");
   }
 }

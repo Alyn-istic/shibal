@@ -6,32 +6,21 @@ package frc.robot.Commands.Routines;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Commands.Drivetrain.Routines.MoveOutOfZoneTimed;
-//import frc.robot.Commands.Arm.Routines.ArmAutonomousBackup;
-import frc.robot.Commands.Drivetrain.Routines.MoveToAmpTimed;
-import frc.robot.Commands.Drivetrain.Routines.TurnToAmpTimed;
-import frc.robot.Commands.IntakeShooter.Routines.DownShootAmpTimed;
-//import frc.robot.Subsystems.ArmSubsystem;
 import frc.robot.Subsystems.DrivetrainSubsystem;
-import frc.robot.Subsystems.IntakeShooterSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ScoreInAmpTimed extends SequentialCommandGroup {
-  /** Creates a new AutonomousBackup. */
-  public ScoreInAmpTimed(
-    DrivetrainSubsystem driveSub,
-    IntakeShooterSubsystem intakeShooterSub
-    //ArmSubsystem armSub
+public class ExitZoneTimed extends SequentialCommandGroup {
+  /** Creates a new ExitZoneTimed. */
+  public ExitZoneTimed(
+    DrivetrainSubsystem driveSub
   ) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new MoveOutOfZoneTimed(driveSub),
-      new TurnToAmpTimed(driveSub),
-      new MoveToAmpTimed(driveSub),
-      new DownShootAmpTimed(intakeShooterSub),
-      new RoutineLog("Done.")
+      new RoutineLog("Done")
     );
   }
 }
