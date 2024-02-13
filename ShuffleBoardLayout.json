@@ -19,8 +19,8 @@
             "content": {
               "_type": "Grid Layout",
               "_title": "Drivetrain",
-              "_glyph": 82,
-              "_showGlyph": true,
+              "_glyph": 149,
+              "_showGlyph": false,
               "Layout/Number of columns": 2,
               "Layout/Number of rows": 2,
               "Layout/Label position": "TOP",
@@ -64,8 +64,8 @@
             "content": {
               "_type": "Grid Layout",
               "_title": "Intake/Shooter",
-              "_glyph": 484,
-              "_showGlyph": true,
+              "_glyph": 149,
+              "_showGlyph": false,
               "Layout/Number of columns": 2,
               "Layout/Number of rows": 1,
               "Layout/Label position": "TOP",
