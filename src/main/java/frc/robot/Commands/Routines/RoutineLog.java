@@ -11,10 +11,13 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class RoutineLog extends InstantCommand {
-  private String routine;
-  public RoutineLog(String routine) {this.routine = routine;}
+  private String message;
+  public RoutineLog(String message) {this.message = message;}
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {SmartDashboard.putString("Routine Log", routine);}
+  public void initialize() {
+    SmartDashboard.putString("Routine Log", message);
+    System.out.println("RoutineLog - " + message);
+  }
 }
