@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Commands.Drivetrain.TankDriveCmd;
 import frc.robot.Commands.Drivetrain.Routines.MoveOutOfZoneTimed;
@@ -43,10 +44,10 @@ public class RobotContainer {
       )
     );
 
-    autoChooser.addOption("MOVE_OUT_OF_ZONE", "MOVE OUT OF ZONE");
-    autoChooser.addOption("SCORE_IN_AMP_SENSORS", "SCORE IN AMP (SENSORS)");
-    autoChooser.addOption("SCORE_IN_AMP_TIMED", "SCORE IN AMP (TIMED)");
-    autoChooser.setDefaultOption("MOVE_OUT_OF_ZONE", "MOVE OUT OF ZONE");
+    autoChooser.setDefaultOption("NONE", "NONE");
+    autoChooser.addOption("MOVE OUT OF ZONE", "MOVE_OUT_OF_ZONE");
+    autoChooser.addOption("SCORE IN AMP (SENSORS)", "SCORE_IN_AMP_SENSORS");
+    autoChooser.addOption("SCORE IN AMP (TIMED)", "SCORE_IN_AMP_TIMED");
     SmartDashboard.putData("Autonomous Routines", autoChooser);
     configureBindings();
   }
@@ -66,6 +67,6 @@ public class RobotContainer {
       case "SCORE_IN_AMP_TIMED":
         return new ScoreInAmpTimed(driveSub, intakeShooterSub); // Returns the auto command that moves robot to amp, and shoots loaded note, using timers.
     }
-    return null; 
+    return Commands.print("No auto command"); 
   }
 }
