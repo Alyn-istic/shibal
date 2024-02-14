@@ -61,6 +61,8 @@ public class Constants {
 
         public static final double raiseAngle = 0; // This is relative to the starting position of the encoders.
         public static final double dropAngle = 0;  // This is relative to the starting position of the encoders.
+
+        public static final double raiseAngleMax = 90;
     }
 
     public class IntakeShooterConstants {
@@ -80,6 +82,10 @@ public class Constants {
 
         public static final int leftJoystickAxis = 1; // Left joystick's axis
         public static final int rightJoystickAxis = 5; // Right joystick's axis
+
+        
+        public static final int raiseButton = 3;
+        public static final int dropButton = 2;
 
         public static final int leftTriggerAxis = 5;
         public static final int rightTriggerAxis = 6;
