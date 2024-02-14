@@ -54,7 +54,7 @@ public class Constants {
 
         public static final int ticksPerRev = 2048; // The amount of encoder ticks in a full rotation 
 
-        public static final double raiseP = 0; // P value for the raise PID command
+        public static final double raiseP = 0.0008; // P value for the raise PID command
         public static final double raiseI = 0; // I value for the raise PID command
         public static final double raiseD = 0; // D value for the raise PID command
         public static final double raiseTolerance = 1;
@@ -75,13 +75,13 @@ public class Constants {
     public class DriverConstants {
         public static final int port = 0; // Controller port
 
-        public static final double joystickDeadband = 0; // Deadzone for controller L/R joysticks
-        public static final double triggerDeadband = 0; // Deadzone for controller L/R triggers
+        public static final double joystickDeadband = 0.08; // Deadzone for controller L/R joysticks
+        public static final double triggerDeadband = 0.08; // Deadzone for controller L/R triggers
 
         public static final int leftJoystickAxis = 1; // Left joystick's axis
         public static final int rightJoystickAxis = 5; // Right joystick's axis
 
-        public static final int leftTriggerAxis = 5;
-        public static final int rightTriggerAxis = 6;
+        public static final int leftTriggerAxis = 2; // 
+        public static final int rightTriggerAxis = 3; // 
     }
 }
