@@ -4,24 +4,19 @@
 
 package frc.robot.Commands.Arm;
 
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Subsystems.ArmSubsystem;
 
-public class ArmTestCmd extends Command {
+public class ArmRaise extends Command {
   private ArmSubsystem armSub;
-  private DoubleSupplier raiseInput, dropInput;
-  /** Creates a new ArmTestCmd. */
-  public ArmTestCmd(
-    ArmSubsystem armSub,
-    DoubleSupplier raiseInput,
-    DoubleSupplier dropInput
+  /** Creates a new ArmRaiseFeedforward. */
+  public ArmRaise(
+    ArmSubsystem armSub
   ) {
     this.armSub = armSub;
-    this.raiseInput = raiseInput;
-    this.dropInput = dropInput;
     addRequirements(armSub);
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -30,11 +25,7 @@ public class ArmTestCmd extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    double raise = raiseInput.getAsDouble();
-    double drop = dropInput.getAsDouble();
-    armSub.setMotor((raiseInput.getAsDouble() - dropInput.getAsDouble())/2);
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override

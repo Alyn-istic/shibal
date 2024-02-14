@@ -9,6 +9,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -20,8 +21,10 @@ public class ArmSubsystem extends SubsystemBase {
 
   private final RelativeEncoder encoder = leftMotor.getEncoder(); // Set this to whatever encoder we are using.
 
-//   private final DigitalInput switch1 = new DigitalInput(ArmConstants.raiseLimitPort1);
-//   private final DigitalInput switch2 = new DigitalInput(ArmConstants.raiseLimitPort2);
+  private final ArmFeedforward feedforward = new ArmFeedforward(ArmConstants.raiseS, ArmConstants.raiseV, ArmConstants.raiseG, ArmConstants.raiseA);
+
+  private final DigitalInput raiseSwitch = new DigitalInput(ArmConstants.raiseLimitSwitchChannel);
+  private final DigitalInput dropSwitch = new DigitalInput(ArmConstants.dropLimitSwitchChannel);
 
   /** Creates a new ArmSubsystem. */
   public ArmSubsystem() {
@@ -37,14 +40,22 @@ public class ArmSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Arm Motor Speed", leftMotor.get());
+    SmartDashboard.putNumber("Arm Motor Voltage", leftMotor.getAppliedOutput());
+
+    SmartDashboard.putBoolean("Arm raise limit", raiseLimitSwitch());
+    SmartDashboard.putBoolean("Arm drop limit", dropLimitSwitch());
   }
 
   public void setMotor(double speed) {
     leftMotor.set(speed);
+   }
+
+  public void calculateFeedForward(double positionRadians, double velocity) {
+    feedforward.calculate(positionRadians, velocity);
   }
 
   public double getAngle() {
-    return (encoder.getPosition() * (360/ArmConstants.ticksPerRev));
+    return (encoder.getPosition()*(360/ArmConstants.ticksPerRev))/ArmConstants.gearRatio;
   }
 
   public void stopMotors() {
@@ -52,7 +63,12 @@ public class ArmSubsystem extends SubsystemBase {
     rightMotor.stopMotor();
   }
 
-//   public boolean raiseLimitSwitched() {
-//     return (!switch1.get() && !switch2.get());
-//   }
-}
+  public boolean raiseLimitSwitch() {
+    return raiseSwitch.get();
+  }
+
+  public boolean dropLimitSwitch() {
+    return dropSwitch.get();
+  }
+
+} 
