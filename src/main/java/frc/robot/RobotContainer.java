@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -40,16 +41,16 @@ public class RobotContainer {
         driveSub,
         /** The following two lines are just getting the controller's left and right joysticks, and applying a deadzone to them.
          * This can all be configurated in Constants.java */
-        () -> controller.getRawAxis(DriverConstants.leftJoystickAxis),
-        () -> controller.getRawAxis(DriverConstants.rightJoystickAxis)
+        () -> MathUtil.applyDeadband(controller.getRawAxis(DriverConstants.leftJoystickAxis), DriverConstants.joystickDeadband),
+        () -> MathUtil.applyDeadband(controller.getRawAxis(DriverConstants.rightJoystickAxis), DriverConstants.joystickDeadband)
       )
     );
 
     armSub.setDefaultCommand(
       new ArmTestCmd(
         armSub,
-        () -> controller.getRawAxis(DriverConstants.rightTriggerAxis),
-        () -> controller.getRawAxis(DriverConstants.leftTriggerAxis)
+        () -> MathUtil.applyDeadband(controller.getRawAxis(DriverConstants.rightTriggerAxis), DriverConstants.triggerDeadband),
+        () -> MathUtil.applyDeadband(controller.getRawAxis(DriverConstants.leftTriggerAxis), DriverConstants.triggerDeadband)
       )
     );
 
@@ -68,7 +69,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     switch (autoChooser.getSelected()) {
-      case "MOVE_OUT_OF_ZONE":
+      case "MOVE_OUT_OF_ZONE": // Moves the robot out of the zone.
         return new ExitZoneTimed(driveSub); // Return the auto command that moves out of the zone
       case "SCORE_IN_AMP_SENSORS":
         return null; // Returns the auto command that moves robot to amp, and shoots loaded note, using sensors.
