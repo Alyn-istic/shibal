@@ -64,8 +64,8 @@
             "content": {
               "_type": "Grid Layout",
               "_title": "Intake/Shooter",
-              "_glyph": 149,
-              "_showGlyph": false,
+              "_glyph": 102,
+              "_showGlyph": true,
               "Layout/Number of columns": 2,
               "Layout/Number of rows": 1,
               "Layout/Label position": "TOP",
@@ -116,17 +116,51 @@
               ]
             }
           },
-          "4,3": {
+          "6,0": {
             "size": [
               2,
-              1
+              3
             ],
             "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Arm Motor Speed",
-              "_title": "Arm Motor Speed",
-              "_glyph": 148,
-              "_showGlyph": false
+              "_type": "List Layout",
+              "_title": "Arm",
+              "_glyph": 484,
+              "_showGlyph": true,
+              "Layout/Label position": "LEFT",
+              "_children": [
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Arm Motor Speed",
+                  "_title": "Arm Motor Speed",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Arm Motor Voltage",
+                  "_title": "Arm Motor Voltage",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                {
+                  "_type": "Boolean Box",
+                  "_source0": "network_table:///SmartDashboard/Arm raise limit",
+                  "_title": "Arm raise limit",
+                  "_glyph": 148,
+                  "_showGlyph": false,
+                  "Colors/Color when true": "#7CFC00FF",
+                  "Colors/Color when false": "#8B0000FF"
+                },
+                {
+                  "_type": "Boolean Box",
+                  "_source0": "network_table:///SmartDashboard/Arm drop limit",
+                  "_title": "Arm drop limit",
+                  "_glyph": 148,
+                  "_showGlyph": false,
+                  "Colors/Color when true": "#7CFC00FF",
+                  "Colors/Color when false": "#8B0000FF"
+                }
+              ]
             }
           }
         }
