@@ -115,6 +115,19 @@
                 }
               ]
             }
+          },
+          "4,3": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Arm Motor Speed",
+              "_title": "Arm Motor Speed",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
           }
         }
       }
