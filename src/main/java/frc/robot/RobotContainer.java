@@ -8,9 +8,9 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Commands.Arm.Routines.ArmRaiseTest;
+import frc.robot.Commands.Arm.ArmTestCmd;
 import frc.robot.Commands.Drivetrain.TankDriveCmd;
 import frc.robot.Commands.IntakeShooter.IntakeCmd;
 import frc.robot.Commands.Routines.ExitZoneTimed;
@@ -18,7 +18,6 @@ import frc.robot.Commands.Routines.RoutineLog;
 import frc.robot.Commands.Routines.ScoreInAmpTimed;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Subsystems.ArmSubsystem;
-//import frc.robot.Subsystems.ArmSubsystem;
 import frc.robot.Subsystems.DrivetrainSubsystem;
 import frc.robot.Subsystems.IntakeShooterSubsystem;
 
@@ -50,8 +49,8 @@ public class RobotContainer {
     armSub.setDefaultCommand(
       new ArmRaiseTest(
         armSub,
-        () -> controller.getRawAxis(DriverConstants.raiseButton),
-        () -> controller.getRawAxis(DriverConstants.dropButton)
+        () -> controller.getRawAxis(DriverConstants.leftTriggerAxis),
+        () -> controller.getRawAxis(DriverConstants.rightTriggerAxis)
       )
     );
 

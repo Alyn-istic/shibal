@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 
@@ -34,7 +35,9 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {}
+  public void periodic() {
+    SmartDashboard.putNumber("Arm Motor Speed", leftMotor.get());
+  }
 
   public void setMotor(double speed) {
     leftMotor.set(speed);
@@ -49,7 +52,7 @@ public class ArmSubsystem extends SubsystemBase {
     rightMotor.stopMotor();
   }
 
-  public boolean raiseLimitSwitched() {
-    return (!switch1.get() && !switch2.get());
-  }
+//   public boolean raiseLimitSwitched() {
+//     return (!switch1.get() && !switch2.get());
+//   }
 }
