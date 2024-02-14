@@ -21,9 +21,7 @@ public class ArmSubsystem extends SubsystemBase {
 
   private final RelativeEncoder encoder = leftMotor.getEncoder(); // Set this to whatever encoder we are using.
 
-  private final ArmFeedforward feedforward = new ArmFeedforward(ArmConstants.raiseS, ArmConstants.raiseV, ArmConstants.raiseG, ArmConstants.raiseA);
-
-  private final DigitalInput raiseSwitch = new DigitalInput(ArmConstants.raiseLimitSwitchChannel);
+  //private final DigitalInput raiseSwitch = new DigitalInput(ArmConstants.raiseLimitSwitchChannel);
   private final DigitalInput dropSwitch = new DigitalInput(ArmConstants.dropLimitSwitchChannel);
 
   /** Creates a new ArmSubsystem. */
@@ -50,10 +48,6 @@ public class ArmSubsystem extends SubsystemBase {
     leftMotor.set(speed);
    }
 
-  public void calculateFeedForward(double positionRadians, double velocity) {
-    feedforward.calculate(positionRadians, velocity);
-  }
-
   public double getAngle() {
     return (encoder.getPosition()*(360/ArmConstants.ticksPerRev))/ArmConstants.gearRatio;
   }
@@ -64,7 +58,8 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public boolean raiseLimitSwitch() {
-    return raiseSwitch.get();
+    return true;
+    //return raiseSwitch.get();
   }
 
   public boolean dropLimitSwitch() {
