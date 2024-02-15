@@ -9,7 +9,6 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
-import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -29,8 +28,11 @@ public class ArmSubsystem extends SubsystemBase {
     rightMotor.follow(leftMotor);
     leftMotor.setInverted(true);
 
-    leftMotor.setIdleMode(IdleMode.kBrake);
-    rightMotor.setIdleMode(IdleMode.kBrake);
+    // leftMotor.setIdleMode(IdleMode.kBrake);
+    // rightMotor.setIdleMode(IdleMode.kBrake);
+
+    leftMotor.setIdleMode(IdleMode.kCoast);
+    rightMotor.setIdleMode(IdleMode.kCoast);
 
     encoder.setPosition(0);
   }
