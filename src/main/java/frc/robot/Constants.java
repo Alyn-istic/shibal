@@ -40,32 +40,29 @@ public class Constants {
     }
 
     public class ArmConstants {
-        public static final int leftID = 4; // Arm's left motor ID (incorrect)
-        public static final int rightID = 5; // Arm's right motor ID (incorrect)
+        public static final int leftID = 4; // Arm's left motor ID
+        public static final int rightID = 5; // Arm's right motor ID
 
         public static final int ticksPerRev = 1024; // The amount of encoder ticks in a full rotation
         public static final double gearRatio = 4; // The gear ratio of the arm
 
-        // public static final double raiseS = 0; // Static gain (incorrect)
-        // public static final double raiseG = 0; // Gravity (incorrect)
-        // public static final double raiseV = 0; // Velocity (incorrect)
-        // public static final double raiseA = 0; // Acceleration (incorrect)
-
-        //public static final int raiseLimitSwitchChannel = 0;
+        public static final int raiseLimitSwitchChannel = 1;
         public static final int dropLimitSwitchChannel = 0;
 
         public static final double kP = 0.08; // P value for the raise PID command
         public static final double kI = 0; // I value for the raise PID command
         public static final double kD = 0; // D value for the raise PID command
-        public static final double raiseTolerance = 0;
-        public static final double raiseAngle = 90; // This is relative to the starting position of the encoders.
-      
+        public static final double tolerance = 0;
+
+        public static final double shootAngle = 100; // The angle of the arm in shooting position
+        public static final double insideAngle = 90; // The angle of the arm inside the perimeter of the bumpers
+        public static final double intakeAngle = 0; // The angle of the arm in intaking position
         // public static final double dropAngle = 0;  // This is relative to the starting position of the encoders.
     }
 
     public class IntakeShooterConstants {
-        public static final int upperWheelID  = 6; // The motor ID for the intake/shooter's upper wheels (incorrect)
-        public static final int lowerWheelID = 7; // The motor ID for the intake/shooter's lower wheels. (incorrect)
+        public static final int upperWheelID  = 6; // The motor ID for the intake/shooter's upper wheels
+        public static final int lowerWheelID = 7; // The motor ID for the intake/shooter's lower wheels
 
         public static final double speed = 1; // The intake/shooter's motor speed.
     }
