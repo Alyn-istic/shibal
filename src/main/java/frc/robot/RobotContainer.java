@@ -10,11 +10,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Commands.EmergencyStopCmd;
 import frc.robot.Commands.Arm.ArmCmd;
 import frc.robot.Commands.Arm.ArmPID;
 import frc.robot.Commands.Drivetrain.TankDriveCmd;
 import frc.robot.Commands.IntakeShooter.IntakeCmd;
-import frc.robot.Commands.IntakeShooter.IntakeTest;
 import frc.robot.Commands.Routines.ExitZoneTimed;
 import frc.robot.Commands.Routines.RoutineLog;
 import frc.robot.Commands.Routines.ScoreInAmpTimed;
@@ -67,9 +67,9 @@ public class RobotContainer {
 
   // This is used to map commands to the Command Xbox Controller.
   private void configureBindings() {
-    //commandController.b().whileTrue(new IntakeCmd(intakeShooterSub, () -> 1));
-    commandController.leftBumper().whileTrue(new IntakeTest(intakeShooterSub, () -> 1));
-    commandController.rightBumper().whileTrue(new IntakeTest(intakeShooterSub, () -> -1));
+    commandController.x().onTrue(new EmergencyStopCmd());
+    commandController.leftBumper().whileTrue(new IntakeCmd(intakeShooterSub, () -> 1));
+    commandController.rightBumper().whileTrue(new IntakeCmd(intakeShooterSub, () -> -1));
     commandController.povDown().onTrue(new ArmPID(armSub, // When the POV's down button is pressed, the arm goes into intake position
         () -> ArmConstants.kP,
         () -> ArmConstants.kI,
