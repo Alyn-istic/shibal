@@ -14,7 +14,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 // import edu.wpi.first.math.geometry.Rotation3d;
 // import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 // import edu.wpi.first.math.util.Units;
-// import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTable;
 // import edu.wpi.first.networktables.NetworkTableEntry;
 // import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -77,7 +77,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
     frontRight.setSelectedSensorPosition(0);
     backLeft.setSelectedSensorPosition(0);
     backRight.setSelectedSensorPosition(0);
-
     // visionPose and poseEstimator's values are assigned here because the necessary values may not have been recieved yet.
     //visionPose = new Pose3d(poseCoordinates[0], poseCoordinates[1], poseCoordinates[2], new Rotation3d(poseCoordinates[3], poseCoordinates[4], poseCoordinates[5]));
     //poseEstimator = new DifferentialDrivePoseEstimator(kinematics, gyro.getRotation2d(), getLeftDistance(), getRightDistance(), visionPose.toPose2d());
@@ -92,7 +91,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public void tankDrive(double leftSpeed, double rightSpeed) { // Tankdrive function
-    drive.tankDrive(leftSpeed, rightSpeed);
+    //drive.tankDrive(leftSpeed, rightSpeed);
   }
   // public double getGyroAngle() { // Function for getting the gyro's angle.
   //   return gyro.getAngle();

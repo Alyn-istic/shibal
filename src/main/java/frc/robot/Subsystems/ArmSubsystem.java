@@ -42,6 +42,12 @@ public class ArmSubsystem extends SubsystemBase {
 
     SmartDashboard.putBoolean("Arm raise limit", raiseLimitSwitch());
     SmartDashboard.putBoolean("Arm drop limit", dropLimitSwitch());
+
+    SmartDashboard.putNumber("Arm Angle", getAngle() % 360);
+
+    if (!dropLimitSwitch()) {
+      encoder.setPosition(0);
+    }
   }
 
   public void setMotor(double speed) {
