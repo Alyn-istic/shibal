@@ -64,8 +64,8 @@
             "content": {
               "_type": "Grid Layout",
               "_title": "Intake/Shooter",
-              "_glyph": 102,
-              "_showGlyph": true,
+              "_glyph": 149,
+              "_showGlyph": false,
               "Layout/Number of columns": 2,
               "Layout/Number of rows": 1,
               "Layout/Label position": "TOP",
@@ -119,7 +119,7 @@
           "6,0": {
             "size": [
               2,
-              3
+              4
             ],
             "content": {
               "_type": "List Layout",
@@ -159,6 +159,24 @@
                   "_showGlyph": false,
                   "Colors/Color when true": "#7CFC00FF",
                   "Colors/Color when false": "#8B0000FF"
+                },
+                {
+                  "_type": "Gyro",
+                  "_source0": "network_table:///SmartDashboard/Arm Angle",
+                  "_title": "Arm Angle",
+                  "_glyph": 148,
+                  "_showGlyph": false,
+                  "Visuals/Major tick spacing": 45.0,
+                  "Visuals/Starting angle": 180.0,
+                  "Visuals/Show tick mark ring": true,
+                  "Visuals/Counter clockwise": false
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Arm PID Output",
+                  "_title": "Arm PID Output",
+                  "_glyph": 148,
+                  "_showGlyph": false
                 }
               ]
             }
