@@ -4,18 +4,21 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Commands.Arm.Routines.ArmRaiseTest;
-import frc.robot.Commands.Arm.ArmTestCmd;
+import frc.robot.Commands.Arm.ArmCmd;
+import frc.robot.Commands.Arm.ArmPID;
 import frc.robot.Commands.Drivetrain.TankDriveCmd;
 import frc.robot.Commands.IntakeShooter.IntakeCmd;
+import frc.robot.Commands.IntakeShooter.IntakeTest;
 import frc.robot.Commands.Routines.ExitZoneTimed;
 import frc.robot.Commands.Routines.RoutineLog;
 import frc.robot.Commands.Routines.ScoreInAmpTimed;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Subsystems.ArmSubsystem;
 import frc.robot.Subsystems.DrivetrainSubsystem;
@@ -41,19 +44,19 @@ public class RobotContainer {
         driveSub,
         /** The following two lines are just getting the controller's left and right joysticks, and applying a deadzone to them.
          * This can all be configurated in Constants.java */
-        () -> controller.getRawAxis(DriverConstants.leftJoystickAxis),
-        () -> controller.getRawAxis(DriverConstants.rightJoystickAxis)
+        () -> MathUtil.applyDeadband(controller.getRawAxis(DriverConstants.leftJoystickAxis), DriverConstants.joystickDeadband),
+        () -> MathUtil.applyDeadband(controller.getRawAxis(DriverConstants.rightJoystickAxis), DriverConstants.joystickDeadband)
       )
     );
 
-    armSub.setDefaultCommand(
-      new ArmRaiseTest(
-        armSub,
-        () -> controller.getRawAxis(DriverConstants.leftTriggerAxis),
-        () -> controller.getRawAxis(DriverConstants.rightTriggerAxis)
-      )
-    );
-
+    // armSub.setDefaultCommand(
+    //   new ArmCmd(
+    //     armSub,
+    //     () -> MathUtil.applyDeadband(controller.getRawAxis(DriverConstants.rightTriggerAxis) * 0.25, DriverConstants.triggerDeadband),
+    //     () -> MathUtil.applyDeadband(controller.getRawAxis(DriverConstants.leftTriggerAxis) * 0.25, DriverConstants.triggerDeadband)
+    //   )
+    // );
+    
     autoChooser.setDefaultOption("NONE", "NONE");
     autoChooser.addOption("MOVE OUT OF ZONE", "MOVE_OUT_OF_ZONE");
     autoChooser.addOption("SCORE IN AMP (SENSORS)", "SCORE_IN_AMP_SENSORS");
@@ -64,12 +67,23 @@ public class RobotContainer {
 
   // This is used to map commands to the Command Xbox Controller.
   private void configureBindings() {
-    commandController.b().whileTrue(new IntakeCmd(intakeShooterSub, () -> 1));
+    //commandController.b().whileTrue(new IntakeCmd(intakeShooterSub, () -> 1));
+    commandController.leftBumper().whileTrue(new IntakeTest(intakeShooterSub, () -> 1));
+    commandController.rightBumper().whileTrue(new IntakeTest(intakeShooterSub, () -> -1));
+    commandController.a().whileTrue(
+
+      new ArmPID(armSub,
+        () -> ArmConstants.kP,
+        () -> ArmConstants.kI,
+        () -> ArmConstants.kD,
+        () -> ArmConstants.raiseAngle,
+        () -> ArmConstants.raiseTolerance
+    ));
   }
 
   public Command getAutonomousCommand() {
     switch (autoChooser.getSelected()) {
-      case "MOVE_OUT_OF_ZONE":
+      case "MOVE_OUT_OF_ZONE": // Moves the robot out of the zone.
         return new ExitZoneTimed(driveSub); // Return the auto command that moves out of the zone
       case "SCORE_IN_AMP_SENSORS":
         return null; // Returns the auto command that moves robot to amp, and shoots loaded note, using sensors.

@@ -9,11 +9,11 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Subsystems.ArmSubsystem;
 
-public class ArmTestCmd extends Command {
+public class ArmCmd extends Command {
   private ArmSubsystem armSub;
   private DoubleSupplier raiseInput, dropInput;
   /** Creates a new ArmTestCmd. */
-  public ArmTestCmd(
+  public ArmCmd(
     ArmSubsystem armSub,
     DoubleSupplier raiseInput,
     DoubleSupplier dropInput
@@ -31,7 +31,15 @@ public class ArmTestCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    armSub.setMotor((raiseInput.getAsDouble() - dropInput.getAsDouble())/2);
+    double raise = raiseInput.getAsDouble();
+    double drop = dropInput.getAsDouble();
+    if (!armSub.raiseLimitSwitch()) {
+      raise = 0 ;
+    }
+    if (!armSub.dropLimitSwitch()) {
+      drop = 0 ;
+    }
+    armSub.setMotor((raise - drop));
   }
 
   // Called once the command ends or is interrupted.
