@@ -70,14 +70,26 @@ public class RobotContainer {
     //commandController.b().whileTrue(new IntakeCmd(intakeShooterSub, () -> 1));
     commandController.leftBumper().whileTrue(new IntakeTest(intakeShooterSub, () -> 1));
     commandController.rightBumper().whileTrue(new IntakeTest(intakeShooterSub, () -> -1));
-    commandController.a().whileTrue(
-
-      new ArmPID(armSub,
+    commandController.povDown().onTrue(new ArmPID(armSub, // When the POV's down button is pressed, the arm goes into intake position
         () -> ArmConstants.kP,
         () -> ArmConstants.kI,
         () -> ArmConstants.kD,
-        () -> ArmConstants.raiseAngle,
-        () -> ArmConstants.raiseTolerance
+        () -> ArmConstants.intakeAngle,
+        () -> ArmConstants.tolerance
+    ));
+    commandController.povLeft().or(commandController.povRight()).onTrue(new ArmPID(armSub, // When the POV's left or right buttons are pressed, the arm goes back inside the perimeters of the bumpers
+        () -> ArmConstants.kP,
+        () -> ArmConstants.kI,
+        () -> ArmConstants.kD,
+        () -> ArmConstants.insideAngle,
+        () -> ArmConstants.tolerance
+    ));
+    commandController.povUp().onTrue(new ArmPID(armSub, // When the POV's up button is pressed, the arm goes into shooting position.
+        () -> ArmConstants.kP,
+        () -> ArmConstants.kI,
+        () -> ArmConstants.kD,
+        () -> ArmConstants.shootAngle,
+        () -> ArmConstants.tolerance
     ));
   }
 
@@ -86,7 +98,7 @@ public class RobotContainer {
       case "MOVE_OUT_OF_ZONE": // Moves the robot out of the zone.
         return new ExitZoneTimed(driveSub); // Return the auto command that moves out of the zone
       case "SCORE_IN_AMP_SENSORS":
-        return null; // Returns the auto command that moves robot to amp, and shoots loaded note, using sensors.
+        return new RoutineLog("This routine has not been set up yet."); // Returns the auto command that moves robot to amp, and shoots loaded note, using sensors.
       case "SCORE_IN_AMP_TIMED":
         return new ScoreInAmpTimed(driveSub, intakeShooterSub); // Returns the auto command that moves robot to amp, and shoots loaded note, using timers.
     }
