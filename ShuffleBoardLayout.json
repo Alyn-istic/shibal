@@ -19,8 +19,8 @@
             "content": {
               "_type": "Grid Layout",
               "_title": "Drivetrain",
-              "_glyph": 149,
-              "_showGlyph": false,
+              "_glyph": 82,
+              "_showGlyph": true,
               "Layout/Number of columns": 2,
               "Layout/Number of rows": 2,
               "Layout/Label position": "TOP",
@@ -64,8 +64,8 @@
             "content": {
               "_type": "Grid Layout",
               "_title": "Intake/Shooter",
-              "_glyph": 149,
-              "_showGlyph": false,
+              "_glyph": 307,
+              "_showGlyph": true,
               "Layout/Number of columns": 2,
               "Layout/Number of rows": 1,
               "Layout/Label position": "TOP",
@@ -161,6 +161,13 @@
                   "Colors/Color when false": "#8B0000FF"
                 },
                 {
+                  "_type": "Text View",
+                  "_source0": "network_table:///SmartDashboard/Arm PID Output",
+                  "_title": "Arm PID Output",
+                  "_glyph": 148,
+                  "_showGlyph": false
+                },
+                {
                   "_type": "Gyro",
                   "_source0": "network_table:///SmartDashboard/Arm Angle",
                   "_title": "Arm Angle",
@@ -170,13 +177,6 @@
                   "Visuals/Starting angle": 180.0,
                   "Visuals/Show tick mark ring": true,
                   "Visuals/Counter clockwise": false
-                },
-                {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Arm PID Output",
-                  "_title": "Arm PID Output",
-                  "_glyph": 148,
-                  "_showGlyph": false
                 }
               ]
             }
@@ -186,9 +186,9 @@
     }
   ],
   "windowGeometry": {
-    "x": -18.0,
-    "y": 26.0,
-    "width": 1455.0,
-    "height": 830.5
+    "x": -7.199999809265137,
+    "y": -7.199999809265137,
+    "width": 1550.4000244140625,
+    "height": 830.4000244140625
   }
 }
