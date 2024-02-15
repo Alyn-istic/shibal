@@ -44,7 +44,7 @@ public class Constants {
         public static final int rightID = 5; // Arm's right motor ID (incorrect)
 
         public static final int ticksPerRev = 1024; // The amount of encoder ticks in a full rotation (incorrect)
-        public static final double gearRatio = 4; // The gear ratio of the arm (incorrect)
+        public static final double gearRatio = 70; // The gear ratio of the arm (incorrect)
 
         // public static final double raiseS = 0; // Static gain (incorrect)
         // public static final double raiseG = 0; // Gravity (incorrect)
@@ -54,12 +54,12 @@ public class Constants {
         public static final int raiseLimitSwitchChannel = 0;
         public static final int dropLimitSwitchChannel = 1;
 
-        // public static final double raiseP = 0.0008; // P value for the raise PID command
-        // public static final double raiseI = 0; // I value for the raise PID command
-        // public static final double raiseD = 0; // D value for the raise PID command
-        // public static final double raiseTolerance = 1;
+         public static final double Kp = 0.0008; // P value for the raise PID command
+         public static final double Ki = 0; // I value for the raise PID command
+         public static final double Kd = 0; // D value for the raise PID command
+         public static final double Tolerance = 0;
 
-        public static final double raiseAngle = 0; // This is relative to the starting position of the encoders.
+        public static final double setpoint = 0; // This is relative to the starting position of the encoders.
         // public static final double dropAngle = 0;  // This is relative to the starting position of the encoders.
     }
 

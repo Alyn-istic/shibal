@@ -11,12 +11,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Commands.Arm.ArmCmd;
+import frc.robot.Commands.Arm.ArmPID;
 import frc.robot.Commands.Drivetrain.TankDriveCmd;
 import frc.robot.Commands.IntakeShooter.IntakeCmd;
 import frc.robot.Commands.IntakeShooter.IntakeTest;
 import frc.robot.Commands.Routines.ExitZoneTimed;
 import frc.robot.Commands.Routines.RoutineLog;
 import frc.robot.Commands.Routines.ScoreInAmpTimed;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Subsystems.ArmSubsystem;
 import frc.robot.Subsystems.DrivetrainSubsystem;
@@ -47,14 +49,6 @@ public class RobotContainer {
       )
     );
 
-    armSub.setDefaultCommand(
-      new ArmCmd(
-        armSub,
-        () -> MathUtil.applyDeadband(controller.getRawAxis(DriverConstants.rightTriggerAxis) * 0.5, DriverConstants.triggerDeadband),
-        () -> MathUtil.applyDeadband(controller.getRawAxis(DriverConstants.leftTriggerAxis) * 0.5, DriverConstants.triggerDeadband)
-      )
-    );
-
     autoChooser.setDefaultOption("NONE", "NONE");
     autoChooser.addOption("MOVE OUT OF ZONE", "MOVE_OUT_OF_ZONE");
     autoChooser.addOption("SCORE IN AMP (SENSORS)", "SCORE_IN_AMP_SENSORS");
@@ -68,6 +62,16 @@ public class RobotContainer {
     //commandController.b().whileTrue(new IntakeCmd(intakeShooterSub, () -> 1));
     commandController.leftBumper().whileTrue(new IntakeTest(intakeShooterSub, () -> 1));
     commandController.rightBumper().whileTrue(new IntakeTest(intakeShooterSub, () -> -1));
+    commandController.a().whileTrue(
+      new ArmPID(
+        armSub,
+        () -> ArmConstants.Kp,
+        () -> ArmConstants.Ki,
+        () -> ArmConstants.Kd,
+        () -> ArmConstants.setpoint,
+        () -> ArmConstants.Tolerance
+      )
+    );
   }
 
   public Command getAutonomousCommand() {

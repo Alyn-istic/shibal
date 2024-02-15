@@ -23,6 +23,7 @@ public class ArmSubsystem extends SubsystemBase {
 
   //private final DigitalInput raiseSwitch = new DigitalInput(ArmConstants.raiseLimitSwitchChannel);
   private final DigitalInput dropSwitch = new DigitalInput(ArmConstants.dropLimitSwitchChannel);
+  private final DigitalInput raiseSwitch = new DigitalInput(ArmConstants.raiseLimitSwitchChannel);
 
   /** Creates a new ArmSubsystem. */
   public ArmSubsystem() {
@@ -42,6 +43,10 @@ public class ArmSubsystem extends SubsystemBase {
 
     SmartDashboard.putBoolean("Arm raise limit", raiseLimitSwitch());
     SmartDashboard.putBoolean("Arm drop limit", dropLimitSwitch());
+    if(dropLimitSwitch());
+      encoder.setPosition(0);
+
+
   }
 
   public void setMotor(double speed) {
@@ -58,12 +63,11 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public boolean raiseLimitSwitch() {
-    return true;
-    //return raiseSwitch.get();
+    return !raiseSwitch.get();
   }
 
   public boolean dropLimitSwitch() {
-    return dropSwitch.get();
+    return !dropSwitch.get();
   }
 
 } 
