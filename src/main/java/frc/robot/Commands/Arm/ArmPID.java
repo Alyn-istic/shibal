@@ -10,13 +10,13 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
-import frc.robot.Constants.ArmConstants;
 import frc.robot.Subsystems.ArmSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ArmPID extends PIDCommand {
+  private ArmSubsystem armSub;
   /** Creates a new ArmRaise. */
   public ArmPID(
     ArmSubsystem armSub,
@@ -38,6 +38,7 @@ public class ArmPID extends PIDCommand {
           armSub.setMotor(MathUtil.clamp(output, -1, 1));
           SmartDashboard.putNumber("Arm PID Output", output);
         });
+    this.armSub = armSub;
     getController().setTolerance(tolerance.getAsDouble());
     addRequirements(armSub);
   }
