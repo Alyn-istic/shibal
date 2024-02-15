@@ -54,12 +54,12 @@ public class Constants {
         //public static final int raiseLimitSwitchChannel = 0;
         public static final int dropLimitSwitchChannel = 0;
 
-        public static final double raiseP = 0.08; // P value for the raise PID command
-        public static final double raiseI = 0; // I value for the raise PID command
-        public static final double raiseD = 0; // D value for the raise PID command
+        public static final double kP = 0.08; // P value for the raise PID command
+        public static final double kI = 0; // I value for the raise PID command
+        public static final double kD = 0; // D value for the raise PID command
         public static final double raiseTolerance = 0;
         public static final double raiseAngle = 90; // This is relative to the starting position of the encoders.
-
+      
         // public static final double dropAngle = 0;  // This is relative to the starting position of the encoders.
     }
 
