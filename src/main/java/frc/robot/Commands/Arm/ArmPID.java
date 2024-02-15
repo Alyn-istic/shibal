@@ -28,7 +28,7 @@ public class ArmPID extends PIDCommand {
   ) {
     super(
         // The controller that the command will use
-        new PIDController(kP.getAsDouble(), kP.getAsDouble(), kP.getAsDouble()),
+        new PIDController(kP.getAsDouble(), kI.getAsDouble(), kD.getAsDouble()),
         // This should return the measurement
         () -> armSub.getAngle(),
         // This should return the setpoint (can also be a constant)

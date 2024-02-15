@@ -44,6 +44,7 @@ public class ArmSubsystem extends SubsystemBase {
     SmartDashboard.putBoolean("Arm drop limit", dropLimitSwitch());
 
     SmartDashboard.putNumber("Arm Angle", getAngle() % 360);
+    System.out.println("Arm angle: " + getAngle());
 
     if (!dropLimitSwitch()) {
       encoder.setPosition(0);
