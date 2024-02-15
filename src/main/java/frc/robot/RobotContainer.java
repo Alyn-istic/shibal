@@ -49,13 +49,13 @@ public class RobotContainer {
       )
     );
 
-    armSub.setDefaultCommand(
-      new ArmCmd(
-        armSub,
-        () -> MathUtil.applyDeadband(controller.getRawAxis(DriverConstants.rightTriggerAxis) * 0.25, DriverConstants.triggerDeadband),
-        () -> MathUtil.applyDeadband(controller.getRawAxis(DriverConstants.leftTriggerAxis) * 0.25, DriverConstants.triggerDeadband)
-      )
-    );
+    // armSub.setDefaultCommand(
+    //   new ArmCmd(
+    //     armSub,
+    //     () -> MathUtil.applyDeadband(controller.getRawAxis(DriverConstants.rightTriggerAxis) * 0.25, DriverConstants.triggerDeadband),
+    //     () -> MathUtil.applyDeadband(controller.getRawAxis(DriverConstants.leftTriggerAxis) * 0.25, DriverConstants.triggerDeadband)
+    //   )
+    // );
 
     autoChooser.setDefaultOption("NONE", "NONE");
     autoChooser.addOption("MOVE OUT OF ZONE", "MOVE_OUT_OF_ZONE");
@@ -72,11 +72,11 @@ public class RobotContainer {
     commandController.rightBumper().whileTrue(new IntakeTest(intakeShooterSub, () -> -1));
     commandController.a().whileTrue(
       new ArmPID(armSub,
-      () -> ArmConstants.raiseP,
-      () -> ArmConstants.raiseI,
-      () -> ArmConstants.raiseD,
-      () -> ArmConstants.raiseAngle,
-      () -> ArmConstants.raiseTolerance
+        () -> ArmConstants.raiseP,
+        () -> ArmConstants.raiseI,
+        () -> ArmConstants.raiseD,
+        () -> ArmConstants.raiseAngle,
+        () -> ArmConstants.raiseTolerance
     ));
   }
 
