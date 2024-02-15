@@ -39,7 +39,7 @@ public class ArmCmd extends Command {
     if (!armSub.dropLimitSwitch()) {
       drop = 0 ;
     }
-    armSub.setMotor((raise - drop)/2);
+    armSub.setMotor((raise - drop));
   }
 
   // Called once the command ends or is interrupted.

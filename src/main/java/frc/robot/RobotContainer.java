@@ -49,6 +49,14 @@ public class RobotContainer {
       )
     );
 
+    // armSub.setDefaultCommand(
+    //   new ArmCmd(
+    //     armSub,
+    //     () -> MathUtil.applyDeadband(controller.getRawAxis(DriverConstants.rightTriggerAxis) * 0.25, DriverConstants.triggerDeadband),
+    //     () -> MathUtil.applyDeadband(controller.getRawAxis(DriverConstants.leftTriggerAxis) * 0.25, DriverConstants.triggerDeadband)
+    //   )
+    // );
+    
     autoChooser.setDefaultOption("NONE", "NONE");
     autoChooser.addOption("MOVE OUT OF ZONE", "MOVE_OUT_OF_ZONE");
     autoChooser.addOption("SCORE IN AMP (SENSORS)", "SCORE_IN_AMP_SENSORS");
@@ -63,15 +71,14 @@ public class RobotContainer {
     commandController.leftBumper().whileTrue(new IntakeTest(intakeShooterSub, () -> 1));
     commandController.rightBumper().whileTrue(new IntakeTest(intakeShooterSub, () -> -1));
     commandController.a().whileTrue(
-      new ArmPID(
-        armSub,
-        () -> ArmConstants.Kp,
-        () -> ArmConstants.Ki,
-        () -> ArmConstants.Kd,
-        () -> ArmConstants.setpoint,
-        () -> ArmConstants.Tolerance
-      )
-    );
+
+      new ArmPID(armSub,
+        () -> ArmConstants.kP,
+        () -> ArmConstants.kI,
+        () -> ArmConstants.kD,
+        () -> ArmConstants.raiseAngle,
+        () -> ArmConstants.raiseTolerance
+    ));
   }
 
   public Command getAutonomousCommand() {
