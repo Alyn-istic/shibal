@@ -8,6 +8,7 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Subsystems.ArmSubsystem;
@@ -35,8 +36,9 @@ public class ArmPID extends PIDCommand {
         // This uses the output
         output -> {
           armSub.setMotor(MathUtil.clamp(output, -1, 1));
+          SmartDashboard.putNumber("Arm PID Output", output);
         });
-    getController(tolerance.getAsDouble());
+    getController().setTolerance(tolerance.getAsDouble());
     addRequirements(armSub);
   }
   // Returns true when the command should end.
