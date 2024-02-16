@@ -33,10 +33,10 @@ public class ArmCmd extends Command {
   public void execute() {
     double raise = raiseInput.getAsDouble();
     double drop = dropInput.getAsDouble();
-    if (!armSub.raiseLimitSwitch()) {
+    if (armSub.raiseLimitSwitch()) {
       raise = 0 ;
     }
-    if (!armSub.dropLimitSwitch()) {
+    if (armSub.dropLimitSwitch()) {
       drop = 0 ;
     }
     armSub.setMotor((raise - drop));
