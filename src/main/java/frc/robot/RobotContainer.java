@@ -56,7 +56,7 @@ public class RobotContainer {
     //     () -> MathUtil.applyDeadband(controller.getRawAxis(DriverConstants.leftTriggerAxis) * 0.25, DriverConstants.triggerDeadband)
     //   )
     // );
-    
+
     autoChooser.setDefaultOption("NONE", "NONE");
     autoChooser.addOption("MOVE OUT OF ZONE", "MOVE_OUT_OF_ZONE");
     autoChooser.addOption("SCORE IN AMP (SENSORS)", "SCORE_IN_AMP_SENSORS");
@@ -77,7 +77,7 @@ public class RobotContainer {
     //     () -> ArmConstants.intakeAngle,
     //     () -> ArmConstants.tolerance
     // ));
-    commandController.a().onTrue(new ArmPID(armSub, // When the POV's left or right buttons are pressed, the arm goes back inside the perimeters of the bumpers
+    commandController.povLeft().or(commandController.povRight()).onTrue(new ArmPID(armSub, // When the POV's left or right buttons are pressed, the arm goes back inside the perimeters of the bumpers
         () -> ArmConstants.kP,
         () -> ArmConstants.kI,
         () -> ArmConstants.kD,
