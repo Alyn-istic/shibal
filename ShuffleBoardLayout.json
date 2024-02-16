@@ -19,8 +19,8 @@
             "content": {
               "_type": "Grid Layout",
               "_title": "Drivetrain",
-              "_glyph": 82,
-              "_showGlyph": true,
+              "_glyph": 149,
+              "_showGlyph": false,
               "Layout/Number of columns": 2,
               "Layout/Number of rows": 2,
               "Layout/Label position": "TOP",
@@ -64,8 +64,8 @@
             "content": {
               "_type": "Grid Layout",
               "_title": "Intake/Shooter",
-              "_glyph": 307,
-              "_showGlyph": true,
+              "_glyph": 149,
+              "_showGlyph": false,
               "Layout/Number of columns": 2,
               "Layout/Number of rows": 1,
               "Layout/Label position": "TOP",
@@ -131,16 +131,27 @@
                 {
                   "_type": "Text View",
                   "_source0": "network_table:///SmartDashboard/Arm Motor Speed",
-                  "_title": "Arm Motor Speed",
+                  "_title": "Motor Speed",
                   "_glyph": 148,
                   "_showGlyph": false
                 },
                 {
                   "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Arm Motor Voltage",
-                  "_title": "Arm Motor Voltage",
+                  "_source0": "network_table:///SmartDashboard/Arm Position",
+                  "_title": "Position",
                   "_glyph": 148,
                   "_showGlyph": false
+                },
+                {
+                  "_type": "Gyro",
+                  "_source0": "network_table:///SmartDashboard/Arm Angle",
+                  "_title": "Angle",
+                  "_glyph": 148,
+                  "_showGlyph": false,
+                  "Visuals/Major tick spacing": 45.0,
+                  "Visuals/Starting angle": 180.0,
+                  "Visuals/Show tick mark ring": true,
+                  "Visuals/Counter clockwise": false
                 },
                 {
                   "_type": "Boolean Box",
@@ -166,17 +177,6 @@
                   "_title": "Arm PID Output",
                   "_glyph": 148,
                   "_showGlyph": false
-                },
-                {
-                  "_type": "Gyro",
-                  "_source0": "network_table:///SmartDashboard/Arm Angle",
-                  "_title": "Arm Angle",
-                  "_glyph": 148,
-                  "_showGlyph": false,
-                  "Visuals/Major tick spacing": 45.0,
-                  "Visuals/Starting angle": 180.0,
-                  "Visuals/Show tick mark ring": true,
-                  "Visuals/Counter clockwise": false
                 }
               ]
             }
