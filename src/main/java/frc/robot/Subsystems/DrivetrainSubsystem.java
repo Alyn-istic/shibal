@@ -61,6 +61,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // Inverting the left motors
     frontLeft.setInverted(true);
     backLeft.setInverted(true);
+    frontRight.setInverted(false);
+    backRight.setInverted(false);
 
     //Telling back-motors to follow the front-motors because FIRST decided to remove MotorControllerGroups.
     backLeft.follow(frontLeft);
