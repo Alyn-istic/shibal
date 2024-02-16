@@ -40,8 +40,8 @@ public class Constants {
     }
 
     public class ArmConstants {
-        public static final int leftID = 4; // Arm's left motor ID
-        public static final int rightID = 5; // Arm's right motor ID
+        public static final int leftID = 5; // Arm's left motor ID
+        public static final int rightID = 6; // Arm's right motor ID
 
         public static final int ticksPerRev = 1024; // The amount of encoder ticks in a full rotation
         public static final double gearRatio = 4; // The gear ratio of the arm
@@ -49,7 +49,7 @@ public class Constants {
         public static final int raiseLimitSwitchChannel = 1;
         public static final int dropLimitSwitchChannel = 0;
 
-        public static final double kP = 0.08; // P value for the arm PID command
+        public static final double kP = 0.005; // P value for the arm PID command
         public static final double kI = 0; // I value for the arm PID command
         public static final double kD = 0; // D value for the arm PID command
         public static final double tolerance = 0;
@@ -61,8 +61,8 @@ public class Constants {
     }
 
     public class IntakeShooterConstants {
-        public static final int upperWheelID  = 6; // The motor ID for the intake/shooter's upper wheels
-        public static final int lowerWheelID = 7; // The motor ID for the intake/shooter's lower wheels
+        public static final int upperWheelID  = 7; // The motor ID for the intake/shooter's upper wheels
+        public static final int lowerWheelID = 8; // The motor ID for the intake/shooter's lower wheels
 
         public static final double speed = 1; // The intake/shooter's motor speed.
     }

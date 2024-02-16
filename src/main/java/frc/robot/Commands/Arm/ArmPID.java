@@ -35,10 +35,11 @@ public class ArmPID extends PIDCommand {
         () -> setpoint.getAsDouble(),
         // This uses the output
         output -> {
-          armSub.setMotor(MathUtil.clamp(output, -1, 1));
+          armSub.setMotor(output);
           SmartDashboard.putNumber("Arm PID Output", output);
         });
     this.armSub = armSub;
+    System.out.println(armSub.getAngle());
     getController().setTolerance(tolerance.getAsDouble());
     addRequirements(armSub);
   }

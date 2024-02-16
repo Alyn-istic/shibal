@@ -70,27 +70,27 @@ public class RobotContainer {
     commandController.x().onTrue(new EmergencyStopCmd());
     commandController.leftBumper().whileTrue(new IntakeCmd(intakeShooterSub, () -> 1));
     commandController.rightBumper().whileTrue(new IntakeCmd(intakeShooterSub, () -> -1));
-    commandController.povDown().onTrue(new ArmPID(armSub, // When the POV's down button is pressed, the arm goes into intake position
-        () -> ArmConstants.kP,
-        () -> ArmConstants.kI,
-        () -> ArmConstants.kD,
-        () -> ArmConstants.intakeAngle,
-        () -> ArmConstants.tolerance
-    ));
-    commandController.povLeft().or(commandController.povRight()).onTrue(new ArmPID(armSub, // When the POV's left or right buttons are pressed, the arm goes back inside the perimeters of the bumpers
+    // commandController.povDown().onTrue(new ArmPID(armSub, // When the POV's down button is pressed, the arm goes into intake position
+    //     () -> ArmConstants.kP,
+    //     () -> ArmConstants.kI,
+    //     () -> ArmConstants.kD,
+    //     () -> ArmConstants.intakeAngle,
+    //     () -> ArmConstants.tolerance
+    // ));
+    commandController.a().onTrue(new ArmPID(armSub, // When the POV's left or right buttons are pressed, the arm goes back inside the perimeters of the bumpers
         () -> ArmConstants.kP,
         () -> ArmConstants.kI,
         () -> ArmConstants.kD,
         () -> ArmConstants.insideAngle,
         () -> ArmConstants.tolerance
     ));
-    commandController.povUp().onTrue(new ArmPID(armSub, // When the POV's up button is pressed, the arm goes into shooting position.
-        () -> ArmConstants.kP,
-        () -> ArmConstants.kI,
-        () -> ArmConstants.kD,
-        () -> ArmConstants.shootAngle,
-        () -> ArmConstants.tolerance
-    ));
+    // commandController.povUp().onTrue(new ArmPID(armSub, // When the POV's up button is pressed, the arm goes into shooting position.
+    //     () -> ArmConstants.kP,
+    //     () -> ArmConstants.kI,
+    //     () -> ArmConstants.kD,
+    //     () -> ArmConstants.shootAngle,
+    //     () -> ArmConstants.tolerance
+    // ));
   }
 
   public Command getAutonomousCommand() {
