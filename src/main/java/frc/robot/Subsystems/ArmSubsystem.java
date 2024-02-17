@@ -16,8 +16,6 @@ public class ArmSubsystem extends SubsystemBase {
   private final WPI_TalonSRX leftMotor = new WPI_TalonSRX(ArmConstants.leftID);
   private final WPI_TalonSRX rightMotor = new WPI_TalonSRX(ArmConstants.rightID);
 
-  private double fakeSensorPos = 0;
-
   // Initializing the limit switches
   private final DigitalInput dropSwitch = new DigitalInput(ArmConstants.dropLimitSwitchChannel);
   private final DigitalInput raiseSwitch = new DigitalInput(ArmConstants.raiseLimitSwitchChannel);
@@ -40,8 +38,8 @@ public class ArmSubsystem extends SubsystemBase {
     rightMotor.setNeutralMode(NeutralMode.Brake);
 
     // Resetting encoder positions
-    leftMotor.setSelectedSensorPosition(0);
-    rightMotor.setSelectedSensorPosition(0);
+    leftMotor.setSelectedSensorPosition(toPosition(ArmConstants.startingAngle));
+    rightMotor.setSelectedSensorPosition(-toPosition(ArmConstants.startingAngle));
   }
 
   @Override
@@ -52,22 +50,22 @@ public class ArmSubsystem extends SubsystemBase {
     SmartDashboard.putBoolean("Arm drop limit", dropLimitSwitch());
 
     SmartDashboard.putNumber("Arm Angle", getAngle() % 360);
-    SmartDashboard.putNumber("Arm Position", leftMotor.getSelectedSensorPosition());
-    System.out.println(getAngle());
+    SmartDashboard.putNumber("Arm Position", getPosition());
+    System.out.println("Arm angle: " + getAngle());
 
     if (dropLimitSwitch()) {
-      leftMotor.setSelectedSensorPosition(ArmConstants.intakeAngle);
-      rightMotor.setSelectedSensorPosition(ArmConstants.intakeAngle);
-    } else if (raiseLimitSwitch()) {
-      leftMotor.setSelectedSensorPosition(ArmConstants.shootAngle);
-      rightMotor.setSelectedSensorPosition(ArmConstants.shootAngle);
+      leftMotor.setSelectedSensorPosition(toPosition(ArmConstants.intakeAngle));
     }
-
+    if (raiseLimitSwitch()) {
+      leftMotor.setSelectedSensorPosition(toPosition(ArmConstants.shootAngle));
+    }
+  }
+  @Override
+  public void simulationPeriodic() {
     /* The thing below is what we are using to "simulate" the encoder... Not reliable, only use to test commands. DO NOT use to tune PID values.
      * There's probably a better way of doing this, but I'm too lazy. - Wilson
     */
-    // fakeSensorPos += (leftMotor.get() * 30);
-    // leftMotor.setSelectedSensorPosition(fakeSensorPos);
+    leftMotor.getSimCollection().addQuadraturePosition((int)(leftMotor.get() * 30.0));
   }
 
   public void setMotor(double speed) {
@@ -75,7 +73,15 @@ public class ArmSubsystem extends SubsystemBase {
    }
 
   public double getAngle() {
-    return (leftMotor.getSelectedSensorPosition()*(360.0/ArmConstants.ticksPerRev))/ArmConstants.gearRatio;
+    return (getPosition()*(360.0/ArmConstants.countsPerRev))/ArmConstants.gearRatio;
+  }
+
+  public double toPosition(double angle) {
+    return (angle*ArmConstants.gearRatio)/(360.0/ArmConstants.countsPerRev);
+  }
+
+  public double getPosition() {
+    return leftMotor.getSelectedSensorPosition();
   }
 
   public void stopMotors() {
@@ -90,5 +96,4 @@ public class ArmSubsystem extends SubsystemBase {
   public boolean dropLimitSwitch() { // True when clicked, false when not
     return !dropSwitch.get();
   }
-
 } 
