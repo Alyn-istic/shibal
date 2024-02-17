@@ -30,12 +30,12 @@ public class ArmPID extends PIDCommand {
         // The controller that the command will use
         new PIDController(kP.getAsDouble(), kI.getAsDouble(), kD.getAsDouble()),
         // This should return the measurement
-        () -> armSub.getAngle(),
+        () -> (armSub.getAngle() % 360),
         // This should return the setpoint (can also be a constant)
         () -> setpoint.getAsDouble(),
         // This uses the output
         output -> {
-          armSub.setMotor(output);
+          armSub.setMotor((armSub.dropLimitSwitch() || armSub.raiseLimitSwitch()) ? 0 : MathUtil.clamp(output, -1, 1));
           SmartDashboard.putNumber("Arm PID Output", output);
         });
     this.armSub = armSub;
@@ -46,7 +46,7 @@ public class ArmPID extends PIDCommand {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (getController().atSetpoint() || armSub.dropLimitSwitch() || armSub.raiseLimitSwitch()); // When the arm is at the setpoint OR if the limit switches are hit.
+    return false;
   }
 }
 
