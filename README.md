@@ -22,3 +22,7 @@ Move the arm into the perimeter of the bumpers: POV left or right button
 Move the arm into shooting position: POV up button
 
 Emergency stop robot: Button X
+
+# How To Set Up Robot:
+
+1) Move arm so that it is approximately perpendicular to the chassis.
