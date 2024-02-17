@@ -45,6 +45,7 @@ public class Constants {
 
         public static final int countsPerRev = 1024; // The amount of encoder ticks in a full rotation
         public static final double gearRatio = 4; // The gear ratio of the arm
+        public static final double startingAngle = 90;
 
         public static final int raiseLimitSwitchChannel = 1;
         public static final int dropLimitSwitchChannel = 0;
