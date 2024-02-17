@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Commands.EmergencyStopCmd;
 import frc.robot.Commands.Arm.ArmCmd;
 import frc.robot.Commands.Arm.ArmPID;
+//import frc.robot.Commands.Arm.LimitSwitchSimulation;
 import frc.robot.Commands.Drivetrain.TankDriveCmd;
 import frc.robot.Commands.IntakeShooter.IntakeCmd;
 import frc.robot.Commands.Routines.ExitZoneTimed;
@@ -57,6 +58,10 @@ public class RobotContainer {
     //   )
     // );
 
+    SmartDashboard.putNumber("Arm P", ArmConstants.kP);
+    SmartDashboard.putNumber("Arm I", ArmConstants.kI);
+    SmartDashboard.putNumber("Arm D", ArmConstants.kD);
+
     autoChooser.setDefaultOption("NONE", "NONE");
     autoChooser.addOption("MOVE OUT OF ZONE", "MOVE_OUT_OF_ZONE");
     autoChooser.addOption("SCORE IN AMP (SENSORS)", "SCORE_IN_AMP_SENSORS");
@@ -70,27 +75,36 @@ public class RobotContainer {
     commandController.x().onTrue(new EmergencyStopCmd());
     commandController.leftBumper().whileTrue(new IntakeCmd(intakeShooterSub, () -> 1));
     commandController.rightBumper().whileTrue(new IntakeCmd(intakeShooterSub, () -> -1));
-    // commandController.povDown().onTrue(new ArmPID(armSub, // When the POV's down button is pressed, the arm goes into intake position
-    //     () -> ArmConstants.kP,
-    //     () -> ArmConstants.kI,
-    //     () -> ArmConstants.kD,
-    //     () -> ArmConstants.intakeAngle,
-    //     () -> ArmConstants.tolerance
-    // ));
+    commandController.povDown().onTrue(new ArmPID(armSub, // When the POV's down button is pressed, the arm goes into intake position
+        () -> ArmConstants.kP,
+        () -> ArmConstants.kI,
+        () -> ArmConstants.kD,
+        // () -> SmartDashboard.getNumber("Arm P", 0),
+        // () -> SmartDashboard.getNumber("Arm I", 0),
+        // () -> SmartDashboard.getNumber("Arm D", 0),
+        () -> ArmConstants.intakeAngle,
+        () -> ArmConstants.tolerance,
+        () -> armSub.dropLimitSwitch()
+    ));
     commandController.povLeft().or(commandController.povRight()).onTrue(new ArmPID(armSub, // When the POV's left or right buttons are pressed, the arm goes back inside the perimeters of the bumpers
         () -> ArmConstants.kP,
         () -> ArmConstants.kI,
         () -> ArmConstants.kD,
         () -> ArmConstants.insideAngle,
-        () -> ArmConstants.tolerance
+        () -> ArmConstants.tolerance,
+        () -> false
     ));
-    // commandController.povUp().onTrue(new ArmPID(armSub, // When the POV's up button is pressed, the arm goes into shooting position.
-    //     () -> ArmConstants.kP,
-    //     () -> ArmConstants.kI,
-    //     () -> ArmConstants.kD,
-    //     () -> ArmConstants.shootAngle,
-    //     () -> ArmConstants.tolerance
-    // ));
+    commandController.povUp().onTrue(new ArmPID(armSub, // When the POV's up button is pressed, the arm goes into shooting position.
+        () -> ArmConstants.kP,
+        () -> ArmConstants.kI,
+        () -> ArmConstants.kD,
+        // () -> SmartDashboard.getNumber("Arm P", 0),
+        // () -> SmartDashboard.getNumber("Arm I", 0),
+        // () -> SmartDashboard.getNumber("Arm D", 0),
+        () -> ArmConstants.shootAngle,
+        () -> ArmConstants.tolerance,
+        () -> armSub.raiseLimitSwitch()
+    ));
   }
 
   public Command getAutonomousCommand() {

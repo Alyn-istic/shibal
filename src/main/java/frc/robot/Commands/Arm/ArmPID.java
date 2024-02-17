@@ -4,6 +4,7 @@
 
 package frc.robot.Commands.Arm;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
@@ -16,7 +17,6 @@ import frc.robot.Subsystems.ArmSubsystem;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ArmPID extends PIDCommand {
-  private ArmSubsystem armSub;
   /** Creates a new ArmRaise. */
   public ArmPID(
     ArmSubsystem armSub,
@@ -24,7 +24,8 @@ public class ArmPID extends PIDCommand {
     DoubleSupplier kI,
     DoubleSupplier kD,
     DoubleSupplier setpoint,
-    DoubleSupplier tolerance
+    DoubleSupplier tolerance,
+    BooleanSupplier limit
   ) {
     super(
         // The controller that the command will use
@@ -35,11 +36,10 @@ public class ArmPID extends PIDCommand {
         () -> setpoint.getAsDouble(),
         // This uses the output
         output -> {
-          armSub.setMotor((armSub.dropLimitSwitch() || armSub.raiseLimitSwitch()) ? 0 : MathUtil.clamp(output, -1, 1));
+          armSub.setMotor(limit.getAsBoolean() ? 0 : MathUtil.clamp(output, -1, 1)); // If limit = true, then speed is set to 0. Else, speed is set to clamped output.
           SmartDashboard.putNumber("Arm PID Output", output);
         });
-    this.armSub = armSub;
-    System.out.println(armSub.getAngle());
+    // System.out.println(armSub.getAngle());
     getController().setTolerance(tolerance.getAsDouble());
     addRequirements(armSub);
   }
