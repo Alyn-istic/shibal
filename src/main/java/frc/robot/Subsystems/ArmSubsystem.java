@@ -19,6 +19,7 @@ public class ArmSubsystem extends SubsystemBase {
   // Initializing the limit switches
   private final DigitalInput dropSwitch = new DigitalInput(ArmConstants.dropLimitSwitchChannel);
   private final DigitalInput raiseSwitch = new DigitalInput(ArmConstants.raiseLimitSwitchChannel);
+  // private Boolean limitSwitchSim = false;
 
   /** Creates a new ArmSubsystem. */
   public ArmSubsystem() {
@@ -96,4 +97,8 @@ public class ArmSubsystem extends SubsystemBase {
   public boolean dropLimitSwitch() { // True when clicked, false when not
     return !dropSwitch.get();
   }
+
+  // public void setLimitSwitchSim(boolean input) {
+  //   limitSwitchSim = input;
+  // }
 } 
