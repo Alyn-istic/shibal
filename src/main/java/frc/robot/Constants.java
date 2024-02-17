@@ -1,5 +1,7 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.SerialPort.Port;
+
 // Feel free to add more constants to the list.
 
 public class Constants {
@@ -25,13 +27,13 @@ public class Constants {
         public static final int backLeftID = 3; // Chassis's back-left motor ID
         public static final int backRightID = 1; // Chassis's back-right motor ID
 
-        // public static final double distLeftRight = 1; // The distance (in inches) between the left wheels and the right wheels.
-        // public static final double wheelRadius = 3; // The radius of the wheels
-        // public static final double gearRatio = 12.75; // Gear ratio
+        public static final double distLeftRight = 1; // The distance (in inches) between the left wheels and the right wheels.
+        public static final double wheelRadius = 3; // The radius of the wheels
+        public static final double gearRatio = 1; // Gear ratio
 
-        // public static final int ticksPerRev = 2048; // The amount of encoder ticks in a full rotation
+        public static final int countsPerRev = 1024; // The amount of encoder ticks in a full rotation
 
-        // public static final Port gyroPort = Port.kUSB; // The port that the gyro is connected to.
+        public static final Port gyroPort = Port.kUSB; // The port that the gyro is connected to.
 
         // public static final double gyroP = 0.0001; // P value for turning PID command
         // public static final double gyroI = 0; // I value for turning PID command
@@ -68,7 +70,9 @@ public class Constants {
         public static final double speed = 1; // The intake/shooter's motor speed.
     }
 
-    public class VisionConstants {}
+    public class VisionConstants {
+        
+    }
 
     public class DriverConstants {
         public static final int port = 0; // Controller port

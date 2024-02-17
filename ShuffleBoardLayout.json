@@ -11,51 +11,6 @@
         "vgap": 16.0,
         "titleType": 1,
         "tiles": {
-          "3,0": {
-            "size": [
-              2,
-              2
-            ],
-            "content": {
-              "_type": "Grid Layout",
-              "_title": "Drivetrain",
-              "_glyph": 149,
-              "_showGlyph": false,
-              "Layout/Number of columns": 2,
-              "Layout/Number of rows": 2,
-              "Layout/Label position": "TOP",
-              "_children": {
-                "1,0": {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Front Right Motor Speed",
-                  "_title": "FR Speed",
-                  "_glyph": 148,
-                  "_showGlyph": false
-                },
-                "0,0": {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Front Left Motor Speed",
-                  "_title": "FL Speed",
-                  "_glyph": 148,
-                  "_showGlyph": false
-                },
-                "0,1": {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Drivetrain Left Speed Input",
-                  "_title": "Left Input",
-                  "_glyph": 148,
-                  "_showGlyph": false
-                },
-                "1,1": {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Drivetrain Right Speed Input",
-                  "_title": "Right Input",
-                  "_glyph": 148,
-                  "_showGlyph": false
-                }
-              }
-            }
-          },
           "3,2": {
             "size": [
               2,
@@ -64,8 +19,8 @@
             "content": {
               "_type": "Grid Layout",
               "_title": "Intake/Shooter",
-              "_glyph": 149,
-              "_showGlyph": false,
+              "_glyph": 551,
+              "_showGlyph": true,
               "Layout/Number of columns": 2,
               "Layout/Number of rows": 1,
               "Layout/Label position": "TOP",
@@ -73,21 +28,21 @@
                 "0,0": {
                   "_type": "Text View",
                   "_source0": "network_table:///SmartDashboard/Intake/Shooter Motor 1 Speed",
-                  "_title": "Motor 1 Speed",
+                  "_title": "Motor 1",
                   "_glyph": 148,
                   "_showGlyph": false
                 },
                 "1,0": {
                   "_type": "Text View",
                   "_source0": "network_table:///SmartDashboard/Intake/Shooter Motor 2 Speed",
-                  "_title": "Motor 2 Speed",
+                  "_title": "Motor2",
                   "_glyph": 148,
                   "_showGlyph": false
                 }
               }
             }
           },
-          "5,0": {
+          "3,0": {
             "size": [
               2,
               2
@@ -205,6 +160,153 @@
                       "_type": "Text View",
                       "_source0": "network_table:///SmartDashboard/Arm P",
                       "_title": "P",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "5,0": {
+            "size": [
+              3,
+              6
+            ],
+            "content": {
+              "_type": "List Layout",
+              "_title": "Drivetrain",
+              "_glyph": 76,
+              "_showGlyph": true,
+              "Layout/Label position": "LEFT",
+              "_children": [
+                {
+                  "_type": "Grid Layout",
+                  "_title": "Motor Speeds",
+                  "_glyph": 149,
+                  "_showGlyph": false,
+                  "Layout/Number of columns": 2,
+                  "Layout/Number of rows": 1,
+                  "Layout/Label position": "TOP",
+                  "_children": {
+                    "1,0": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SmartDashboard/Front Right Motor Speed",
+                      "_title": "FR Speed",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    },
+                    "0,0": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SmartDashboard/Front Left Motor Speed",
+                      "_title": "FL Speed",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    }
+                  }
+                },
+                {
+                  "_type": "Grid Layout",
+                  "_title": "Distances",
+                  "_glyph": 149,
+                  "_showGlyph": false,
+                  "Layout/Number of columns": 2,
+                  "Layout/Number of rows": 2,
+                  "Layout/Label position": "TOP",
+                  "_children": {
+                    "0,0": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SmartDashboard/Left Distance",
+                      "_title": "Left Distance",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    },
+                    "1,0": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SmartDashboard/Right Distance",
+                      "_title": "Right Distance",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    },
+                    "0,1": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SmartDashboard/Left Pos",
+                      "_title": "Left Pos",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    },
+                    "1,1": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SmartDashboard/Right Pos",
+                      "_title": "Right Pos",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    }
+                  }
+                },
+                {
+                  "_type": "Grid Layout",
+                  "_title": "Pose Estimation",
+                  "_glyph": 152,
+                  "_showGlyph": false,
+                  "Layout/Number of columns": 3,
+                  "Layout/Number of rows": 1,
+                  "Layout/Label position": "TOP",
+                  "_children": {
+                    "0,0": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SmartDashboard/Bot X",
+                      "_title": "X",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    },
+                    "1,0": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SmartDashboard/Bot Y",
+                      "_title": "Y",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    },
+                    "2,0": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SmartDashboard/Bot Rotation",
+                      "_title": "Rot",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    }
+                  }
+                },
+                {
+                  "_type": "Gyro",
+                  "_source0": "network_table:///SmartDashboard/Gyro Angle",
+                  "_title": "Gyro Angle",
+                  "_glyph": 148,
+                  "_showGlyph": false,
+                  "Visuals/Major tick spacing": 45.0,
+                  "Visuals/Starting angle": 180.0,
+                  "Visuals/Show tick mark ring": true,
+                  "Visuals/Counter clockwise": false
+                },
+                {
+                  "_type": "Grid Layout",
+                  "_title": "Inputs",
+                  "_glyph": 149,
+                  "_showGlyph": false,
+                  "Layout/Number of columns": 2,
+                  "Layout/Number of rows": 1,
+                  "Layout/Label position": "TOP",
+                  "_children": {
+                    "0,0": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SmartDashboard/Drivetrain Left Speed Input",
+                      "_title": "Left Input",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    },
+                    "1,0": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SmartDashboard/Drivetrain Right Speed Input",
+                      "_title": "Right Input",
                       "_glyph": 148,
                       "_showGlyph": false
                     }

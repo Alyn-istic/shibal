@@ -13,12 +13,12 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Commands.EmergencyStopCmd;
 import frc.robot.Commands.Arm.ArmCmd;
 import frc.robot.Commands.Arm.ArmPID;
+import frc.robot.Commands.Autos.ExitZoneTimed;
+import frc.robot.Commands.Autos.AutoLog;
+import frc.robot.Commands.Autos.ScoreInAmpTimed;
 // import frc.robot.Commands.Arm.LimitSwitchSimulation;
 import frc.robot.Commands.Drivetrain.TankDriveCmd;
 import frc.robot.Commands.IntakeShooter.IntakeCmd;
-import frc.robot.Commands.Routines.ExitZoneTimed;
-import frc.robot.Commands.Routines.RoutineLog;
-import frc.robot.Commands.Routines.ScoreInAmpTimed;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Subsystems.ArmSubsystem;
@@ -45,8 +45,10 @@ public class RobotContainer {
         driveSub,
         /** The following two lines are just getting the controller's left and right joysticks, and applying a deadzone to them.
          * This can all be configurated in Constants.java */
-        () -> MathUtil.applyDeadband(controller.getRawAxis(DriverConstants.leftJoystickAxis), DriverConstants.joystickDeadband),
-        () -> MathUtil.applyDeadband(controller.getRawAxis(DriverConstants.rightJoystickAxis), DriverConstants.joystickDeadband)
+        // () -> MathUtil.applyDeadband(controller.getRawAxis(DriverConstants.leftJoystickAxis), DriverConstants.joystickDeadband),
+        // () -> MathUtil.applyDeadband(controller.getRawAxis(DriverConstants.rightJoystickAxis), DriverConstants.joystickDeadband)
+        () -> controller.getRawAxis(1),
+        () -> controller.getRawAxis(0)
       )
     );
 
@@ -115,10 +117,10 @@ public class RobotContainer {
       case "MOVE_OUT_OF_ZONE": // Moves the robot out of the zone.
         return new ExitZoneTimed(driveSub); // Return the auto command that moves out of the zone
       case "SCORE_IN_AMP_SENSORS":
-        return new RoutineLog("This routine has not been set up yet."); // Returns the auto command that moves robot to amp, and shoots loaded note, using sensors.
+        return new AutoLog("This routine has not been set up yet."); // Returns the auto command that moves robot to amp, and shoots loaded note, using sensors.
       case "SCORE_IN_AMP_TIMED":
         return new ScoreInAmpTimed(driveSub, intakeShooterSub); // Returns the auto command that moves robot to amp, and shoots loaded note, using timers.
     }
-    return new RoutineLog("No auto selected.");
+    return new AutoLog("No auto selected.");
   }
 }
