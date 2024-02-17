@@ -93,7 +93,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public void tankDrive(double leftSpeed, double rightSpeed) { // Tankdrive function
-    //drive.tankDrive(leftSpeed, rightSpeed);
+    drive.tankDrive(leftSpeed, rightSpeed);
   }
   // public double getGyroAngle() { // Function for getting the gyro's angle.
   //   return gyro.getAngle();
