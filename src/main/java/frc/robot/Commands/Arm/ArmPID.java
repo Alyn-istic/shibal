@@ -10,13 +10,17 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.PIDCommand;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Subsystems.ArmSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ArmPID extends PIDCommand {
+public class ArmPID extends Command {
+  private ArmSubsystem armSub;
+  private DoubleSupplier kP, kI, kD;
+  private BooleanSupplier limit;
+  private PIDController controller;
   /** Creates a new ArmRaise. */
   public ArmPID(
     ArmSubsystem armSub,
@@ -27,26 +31,41 @@ public class ArmPID extends PIDCommand {
     DoubleSupplier tolerance,
     BooleanSupplier limit
   ) {
-    super(
-        // The controller that the command will use
-        new PIDController(kP.getAsDouble(), kI.getAsDouble(), kD.getAsDouble()),
-        // This should return the measurement
-        () -> (armSub.getAngle() % 360),
-        // This should return the setpoint (can also be a constant)
-        () -> setpoint.getAsDouble(),
-        // This uses the output
-        output -> {
-          armSub.setMotor(limit.getAsBoolean() ? 0 : MathUtil.clamp(output, -1, 1)); // If limit = true, then speed is set to 0. Else, speed is set to clamped output.
-          SmartDashboard.putNumber("Arm PID Output", output);
-        });
     // System.out.println(armSub.getAngle());
-    getController().setTolerance(tolerance.getAsDouble());
+    this.armSub = armSub;
+    this.kP = kP;
+    this.kI = kI;
+    this.kD = kD;
+    this.limit = limit;
     addRequirements(armSub);
+
+    controller = new PIDController(kP.getAsDouble(), kI.getAsDouble(), kD.getAsDouble());
+    controller.setTolerance(tolerance.getAsDouble());
+    controller.setSetpoint(setpoint.getAsDouble());
   }
+
+  @Override
+  public void execute() {
+    // Applying the output to the arm
+    armSub.setMotor(limit.getAsBoolean() ? 0 : MathUtil.clamp(controller.calculate(armSub.getAngle() % 360), -1, 1)); // If limit = true, then speed is set to 0. Else, speed is set to clamped output.
+
+    // Updating the PID valuess
+    controller.setP(kP.getAsDouble());
+    controller.setI(kI.getAsDouble());
+    controller.setD(kD.getAsDouble());
+
+    // Pushing number to SmartDashboard
+    SmartDashboard.putNumber("Arm PID Output", controller.calculate(armSub.getAngle() % 360));
+  }
+
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    /* This should probably not be set to controller.atSetpoint() or limit.getAsBoolean()
+    Because, it would be nice if the arm would be able to go back to the setpoint on its own if something (like an collision) moved the arm a little.
+    The motor speed is automatically set to 0 when the limit returns true, and the motors shouldn't be able to move when settled at the setpoint */
     return false;
+    // return (controller.atSetpoint() || limit.getAsBoolean());
   }
 }
 
