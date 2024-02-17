@@ -6,7 +6,6 @@ package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.Commands.Routines.RoutineLog;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -18,6 +17,6 @@ public class EmergencyStopCmd extends InstantCommand {
   @Override
   public void initialize() {
     CommandScheduler.getInstance().cancelAll();
-    CommandScheduler.getInstance().schedule(new RoutineLog("Emergency stopped all commands."));
+    System.out.println("EmergencyStopCmd - Stopped all running commands.");
   }
 }
