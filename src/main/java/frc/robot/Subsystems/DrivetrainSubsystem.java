@@ -14,10 +14,23 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Distance;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.MutableMeasure;
+import edu.wpi.first.units.Velocity;
+import edu.wpi.first.units.Voltage;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.DrivetrainConstants;
+
+// Static imports for units
+import static edu.wpi.first.units.Units.Volts;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
 
 public class DrivetrainSubsystem extends SubsystemBase {
 
@@ -36,6 +49,56 @@ public class DrivetrainSubsystem extends SubsystemBase {
   // Kinematics
   private DifferentialDrivePoseEstimator poseEstimator;
   private DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(DrivetrainConstants.distLeftRight));
+
+  /* Mutable holders
+    The idea behind a mutable object is that you can modify its value.
+    For example, you can create a variable called x, and assign it's value with integer 1.
+    When you run (x += 1;), you are modifying the value and adding 1, making it a mutable object.
+
+    However, when you create a variable called x, and assign it's value with string "hello", you have created a immutable object, meaning you can't modify it.
+    If you concatenate it with "!" like so (x = x + "!";), you are not actually modifying the variable. You are creating a seperate copy with a assigned value of "hello!".
+    We use mutable objects because we can modify them without creating new "copies". This in turn reduces the memory usage.
+
+    Which values are mutable or immutable? It all comes down to which language you are using.
+
+    The following variables hold measurements in special stores in the RoboRIO.
+   */
+  private final MutableMeasure<Voltage> m_appliedVoltage = MutableMeasure.mutable(Volts.of(0));
+  private final MutableMeasure<Distance> m_distance = MutableMeasure.mutable(Meters.of(0));
+  private final MutableMeasure<Velocity<Distance>> m_velocity = MutableMeasure.mutable(MetersPerSecond.of(0));
+
+  // System Identification, used to help find some values
+  private final SysIdRoutine m_sysIdRoutine = new SysIdRoutine(new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(
+      (Measure<Voltage> voltage) -> {
+        frontLeft.setVoltage(voltage.in(Volts));
+        frontRight.setVoltage(voltage.in(Volts));
+      },
+      /* 
+       * The idea for the voltage is that motor speed is influenced by battery voltage.
+       * For example: (voltage = motorSpeed * batteryVoltage) can be re-arranged into (motorSpeed = voltage / batteryVoltage)
+       * The other calculations such as position and velocity can be found in their repspective functions
+       */
+      log -> {
+        // Create frame for left motors
+        log.motor("drive-left").voltage(m_appliedVoltage.mut_replace(frontLeft.get() * RobotController.getBatteryVoltage(), Volts))
+          .linearPosition(m_distance.mut_replace(getLeftDistance(), Meters))
+          .linearVelocity(m_velocity.mut_replace(getLeftVelocity(), MetersPerSecond));
+
+        // Create frame for right motors
+        log.motor("drive-right").voltage(m_appliedVoltage.mut_replace(frontRight.get() * RobotController.getBatteryVoltage(), Volts))
+          .linearPosition(m_distance.mut_replace(getRightDistance(), Meters))
+          .linearVelocity(m_velocity.mut_replace(getRightVelocity(), MetersPerSecond)); 
+      }, this
+    )
+  );
+
+  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+    return m_sysIdRoutine.quasistatic(direction);
+  }
+
+  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+    return m_sysIdRoutine.dynamic(direction);
+  }
 
   /** Creates a new DrivetrainSubsystem. */
   public DrivetrainSubsystem() {

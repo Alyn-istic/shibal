@@ -6,10 +6,24 @@ package frc.robot.Subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
+import edu.wpi.first.units.Angle;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.MutableMeasure;
+import edu.wpi.first.units.Velocity;
+import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.ArmConstants;
+
+// Static imports for units
+import static edu.wpi.first.units.Units.Volts;
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.DegreesPerSecond;
 
 public class ArmSubsystem extends SubsystemBase {
   // Initializing the TalonSRX motorcontrollers
@@ -20,6 +34,32 @@ public class ArmSubsystem extends SubsystemBase {
   private final DigitalInput dropSwitch = new DigitalInput(ArmConstants.dropLimitSwitchChannel);
   private final DigitalInput raiseSwitch = new DigitalInput(ArmConstants.raiseLimitSwitchChannel);
   // private Boolean limitSwitchSim = false;
+
+  // Mutable holders
+  private final MutableMeasure<Voltage> m_appliedVoltage = MutableMeasure.mutable(Volts.of(0));
+  private final MutableMeasure<Angle> m_angle = MutableMeasure.mutable(Degrees.of(0));
+  private final MutableMeasure<Velocity<Angle>> m_anglePerSecond = MutableMeasure.mutable(DegreesPerSecond.of(0));
+
+  // System Identification
+  private final SysIdRoutine m_SysIdRoutine = new SysIdRoutine(new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(
+    (Measure<Voltage> voltage) -> {
+      leftMotor.setVoltage(voltage.in(Volts));
+    },
+    log -> {
+      // We are treating leftMotor and rightMotor as the same motor because rightMotor follows leftMotor
+      log.motor("arm-Motor").voltage(m_appliedVoltage.mut_replace(leftMotor.get() * RobotController.getBatteryVoltage(), Volts))
+        .angularPosition(m_angle.mut_replace(getAngle(), Degrees))
+        .angularVelocity(m_anglePerSecond.mut_replace(getVelocity(), DegreesPerSecond));
+    }, this
+  ));
+
+  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+    return m_SysIdRoutine.quasistatic(direction);
+  }
+
+  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+    return m_SysIdRoutine.dynamic(direction);
+  }
 
   /** Creates a new ArmSubsystem. */
   public ArmSubsystem() {
@@ -51,7 +91,7 @@ public class ArmSubsystem extends SubsystemBase {
     SmartDashboard.putBoolean("Arm drop limit", dropLimitSwitch());
 
     SmartDashboard.putNumber("Arm Angle", getAngle() % 360);
-    SmartDashboard.putNumber("Arm Position", getPosition());
+    SmartDashboard.putNumber("Arm Position", getSensorPosition());
     System.out.println("Arm angle: " + getAngle());
 
     if (dropLimitSwitch()) {
@@ -74,15 +114,23 @@ public class ArmSubsystem extends SubsystemBase {
    }
 
   public double getAngle() {
-    return (getPosition()*(360.0/ArmConstants.countsPerRev))/ArmConstants.gearRatio;
+    return (getSensorPosition()*(360.0/ArmConstants.countsPerRev))/ArmConstants.gearRatio;
+  }
+
+  public double getVelocity() {
+    return (getSensorVelocity()*(360.0/ArmConstants.countsPerRev))/ArmConstants.gearRatio;
   }
 
   public double toPosition(double angle) {
     return (angle*ArmConstants.gearRatio)/(360.0/ArmConstants.countsPerRev);
   }
 
-  public double getPosition() {
+  public double getSensorPosition() {
     return leftMotor.getSelectedSensorPosition();
+  }
+
+  public double getSensorVelocity() {
+    return leftMotor.getSelectedSensorVelocity();
   }
 
   public void stopMotors() {
