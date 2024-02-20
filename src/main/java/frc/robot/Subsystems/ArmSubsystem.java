@@ -33,7 +33,6 @@ public class ArmSubsystem extends SubsystemBase {
   // Initializing the limit switches
   private final DigitalInput dropSwitch = new DigitalInput(ArmConstants.dropLimitSwitchChannel);
   private final DigitalInput raiseSwitch = new DigitalInput(ArmConstants.raiseLimitSwitchChannel);
-  // private Boolean limitSwitchSim = false;
 
   // Mutable holders
   private final MutableMeasure<Voltage> m_appliedVoltage = MutableMeasure.mutable(Volts.of(0));
@@ -46,8 +45,8 @@ public class ArmSubsystem extends SubsystemBase {
       leftMotor.setVoltage(voltage.in(Volts));
     },
     log -> {
-      // We are treating leftMotor and rightMotor as the same motor because rightMotor follows leftMotor
-      log.motor("arm-Motor").voltage(m_appliedVoltage.mut_replace(leftMotor.get() * RobotController.getBatteryVoltage(), Volts))
+      // We are treating leftMotor and rightMotor as the same motor because rightMotor follows leftMotor?
+      log.motor("arm-motor").voltage(m_appliedVoltage.mut_replace(leftMotor.get() * RobotController.getBatteryVoltage(), Volts))
         .angularPosition(m_angle.mut_replace(getAngle(), Degrees))
         .angularVelocity(m_anglePerSecond.mut_replace(getVelocity(), DegreesPerSecond));
     }, this
@@ -56,7 +55,6 @@ public class ArmSubsystem extends SubsystemBase {
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
     return m_SysIdRoutine.quasistatic(direction);
   }
-
   public Command sysIdDynamic(SysIdRoutine.Direction direction) {
     return m_SysIdRoutine.dynamic(direction);
   }
@@ -145,8 +143,4 @@ public class ArmSubsystem extends SubsystemBase {
   public boolean dropLimitSwitch() { // True when clicked, false when not
     return !dropSwitch.get();
   }
-
-  // public void setLimitSwitchSim(boolean input) {
-  //   limitSwitchSim = input;
-  // }
 } 

@@ -16,13 +16,13 @@ import frc.robot.Subsystems.ArmSubsystem;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ArmPID extends Command {
+public class ArmPIDCmd extends Command {
   private ArmSubsystem armSub;
-  private DoubleSupplier kP, kI, kD;
+  private DoubleSupplier kP, kI, kD, setpoint, tolerance;
   private BooleanSupplier limit;
   private PIDController controller;
   /** Creates a new ArmRaise. */
-  public ArmPID(
+  public ArmPIDCmd(
     ArmSubsystem armSub,
     DoubleSupplier kP,
     DoubleSupplier kI,
@@ -36,9 +36,14 @@ public class ArmPID extends Command {
     this.kP = kP;
     this.kI = kI;
     this.kD = kD;
+    this.setpoint = setpoint;
+    this.tolerance = tolerance;
     this.limit = limit;
     addRequirements(armSub);
+  }
 
+  @Override
+  public void initialize() {
     controller = new PIDController(kP.getAsDouble(), kI.getAsDouble(), kD.getAsDouble());
     controller.setTolerance(tolerance.getAsDouble());
     controller.setSetpoint(setpoint.getAsDouble());
@@ -56,6 +61,11 @@ public class ArmPID extends Command {
 
     // Pushing number to SmartDashboard
     SmartDashboard.putNumber("Arm PID Output", controller.calculate(armSub.getAngle() % 360));
+  }
+
+  @Override
+  public void end(boolean interrupted) {
+    armSub.setMotor(0);
   }
 
   // Returns true when the command should end.

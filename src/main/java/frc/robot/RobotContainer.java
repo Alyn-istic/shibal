@@ -12,7 +12,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Commands.EmergencyStopCmd;
 import frc.robot.Commands.Arm.ArmCmd;
-import frc.robot.Commands.Arm.ArmPID;
+import frc.robot.Commands.Arm.ArmPIDCmd;
+import frc.robot.Commands.Arm.Autos.ArmIntake;
+import frc.robot.Commands.Arm.Autos.ArmShoot;
 import frc.robot.Commands.Autos.ExitZoneTimed;
 import frc.robot.Commands.Autos.AutoLog;
 import frc.robot.Commands.Autos.ScoreInAmpTimed;
@@ -45,10 +47,10 @@ public class RobotContainer {
         driveSub,
         /** The following two lines are just getting the controller's left and right joysticks, and applying a deadzone to them.
          * This can all be configurated in Constants.java */
-        // () -> MathUtil.applyDeadband(controller.getRawAxis(DriverConstants.leftJoystickAxis), DriverConstants.joystickDeadband),
-        // () -> MathUtil.applyDeadband(controller.getRawAxis(DriverConstants.rightJoystickAxis), DriverConstants.joystickDeadband)
-        () -> controller.getRawAxis(1),
-        () -> controller.getRawAxis(0)
+        () -> MathUtil.applyDeadband(controller.getRawAxis(DriverConstants.leftJoystickAxis), DriverConstants.joystickDeadband),
+        () -> MathUtil.applyDeadband(controller.getRawAxis(DriverConstants.rightJoystickAxis), DriverConstants.joystickDeadband)
+        // () -> controller.getRawAxis(1),
+        // () -> controller.getRawAxis(0)
       )
     );
 
@@ -77,18 +79,18 @@ public class RobotContainer {
     commandController.x().onTrue(new EmergencyStopCmd());
     commandController.leftBumper().whileTrue(new IntakeCmd(intakeShooterSub, () -> 1));
     commandController.rightBumper().whileTrue(new IntakeCmd(intakeShooterSub, () -> -1));
-    // commandController.povDown().onTrue(new ArmPID(armSub, // When the POV's down button is pressed, the arm goes into intake position
-    //     // () -> ArmConstants.kP,
-    //     // () -> ArmConstants.kI,
-    //     // () -> ArmConstants.kD,
-    //     () -> SmartDashboard.getNumber("Arm P", 0),
-    //     () -> SmartDashboard.getNumber("Arm I", 0),
-    //     () -> SmartDashboard.getNumber("Arm D", 0),
-    //     () -> ArmConstants.intakeAngle,
-    //     () -> ArmConstants.tolerance,
-    //     () -> armSub.dropLimitSwitch()
-    // ));
-    commandController.povLeft().or(commandController.povRight()).onTrue(new ArmPID(armSub, // When the POV's left or right buttons are pressed, the arm goes back inside the perimeters of the bumpers
+    commandController.povDown().onTrue(new ArmPIDCmd(armSub, // When the POV's down button is pressed, the arm goes into intake position
+        // () -> ArmConstants.kP,
+        // () -> ArmConstants.kI,
+        // () -> ArmConstants.kD,
+        () -> SmartDashboard.getNumber("Arm P", 0),
+        () -> SmartDashboard.getNumber("Arm I", 0),
+        () -> SmartDashboard.getNumber("Arm D", 0),
+        () -> ArmConstants.intakeAngle,
+        () -> ArmConstants.tolerance,
+        () -> armSub.dropLimitSwitch()
+    ));
+    commandController.povLeft().or(commandController.povRight()).onTrue(new ArmPIDCmd(armSub, // When the POV's left or right buttons are pressed, the arm goes back inside the perimeters of the bumpers
         // () -> ArmConstants.kP,
         // () -> ArmConstants.kI,
         // () -> ArmConstants.kD,
@@ -99,17 +101,17 @@ public class RobotContainer {
         () -> ArmConstants.tolerance,
         () -> false
     ));
-    // commandController.povUp().onTrue(new ArmPID(armSub, // When the POV's up button is pressed, the arm goes into shooting position.
-    //     // () -> ArmConstants.kP,
-    //     // () -> ArmConstants.kI,
-    //     // () -> ArmConstants.kD,
-    //     () -> SmartDashboard.getNumber("Arm P", 0),
-    //     () -> SmartDashboard.getNumber("Arm I", 0),
-    //     () -> SmartDashboard.getNumber("Arm D", 0),
-    //     () -> ArmConstants.shootAngle,
-    //     () -> ArmConstants.tolerance,
-    //     () -> armSub.raiseLimitSwitch()
-    // ));
+    commandController.povUp().onTrue(new ArmPIDCmd(armSub, // When the POV's up button is pressed, the arm goes into shooting position.
+        // () -> ArmConstants.kP,
+        // () -> ArmConstants.kI,
+        // () -> ArmConstants.kD,
+        () -> SmartDashboard.getNumber("Arm P", 0),
+        () -> SmartDashboard.getNumber("Arm I", 0),
+        () -> SmartDashboard.getNumber("Arm D", 0),
+        () -> ArmConstants.shootAngle,
+        () -> ArmConstants.tolerance,
+        () -> armSub.raiseLimitSwitch()
+    ));
   }
 
   public Command getAutonomousCommand() {
