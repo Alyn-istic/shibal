@@ -19,8 +19,8 @@
             "content": {
               "_type": "Grid Layout",
               "_title": "Intake/Shooter",
-              "_glyph": 551,
-              "_showGlyph": true,
+              "_glyph": 149,
+              "_showGlyph": false,
               "Layout/Number of columns": 2,
               "Layout/Number of rows": 1,
               "Layout/Label position": "TOP",
@@ -247,7 +247,7 @@
                 {
                   "_type": "Grid Layout",
                   "_title": "Pose Estimation",
-                  "_glyph": 152,
+                  "_glyph": 149,
                   "_showGlyph": false,
                   "Layout/Number of columns": 3,
                   "Layout/Number of rows": 1,
