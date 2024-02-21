@@ -42,10 +42,10 @@ public class Constants {
     }
 
     public class ArmConstants {
-        public static final int leftID = 5; // Arm's left motor ID
-        public static final int rightID = 6; // Arm's right motor ID
+        public static final int leftID = 6; // Arm's left motor ID
+        public static final int rightID = 5; // Arm's right motor ID
 
-        public static final int countsPerRev = 1024; // The amount of encoder ticks in a full rotation
+        public static final int countsPerRev = 4096; // The amount of encoder ticks in a full rotation
         public static final double gearRatio = 4; // The gear ratio of the arm
         public static final double startingAngle = 90;
 
