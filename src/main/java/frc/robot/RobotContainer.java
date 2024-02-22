@@ -54,12 +54,12 @@ public class RobotContainer {
     //   )
     // );
 
-    // armSub.setDefaultCommand(
-    //   new ArmCmd(
-    //     armSub,
-    //     () -> MathUtil.applyDeadband(controller.getRawAxis(DriverConstants.leftJoystickAxis) * 0.25, DriverConstants.triggerDeadband)
-    //   )
-    // );
+    armSub.setDefaultCommand(
+      new ArmCmd(
+        armSub,
+        () -> MathUtil.applyDeadband(controller.getRawAxis(DriverConstants.leftJoystickAxis) * 0.25, DriverConstants.triggerDeadband)
+      )
+    );
 
     SmartDashboard.putNumber("Arm P", ArmConstants.kP);
     SmartDashboard.putNumber("Arm I", ArmConstants.kI);
@@ -78,17 +78,17 @@ public class RobotContainer {
     commandController.x().onTrue(new EmergencyStopCmd());
     commandController.leftBumper().whileTrue(new IntakeCmd(intakeShooterSub, () -> 1));
     commandController.rightBumper().whileTrue(new IntakeCmd(intakeShooterSub, () -> -1));
-    commandController.povDown().whileTrue(new ArmPIDCmd(armSub, // When the POV's down button is pressed, the arm goes into intake position
-        // () -> ArmConstants.kP,
-        // () -> ArmConstants.kI,
-        // () -> ArmConstants.kD,
-        () -> SmartDashboard.getNumber("Arm P", 0),
-        () -> SmartDashboard.getNumber("Arm I", 0),
-        () -> SmartDashboard.getNumber("Arm D", 0),
-        () -> ArmConstants.intakeAngle,
-        () -> ArmConstants.tolerance,
-        () -> armSub.dropLimitSwitch()
-    ));
+    // commandController.povDown().whileTrue(new ArmPIDCmd(armSub, // When the POV's down button is pressed, the arm goes into intake position
+    //     // () -> ArmConstants.kP,
+    //     // () -> ArmConstants.kI,
+    //     // () -> ArmConstants.kD,
+    //     () -> SmartDashboard.getNumber("Arm P", 0),
+    //     () -> SmartDashboard.getNumber("Arm I", 0),
+    //     () -> SmartDashboard.getNumber("Arm D", 0),
+    //     () -> ArmConstants.intakeAngle,
+    //     () -> ArmConstants.tolerance,
+    //     () -> armSub.dropLimitSwitch()
+    // ));
     commandController.povLeft().or(commandController.povRight()).whileTrue(new ArmPIDCmd(armSub, // When the POV's left or right buttons are pressed, the arm goes back inside the perimeters of the bumpers
         // () -> ArmConstants.kP,
         // () -> ArmConstants.kI,

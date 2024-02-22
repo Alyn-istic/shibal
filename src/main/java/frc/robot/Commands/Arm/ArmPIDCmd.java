@@ -42,6 +42,7 @@ public class ArmPIDCmd extends Command {
     addRequirements(armSub);
   }
 
+
   @Override
   public void initialize() {
     controller = new PIDController(kP.getAsDouble(), kI.getAsDouble(), kD.getAsDouble());

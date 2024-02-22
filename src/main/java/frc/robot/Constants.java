@@ -42,23 +42,25 @@ public class Constants {
     }
 
     public class ArmConstants {
+
+
         public static final int leftID = 6; // Arm's left motor ID
         public static final int rightID = 5; // Arm's right motor ID
 
         public static final int countsPerRev = 4096; // The amount of encoder ticks in a full rotation
         public static final double gearRatio = 4; // The gear ratio of the arm
-        public static final double startingAngle = 90;
+        public static final double startingAngle = 0;
 
         public static final int raiseLimitSwitchChannel = 1;
         public static final int dropLimitSwitchChannel = 0;
 
-        public static final double kP = 0.00005; // P value for the arm PID command
+        public static final double kP = 0.03; // P value for the arm PID command
         public static final double kI = 0; // I value for the arm PID command
         public static final double kD = 0; // D value for the arm PID command
         public static final double tolerance = 1;
 
         public static final double shootAngle = 100; // The angle of the arm in shooting position
-        public static final double insideAngle = 90; // The angle of the arm inside the perimeter of the bumpers
+        public static final double insideAngle = 135; // The angle of the arm inside the perimeter of the bumpers
         public static final double intakeAngle = 0; // The angle of the arm in intaking position
         // public static final double dropAngle = 0;  // This is relative to the starting position of the encoders.
     }
