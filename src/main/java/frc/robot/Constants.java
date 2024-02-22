@@ -52,7 +52,7 @@ public class Constants {
         public static final int raiseLimitSwitchChannel = 1;
         public static final int dropLimitSwitchChannel = 0;
 
-        public static final double kP = 0.005; // P value for the arm PID command
+        public static final double kP = 0.00005; // P value for the arm PID command
         public static final double kI = 0; // I value for the arm PID command
         public static final double kD = 0; // D value for the arm PID command
         public static final double tolerance = 1;

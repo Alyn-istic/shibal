@@ -42,23 +42,22 @@ public class RobotContainer {
 
   public RobotContainer() {
     // Telling the robot to run the TankDrive command when no other command is using the Drivetrain.
-    driveSub.setDefaultCommand(
-      new TankDriveCmd(
-        driveSub,
-        /** The following two lines are just getting the controller's left and right joysticks, and applying a deadzone to them.
-         * This can all be configurated in Constants.java */
-        () -> MathUtil.applyDeadband(controller.getRawAxis(DriverConstants.leftJoystickAxis), DriverConstants.joystickDeadband),
-        () -> MathUtil.applyDeadband(controller.getRawAxis(DriverConstants.rightJoystickAxis), DriverConstants.joystickDeadband)
-        // () -> controller.getRawAxis(1),
-        // () -> controller.getRawAxis(0)
-      )
-    );
+    // driveSub.setDefaultCommand(
+    //   new TankDriveCmd(
+    //     driveSub,
+    //     /** The following two lines are just getting the controller's left and right joysticks, and applying a deadzone to them.
+    //      * This can all be configurated in Constants.java */
+    //     () -> MathUtil.applyDeadband(controller.getRawAxis(DriverConstants.leftJoystickAxis), DriverConstants.joystickDeadband),
+    //     () -> MathUtil.applyDeadband(controller.getRawAxis(DriverConstants.rightJoystickAxis), DriverConstants.joystickDeadband)
+    //     // () -> controller.getRawAxis(1),
+    //     // () -> controller.getRawAxis(0)
+    //   )
+    // );
 
     // armSub.setDefaultCommand(
     //   new ArmCmd(
     //     armSub,
-    //     () -> MathUtil.applyDeadband(controller.getRawAxis(DriverConstants.rightTriggerAxis) * 0.25, DriverConstants.triggerDeadband),
-    //     () -> MathUtil.applyDeadband(controller.getRawAxis(DriverConstants.leftTriggerAxis) * 0.25, DriverConstants.triggerDeadband)
+    //     () -> MathUtil.applyDeadband(controller.getRawAxis(DriverConstants.leftJoystickAxis) * 0.25, DriverConstants.triggerDeadband)
     //   )
     // );
 
@@ -79,7 +78,7 @@ public class RobotContainer {
     commandController.x().onTrue(new EmergencyStopCmd());
     commandController.leftBumper().whileTrue(new IntakeCmd(intakeShooterSub, () -> 1));
     commandController.rightBumper().whileTrue(new IntakeCmd(intakeShooterSub, () -> -1));
-    commandController.povDown().onTrue(new ArmPIDCmd(armSub, // When the POV's down button is pressed, the arm goes into intake position
+    commandController.povDown().whileTrue(new ArmPIDCmd(armSub, // When the POV's down button is pressed, the arm goes into intake position
         // () -> ArmConstants.kP,
         // () -> ArmConstants.kI,
         // () -> ArmConstants.kD,
@@ -90,7 +89,7 @@ public class RobotContainer {
         () -> ArmConstants.tolerance,
         () -> armSub.dropLimitSwitch()
     ));
-    commandController.povLeft().or(commandController.povRight()).onTrue(new ArmPIDCmd(armSub, // When the POV's left or right buttons are pressed, the arm goes back inside the perimeters of the bumpers
+    commandController.povLeft().or(commandController.povRight()).whileTrue(new ArmPIDCmd(armSub, // When the POV's left or right buttons are pressed, the arm goes back inside the perimeters of the bumpers
         // () -> ArmConstants.kP,
         // () -> ArmConstants.kI,
         // () -> ArmConstants.kD,
@@ -101,17 +100,17 @@ public class RobotContainer {
         () -> ArmConstants.tolerance,
         () -> false
     ));
-    commandController.povUp().onTrue(new ArmPIDCmd(armSub, // When the POV's up button is pressed, the arm goes into shooting position.
-        // () -> ArmConstants.kP,
-        // () -> ArmConstants.kI,
-        // () -> ArmConstants.kD,
-        () -> SmartDashboard.getNumber("Arm P", 0),
-        () -> SmartDashboard.getNumber("Arm I", 0),
-        () -> SmartDashboard.getNumber("Arm D", 0),
-        () -> ArmConstants.shootAngle,
-        () -> ArmConstants.tolerance,
-        () -> armSub.raiseLimitSwitch()
-    ));
+    // commandController.povUp().whileTrue(new ArmPIDCmd(armSub, // When the POV's up button is pressed, the arm goes into shooting position.
+    //     // () -> ArmConstants.kP,
+    //     // () -> ArmConstants.kI,
+    //     // () -> ArmConstants.kD,
+    //     () -> SmartDashboard.getNumber("Arm P", 0),
+    //     () -> SmartDashboard.getNumber("Arm I", 0),
+    //     () -> SmartDashboard.getNumber("Arm D", 0),
+    //     () -> ArmConstants.shootAngle,
+    //     () -> ArmConstants.tolerance,
+    //     () -> armSub.raiseLimitSwitch()
+    // ));
   }
 
   public Command getAutonomousCommand() {

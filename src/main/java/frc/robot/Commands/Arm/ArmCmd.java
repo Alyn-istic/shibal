@@ -11,16 +11,14 @@ import frc.robot.Subsystems.ArmSubsystem;
 
 public class ArmCmd extends Command {
   private ArmSubsystem armSub;
-  private DoubleSupplier raiseInput, dropInput;
+  private DoubleSupplier raiseInput;
   /** Creates a new ArmTestCmd. */
   public ArmCmd(
     ArmSubsystem armSub,
-    DoubleSupplier raiseInput,
-    DoubleSupplier dropInput
+    DoubleSupplier raiseInput
   ) {
     this.armSub = armSub;
     this.raiseInput = raiseInput;
-    this.dropInput = dropInput;
     addRequirements(armSub);
   }
 
@@ -32,14 +30,10 @@ public class ArmCmd extends Command {
   @Override
   public void execute() {
     double raise = raiseInput.getAsDouble();
-    double drop = dropInput.getAsDouble();
-    if (armSub.raiseLimitSwitch()) {
+    if (armSub.raiseLimitSwitch() || armSub.dropLimitSwitch()) {
       raise = 0 ;
     }
-    if (armSub.dropLimitSwitch()) {
-      drop = 0 ;
-    }
-    armSub.setMotor((raise - drop));
+    armSub.setMotor(raise);
   }
 
   // Called once the command ends or is interrupted.

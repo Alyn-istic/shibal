@@ -52,7 +52,7 @@ public class ArmPIDCmd extends Command {
   @Override
   public void execute() {
     // Applying the output to the arm
-    armSub.setMotor(limit.getAsBoolean() ? 0 : MathUtil.clamp(controller.calculate(armSub.getAngle() % 360), -1, 1)); // If limit = true, then speed is set to 0. Else, speed is set to clamped output.
+    armSub.setMotor(limit.getAsBoolean() ? 0 : -MathUtil.clamp(controller.calculate(armSub.getAngle() % 360), -1, 1)); // If limit = true, then speed is set to 0. Else, speed is set to clamped output.
 
     // Updating the PID valuess
     controller.setP(kP.getAsDouble());

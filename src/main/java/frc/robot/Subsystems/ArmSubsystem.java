@@ -73,14 +73,14 @@ public class ArmSubsystem extends SubsystemBase {
     leftMotor.setInverted(true);
 
     // Setting motor neutral mode to brake
-    // leftMotor.setNeutralMode(NeutralMode.Brake);
-    // rightMotor.setNeutralMode(NeutralMode.Brake);
-    leftMotor.setNeutralMode(NeutralMode.Coast);
-    rightMotor.setNeutralMode(NeutralMode.Coast);
+    leftMotor.setNeutralMode(NeutralMode.Brake);
+    rightMotor.setNeutralMode(NeutralMode.Brake);
+    // leftMotor.setNeutralMode(NeutralMode.Coast);
+    // rightMotor.setNeutralMode(NeutralMode.Coast);
 
     // Resetting encoder positions
-    leftMotor.setSelectedSensorPosition(toPosition(ArmConstants.startingAngle));
-    rightMotor.setSelectedSensorPosition(-toPosition(ArmConstants.startingAngle));
+    leftMotor.setSelectedSensorPosition(toPosition(-ArmConstants.startingAngle));
+    rightMotor.setSelectedSensorPosition(toPosition(ArmConstants.startingAngle));
   }
 
   @Override
