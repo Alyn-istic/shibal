@@ -26,6 +26,7 @@ public class ArmSubsystem extends SubsystemBase {
 
   /** Creates a new ArmSubsystem. */
   public ArmSubsystem() {
+    //following makes it so it acts in tangent
     rightMotor.follow(leftMotor);
     leftMotor.setInverted(true);
 
@@ -50,25 +51,25 @@ public class ArmSubsystem extends SubsystemBase {
     System.out.println("Arm angle: " + getAngle());
 
     if (!dropLimitSwitch()) {
-      encoder.setPosition(0);
+      encoder.setPosition(0); //if hit, reset encoders
     }
   }
 
   public void setMotor(double speed) {
-    leftMotor.set(speed);
+    leftMotor.set(speed); //defining public method to just the left motor, takes doubles, -> speed
    }
 
   public double getAngle() {
-    return (encoder.getPosition()*(360/ArmConstants.ticksPerRev))/ArmConstants.gearRatio;
+    return (encoder.getPosition()*(360/ArmConstants.ticksPerRev))/ArmConstants.gearRatio; //get angle of arm -> encoder position * 360/1024 )/gear ratio-> get angle if done correctly
   }
 
   public void stopMotors() {
-    leftMotor.stopMotor();
+    leftMotor.stopMotor(); //def public stopMotors to stop all motors
     rightMotor.stopMotor();
   }
 
   public boolean raiseLimitSwitch() {
-    return !raiseSwitch.get();
+    return !raiseSwitch.get(); //boolean of raise switch -> will return true if hit,alse if not
   }
 
   public boolean dropLimitSwitch() {

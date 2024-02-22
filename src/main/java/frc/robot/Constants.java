@@ -66,6 +66,12 @@ public class Constants {
 
         public static final double speed = 1; // The intake/shooter's motor speed.
     }
+    public class ClimberConstants{ //Need to change values based on testing
+        public static final int leftClimberID = 8;
+        public static final int rightClimberID = 9;
+        public static final double climberSpeed = 0.2; 
+    }
+
 
     public class VisionConstants {}
 

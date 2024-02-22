@@ -10,8 +10,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Commands.ClimberCmd;
 import frc.robot.Commands.EmergencyStopCmd;
-import frc.robot.Commands.Arm.ArmCmd;
 import frc.robot.Commands.Arm.ArmPID;
 import frc.robot.Commands.Drivetrain.TankDriveCmd;
 import frc.robot.Commands.IntakeShooter.IntakeCmd;
@@ -23,6 +23,8 @@ import frc.robot.Constants.DriverConstants;
 import frc.robot.Subsystems.ArmSubsystem;
 import frc.robot.Subsystems.DrivetrainSubsystem;
 import frc.robot.Subsystems.IntakeShooterSubsystem;
+import frc.robot.Subsystems.ClimberSubsystem;
+import frc.robot.Constants.ClimberConstants;
 
 public class RobotContainer {
   // Initiating a ordinary Xbox Controller. Nothing special.
@@ -34,6 +36,7 @@ public class RobotContainer {
   private final DrivetrainSubsystem driveSub = new DrivetrainSubsystem();
   private final ArmSubsystem armSub = new ArmSubsystem();
   private final IntakeShooterSubsystem intakeShooterSub = new IntakeShooterSubsystem();
+  private final ClimberSubsystem climbSub = new ClimberSubsystem();
 
   private final SendableChooser<String> autoChooser = new SendableChooser<>();
 
@@ -91,6 +94,8 @@ public class RobotContainer {
         () -> ArmConstants.shootAngle,
         () -> ArmConstants.tolerance
     ));
+    commandController.y().whileTrue(new ClimberCmd(climbSub, () -> ClimberConstants.climberSpeed)); //Extending Climber (This will depend on how arm works)
+    commandController.b().whileTrue(new ClimberCmd(climbSub, () -> ClimberConstants.climberSpeed * -1)); //Retracting climber
   }
 
   public Command getAutonomousCommand() {

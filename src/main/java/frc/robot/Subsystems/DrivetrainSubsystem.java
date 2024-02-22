@@ -38,7 +38,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   //private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(DrivetrainConstants.distLeftRight));
   
   // Creating a Differential Drive using the front motors. This is like grouping all the motors together.
-  private final DifferentialDrive drive = new DifferentialDrive(frontLeft, frontRight);
+  private final DifferentialDrive drive = new DifferentialDrive(frontLeft, frontRight); //new object, using two parameteres for both sides
 
   // Initiating the gyro.
   //private final AHRS gyro = new AHRS(DrivetrainConstants.gyroPort);
@@ -90,8 +90,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   }
 
-  public void tankDrive(double leftSpeed, double rightSpeed) { // Tankdrive function
-    //drive.tankDrive(leftSpeed, rightSpeed);
+  public void tankDrive(double leftSpeed, double rightSpeed) {
+    drive.tankDrive(leftSpeed, rightSpeed); 
   }
   // public double getGyroAngle() { // Function for getting the gyro's angle.
   //   return gyro.getAngle();
