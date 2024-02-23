@@ -101,13 +101,13 @@ public class ArmSubsystem extends SubsystemBase {
       leftMotor.setSelectedSensorPosition(toPosition(ArmConstants.shootAngle));
     }
   }
-  // @Override
-  // public void simulationPeriodic() {
-  //   /* The thing below is what we are using to "simulate" the encoder... Not reliable, only use to test commands. DO NOT use to tune PID values.
-  //    * There's probably a better way of doing this, but I'm too lazy. - Wilson
-  //   */
-  //   leftMotor.getSimCollection().addQuadraturePosition((int)(leftMotor.get() * 30.0));
-  // }
+  @Override
+  public void simulationPeriodic() {
+    /* The thing below is what we are using to "simulate" the encoder... Not reliable, only use to test commands. DO NOT use to tune PID values.
+     * There's probably a better way of doing this, but I'm too lazy. - Wilson
+    */
+    leftMotor.getSimCollection().addQuadraturePosition((int)(leftMotor.get() * 30.0));
+  }
 
   public void setMotor(double speed) {
     leftMotor.set(speed);

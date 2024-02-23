@@ -75,42 +75,74 @@ public class RobotContainer {
 
   // This is used to map commands to the Command Xbox Controller.
   private void configureBindings() {
-    commandController.x().onTrue(new EmergencyStopCmd());
+    //commandController.x().onTrue(new EmergencyStopCmd());
     commandController.leftBumper().whileTrue(new IntakeCmd(intakeShooterSub, () -> 1));
     commandController.rightBumper().whileTrue(new IntakeCmd(intakeShooterSub, () -> -1));
-    // commandController.povDown().whileTrue(new ArmPIDCmd(armSub, // When the POV's down button is pressed, the arm goes into intake position
-    //     // () -> ArmConstants.kP,
-    //     // () -> ArmConstants.kI,
-    //     // () -> ArmConstants.kD,
-    //     () -> SmartDashboard.getNumber("Arm P", 0),
-    //     () -> SmartDashboard.getNumber("Arm I", 0),
-    //     () -> SmartDashboard.getNumber("Arm D", 0),
-    //     () -> ArmConstants.intakeAngle,
-    //     () -> ArmConstants.tolerance,
-    //     () -> armSub.dropLimitSwitch()
-    // ));
-    commandController.povLeft().or(commandController.povRight()).whileTrue(new ArmPIDCmd(armSub, // When the POV's left or right buttons are pressed, the arm goes back inside the perimeters of the bumpers
+    
+    //Intake//
+    commandController.povDown().whileTrue(new ArmPIDCmd(armSub, // When the POV's down button is pressed, the arm goes into intake position
         // () -> ArmConstants.kP,
         // () -> ArmConstants.kI,
         // () -> ArmConstants.kD,
         () -> SmartDashboard.getNumber("Arm P", 0),
         () -> SmartDashboard.getNumber("Arm I", 0),
         () -> SmartDashboard.getNumber("Arm D", 0),
-        () -> ArmConstants.insideAngle,
+        () -> ArmConstants.intakeAngle,
+        () -> ArmConstants.tolerance,
+        () -> armSub.dropLimitSwitch()
+    ));
+
+    //Inside Angle for Intake//
+    commandController.povRight().whileTrue(new ArmPIDCmd(armSub, // When the POV's left or right buttons are pressed, the arm goes back inside the perimeters of the bumpers preparing to intake.
+        // () -> ArmConstants.kP,
+        // () -> ArmConstants.kI,
+        // () -> ArmConstants.kD,
+        () -> SmartDashboard.getNumber("Arm P", 0),
+        () -> SmartDashboard.getNumber("Arm I", 0),
+        () -> SmartDashboard.getNumber("Arm D", 0),
+        () -> ArmConstants.intakeInsideAngle,
         () -> ArmConstants.tolerance,
         () -> false
     ));
-    // commandController.povUp().whileTrue(new ArmPIDCmd(armSub, // When the POV's up button is pressed, the arm goes into shooting position.
-    //     // () -> ArmConstants.kP,
-    //     // () -> ArmConstants.kI,
-    //     // () -> ArmConstants.kD,
-    //     () -> SmartDashboard.getNumber("Arm P", 0),
-    //     () -> SmartDashboard.getNumber("Arm I", 0),
-    //     () -> SmartDashboard.getNumber("Arm D", 0),
-    //     () -> ArmConstants.shootAngle,
-    //     () -> ArmConstants.tolerance,
-    //     () -> armSub.raiseLimitSwitch()
-    // ));
+
+    //Shooter//
+    commandController.povUp().whileTrue(new ArmPIDCmd(armSub, // When the POV's up button is pressed, the arm goes into shooting position.
+        // () -> ArmConstants.kP,
+        // () -> ArmConstants.kI,
+        // () -> ArmConstants.kD,
+        () -> SmartDashboard.getNumber("Arm P", 0),
+        () -> SmartDashboard.getNumber("Arm I", 0),
+        () -> SmartDashboard.getNumber("Arm D", 0),
+        () -> ArmConstants.shootAngle,
+        () -> ArmConstants.tolerance,
+        () -> armSub.raiseLimitSwitch()
+    ));
+
+    //Inside angle for Shooter//
+    commandController.povLeft().whileTrue(new ArmPIDCmd(armSub, // When the POV's Left button is pressed, the arm goes into the perimeter preparing for shooting position.
+        // () -> ArmConstants.kP,
+        // () -> ArmConstants.kI,
+        // () -> ArmConstants.kD,
+        () -> SmartDashboard.getNumber("Arm P", 0),
+        () -> SmartDashboard.getNumber("Arm I", 0),
+        () -> SmartDashboard.getNumber("Arm D", 0),
+        () -> ArmConstants.shootInsideAngle,
+        () -> ArmConstants.tolerance,
+        () -> false
+    ));
+
+    //Source Intake//
+    commandController.a().whileTrue(new ArmPIDCmd(armSub, // When the A button is pressed, the arm goes into Intake from source position.
+        // () -> ArmConstants.kP,
+        // () -> ArmConstants.kI,
+        // () -> ArmConstants.kD,
+        () -> SmartDashboard.getNumber("Arm P", 0),
+        () -> SmartDashboard.getNumber("Arm I", 0),
+        () -> SmartDashboard.getNumber("Arm D", 0),
+        () -> ArmConstants.sourceIntakeAngle,
+        () -> ArmConstants.tolerance,
+        () -> false
+    ));
   }
 
   public Command getAutonomousCommand() {

@@ -24,7 +24,7 @@ public class ArmInside extends SequentialCommandGroup {
         () -> ArmConstants.kP,
         () -> ArmConstants.kI,
         () -> ArmConstants.kD,
-        () -> ArmConstants.insideAngle,
+        () -> ArmConstants.shootInsideAngle,
         () -> ArmConstants.tolerance,
         () -> false
       )
