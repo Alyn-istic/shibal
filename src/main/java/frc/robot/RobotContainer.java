@@ -13,8 +13,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Commands.EmergencyStopCmd;
 import frc.robot.Commands.Arm.ArmCmd;
 import frc.robot.Commands.Arm.ArmPIDCmd;
-import frc.robot.Commands.Arm.Autos.ArmIntake;
-import frc.robot.Commands.Arm.Autos.ArmShoot;
 import frc.robot.Commands.Autos.ExitZoneTimed;
 import frc.robot.Commands.Autos.AutoLog;
 import frc.robot.Commands.Autos.ScoreInAmpTimed;
@@ -64,6 +62,8 @@ public class RobotContainer {
     SmartDashboard.putNumber("Arm P", ArmConstants.kP);
     SmartDashboard.putNumber("Arm I", ArmConstants.kI);
     SmartDashboard.putNumber("Arm D", ArmConstants.kD);
+    SmartDashboard.putNumber("Arm Setpoint", ArmConstants.shootInsideAngle);
+    SmartDashboard.putNumber("Arm Clamp", ArmConstants.clamp);
 
     autoChooser.setDefaultOption("NONE", "NONE");
     autoChooser.addOption("MOVE OUT OF ZONE", "MOVE_OUT_OF_ZONE");
@@ -75,12 +75,12 @@ public class RobotContainer {
 
   // This is used to map commands to the Command Xbox Controller.
   private void configureBindings() {
-    //commandController.x().onTrue(new EmergencyStopCmd());
+    commandController.x().onTrue(new EmergencyStopCmd());
     commandController.leftBumper().whileTrue(new IntakeCmd(intakeShooterSub, () -> 1));
     commandController.rightBumper().whileTrue(new IntakeCmd(intakeShooterSub, () -> -1));
     
-    //Intake//
-    commandController.povDown().whileTrue(new ArmPIDCmd(armSub, // When the POV's down button is pressed, the arm goes into intake position
+    //Intake: Drop into intake angle.//
+    commandController.povDown().whileTrue(new ArmPIDCmd(armSub, //
         // () -> ArmConstants.kP,
         // () -> ArmConstants.kI,
         // () -> ArmConstants.kD,
@@ -89,11 +89,12 @@ public class RobotContainer {
         () -> SmartDashboard.getNumber("Arm D", 0),
         () -> ArmConstants.intakeAngle,
         () -> ArmConstants.tolerance,
+        () -> ArmConstants.clamp,
         () -> armSub.dropLimitSwitch()
     ));
 
-    //Inside Angle for Intake//
-    commandController.povRight().whileTrue(new ArmPIDCmd(armSub, // When the POV's left or right buttons are pressed, the arm goes back inside the perimeters of the bumpers preparing to intake.
+    //Inside Angle for Intake: Raise into the perimeters of the robot, while ready for intake//
+    commandController.povRight().whileTrue(new ArmPIDCmd(armSub,
         // () -> ArmConstants.kP,
         // () -> ArmConstants.kI,
         // () -> ArmConstants.kD,
@@ -102,11 +103,12 @@ public class RobotContainer {
         () -> SmartDashboard.getNumber("Arm D", 0),
         () -> ArmConstants.intakeInsideAngle,
         () -> ArmConstants.tolerance,
+        () -> ArmConstants.clamp,
         () -> false
     ));
 
-    //Shooter//
-    commandController.povUp().whileTrue(new ArmPIDCmd(armSub, // When the POV's up button is pressed, the arm goes into shooting position.
+    //Shooter: Raise into shooting position for amp.//
+    commandController.povUp().whileTrue(new ArmPIDCmd(armSub,
         // () -> ArmConstants.kP,
         // () -> ArmConstants.kI,
         // () -> ArmConstants.kD,
@@ -115,11 +117,12 @@ public class RobotContainer {
         () -> SmartDashboard.getNumber("Arm D", 0),
         () -> ArmConstants.shootAngle,
         () -> ArmConstants.tolerance,
+        () -> ArmConstants.clamp,
         () -> armSub.raiseLimitSwitch()
     ));
 
-    //Inside angle for Shooter//
-    commandController.povLeft().whileTrue(new ArmPIDCmd(armSub, // When the POV's Left button is pressed, the arm goes into the perimeter preparing for shooting position.
+    //Inside angle for Shooter: Raise into the perimeters of robot, while ready to downshoot into amp.//
+    commandController.povLeft().whileTrue(new ArmPIDCmd(armSub,
         // () -> ArmConstants.kP,
         // () -> ArmConstants.kI,
         // () -> ArmConstants.kD,
@@ -127,12 +130,13 @@ public class RobotContainer {
         () -> SmartDashboard.getNumber("Arm I", 0),
         () -> SmartDashboard.getNumber("Arm D", 0),
         () -> ArmConstants.shootInsideAngle,
+        () -> ArmConstants.clamp,  
         () -> ArmConstants.tolerance,
         () -> false
     ));
 
-    //Source Intake//
-    commandController.a().whileTrue(new ArmPIDCmd(armSub, // When the A button is pressed, the arm goes into Intake from source position.
+    //Source Intake: Raise into perimeters of robot, while ready to intake from source.//
+    commandController.a().whileTrue(new ArmPIDCmd(armSub,
         // () -> ArmConstants.kP,
         // () -> ArmConstants.kI,
         // () -> ArmConstants.kD,
@@ -140,7 +144,8 @@ public class RobotContainer {
         () -> SmartDashboard.getNumber("Arm I", 0),
         () -> SmartDashboard.getNumber("Arm D", 0),
         () -> ArmConstants.sourceIntakeAngle,
-        () -> ArmConstants.tolerance,
+        () -> ArmConstants.tolerance,        
+        () -> ArmConstants.clamp,
         () -> false
     ));
   }

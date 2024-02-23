@@ -139,7 +139,7 @@
                   "_glyph": 149,
                   "_showGlyph": false,
                   "Layout/Number of columns": 3,
-                  "Layout/Number of rows": 1,
+                  "Layout/Number of rows": 2,
                   "Layout/Label position": "TOP",
                   "_children": {
                     "2,0": {
@@ -160,6 +160,20 @@
                       "_type": "Text View",
                       "_source0": "network_table:///SmartDashboard/Arm P",
                       "_title": "P",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    },
+                    "0,1": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SmartDashboard/Arm Setpoint",
+                      "_title": "Setpoint",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    },
+                    "1,1": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SmartDashboard/Arm Clamp",
+                      "_title": "Clamp",
                       "_glyph": 148,
                       "_showGlyph": false
                     }

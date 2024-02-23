@@ -90,9 +90,8 @@ public class ArmSubsystem extends SubsystemBase {
     SmartDashboard.putBoolean("Arm raise limit", raiseLimitSwitch());
     SmartDashboard.putBoolean("Arm drop limit", dropLimitSwitch());
 
-    SmartDashboard.putNumber("Arm Angle", getAngle() % 360);
+    SmartDashboard.putNumber("Arm Angle", getAngle());
     SmartDashboard.putNumber("Arm Position", getSensorPosition());
-    System.out.println("Arm angle: " + getAngle());
 
     if (dropLimitSwitch()) {
       leftMotor.setSelectedSensorPosition(toPosition(ArmConstants.intakeAngle));
@@ -106,7 +105,7 @@ public class ArmSubsystem extends SubsystemBase {
     /* The thing below is what we are using to "simulate" the encoder... Not reliable, only use to test commands. DO NOT use to tune PID values.
      * There's probably a better way of doing this, but I'm too lazy. - Wilson
     */
-    leftMotor.getSimCollection().addQuadraturePosition((int)(leftMotor.get() * 30.0));
+    leftMotor.getSimCollection().addQuadraturePosition((int)(leftMotor.get() * 30.0)); // Random multiplier... THe point is that the simulated encoder works, not for it to be accurate.
   }
 
   public void setMotor(double speed) {
