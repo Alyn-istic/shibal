@@ -75,12 +75,12 @@ public class RobotContainer {
 
   // This is used to map commands to the Command Xbox Controller.
   private void configureBindings() {
-    //commandController.x().onTrue(new EmergencyStopCmd());
+    commandController.x().onTrue(new EmergencyStopCmd());
     commandController.leftBumper().whileTrue(new IntakeCmd(intakeShooterSub, () -> 1));
     commandController.rightBumper().whileTrue(new IntakeCmd(intakeShooterSub, () -> -1));
     
-    //Intake//
-    commandController.povDown().whileTrue(new ArmPIDCmd(armSub,
+    //Intake: Drop into intake angle.//
+    commandController.povDown().whileTrue(new ArmPIDCmd(armSub, //
         // () -> ArmConstants.kP,
         // () -> ArmConstants.kI,
         // () -> ArmConstants.kD,
@@ -93,7 +93,7 @@ public class RobotContainer {
         () -> armSub.dropLimitSwitch()
     ));
 
-    //Inside Angle for Intake//
+    //Inside Angle for Intake: Raise into the perimeters of the robot, while ready for intake//
     commandController.povRight().whileTrue(new ArmPIDCmd(armSub,
         // () -> ArmConstants.kP,
         // () -> ArmConstants.kI,
@@ -107,7 +107,7 @@ public class RobotContainer {
         () -> false
     ));
 
-    //Shooter//
+    //Shooter: Raise into shooting position for amp.//
     commandController.povUp().whileTrue(new ArmPIDCmd(armSub,
         // () -> ArmConstants.kP,
         // () -> ArmConstants.kI,
@@ -121,7 +121,7 @@ public class RobotContainer {
         () -> armSub.raiseLimitSwitch()
     ));
 
-    //Inside angle for Shooter//
+    //Inside angle for Shooter: Raise into the perimeters of robot, while ready to downshoot into amp.//
     commandController.povLeft().whileTrue(new ArmPIDCmd(armSub,
         // () -> ArmConstants.kP,
         // () -> ArmConstants.kI,
@@ -135,7 +135,7 @@ public class RobotContainer {
         () -> false
     ));
 
-    //Source Intake//
+    //Source Intake: Raise into perimeters of robot, while ready to intake from source.//
     commandController.a().whileTrue(new ArmPIDCmd(armSub,
         // () -> ArmConstants.kP,
         // () -> ArmConstants.kI,
