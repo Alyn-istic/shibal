@@ -62,7 +62,7 @@ public class RobotContainer {
     SmartDashboard.putNumber("Arm P", ArmConstants.kP);
     SmartDashboard.putNumber("Arm I", ArmConstants.kI);
     SmartDashboard.putNumber("Arm D", ArmConstants.kD);
-    SmartDashboard.putNumber("Arm Setpoint", ArmConstants.insideAngle);
+    SmartDashboard.putNumber("Arm Setpoint", ArmConstants.shootInsideAngle);
     SmartDashboard.putNumber("Arm Clamp", ArmConstants.clamp);
 
     autoChooser.setDefaultOption("NONE", "NONE");
@@ -75,46 +75,79 @@ public class RobotContainer {
 
   // This is used to map commands to the Command Xbox Controller.
   private void configureBindings() {
-    commandController.x().onTrue(new EmergencyStopCmd());
+    //commandController.x().onTrue(new EmergencyStopCmd());
     commandController.leftBumper().whileTrue(new IntakeCmd(intakeShooterSub, () -> 1));
     commandController.rightBumper().whileTrue(new IntakeCmd(intakeShooterSub, () -> -1));
-    // commandController.povDown().whileTrue(new ArmPIDCmd(armSub, // When the POV's down button is pressed, the arm goes into intake position
-    //     // () -> ArmConstants.kP,
-    //     // () -> ArmConstants.kI,
-    //     // () -> ArmConstants.kD,
-    //     () -> SmartDashboard.getNumber("Arm P", 0),
-    //     () -> SmartDashboard.getNumber("Arm I", 0),
-    //     () -> SmartDashboard.getNumber("Arm D", 0),
-    //     // () -> ArmConstants.intakeAngle,
-    //     () -> SmartDashboard.getNumber("Arm Setpoint", 0), // We will replace this with its actual constant after we are done tuning.
-    //     () -> ArmConstants.tolerance,
-    //     () -> SmartDashboard.getNumber("Arm Clamp", 0.25),
-    //     () -> armSub.dropLimitSwitch()
-    // ));
-    commandController.a().or(commandController.povRight()).whileTrue(new ArmPIDCmd(armSub, // When the POV's left or right buttons are pressed, the arm goes back inside the perimeters of the bumpers
+    
+    //Intake//
+    commandController.povDown().whileTrue(new ArmPIDCmd(armSub,
         // () -> ArmConstants.kP,
         // () -> ArmConstants.kI,
         // () -> ArmConstants.kD,
         () -> SmartDashboard.getNumber("Arm P", 0),
         () -> SmartDashboard.getNumber("Arm I", 0),
         () -> SmartDashboard.getNumber("Arm D", 0),
-        // () -> ArmConstants.insideAngle,
-        () -> SmartDashboard.getNumber("Arm Setpoint", 0), // We will replace this with its actual constant after we are done tuning.
+        () -> ArmConstants.intakeAngle,
         () -> ArmConstants.tolerance,
-        () -> SmartDashboard.getNumber("Arm Clamp", 0.25),
+        () -> ArmConstants.clamp,
+        () -> armSub.dropLimitSwitch()
+    ));
+
+    //Inside Angle for Intake//
+    commandController.povRight().whileTrue(new ArmPIDCmd(armSub,
+        // () -> ArmConstants.kP,
+        // () -> ArmConstants.kI,
+        // () -> ArmConstants.kD,
+        () -> SmartDashboard.getNumber("Arm P", 0),
+        () -> SmartDashboard.getNumber("Arm I", 0),
+        () -> SmartDashboard.getNumber("Arm D", 0),
+        () -> ArmConstants.intakeInsideAngle,
+        () -> ArmConstants.tolerance,
+        () -> ArmConstants.clamp,
         () -> false
     ));
-    // commandController.povUp().whileTrue(new ArmPIDCmd(armSub, // When the POV's up button is pressed, the arm goes into shooting position.
-    //     // () -> ArmConstants.kP,
-    //     // () -> ArmConstants.kI,
-    //     // () -> ArmConstants.kD,
-    //     () -> SmartDashboard.getNumber("Arm P", 0),
-    //     () -> SmartDashboard.getNumber("Arm I", 0),
-    //     () -> SmartDashboard.getNumber("Arm D", 0),
-    //     () -> ArmConstants.shootAngle,
-    //     () -> ArmConstants.tolerance,
-    //     () -> armSub.raiseLimitSwitch()
-    // ));
+
+    //Shooter//
+    commandController.povUp().whileTrue(new ArmPIDCmd(armSub,
+        // () -> ArmConstants.kP,
+        // () -> ArmConstants.kI,
+        // () -> ArmConstants.kD,
+        () -> SmartDashboard.getNumber("Arm P", 0),
+        () -> SmartDashboard.getNumber("Arm I", 0),
+        () -> SmartDashboard.getNumber("Arm D", 0),
+        () -> ArmConstants.shootAngle,
+        () -> ArmConstants.tolerance,
+        () -> ArmConstants.clamp,
+        () -> armSub.raiseLimitSwitch()
+    ));
+
+    //Inside angle for Shooter//
+    commandController.povLeft().whileTrue(new ArmPIDCmd(armSub,
+        // () -> ArmConstants.kP,
+        // () -> ArmConstants.kI,
+        // () -> ArmConstants.kD,
+        () -> SmartDashboard.getNumber("Arm P", 0),
+        () -> SmartDashboard.getNumber("Arm I", 0),
+        () -> SmartDashboard.getNumber("Arm D", 0),
+        () -> ArmConstants.shootInsideAngle,
+        () -> ArmConstants.clamp,  
+        () -> ArmConstants.tolerance,
+        () -> false
+    ));
+
+    //Source Intake//
+    commandController.a().whileTrue(new ArmPIDCmd(armSub,
+        // () -> ArmConstants.kP,
+        // () -> ArmConstants.kI,
+        // () -> ArmConstants.kD,
+        () -> SmartDashboard.getNumber("Arm P", 0),
+        () -> SmartDashboard.getNumber("Arm I", 0),
+        () -> SmartDashboard.getNumber("Arm D", 0),
+        () -> ArmConstants.sourceIntakeAngle,
+        () -> ArmConstants.tolerance,        
+        () -> ArmConstants.clamp,
+        () -> false
+    ));
   }
 
   public Command getAutonomousCommand() {

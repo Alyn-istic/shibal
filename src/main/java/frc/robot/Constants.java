@@ -57,8 +57,10 @@ public class Constants {
         public static final double kD = 0; // D value for the arm PID command
         public static final double tolerance = 1;
 
-        public static final double shootAngle = 100; // The angle of the arm in shooting position
-        public static final double insideAngle = 135; // The angle of the arm inside the perimeter of the bumpers
+        public static final double shootAngle = 140; // The angle of the arm in shooting position
+        public static final double sourceIntakeAngle = 100; //Intake from source angle
+        public static final double intakeInsideAngle = 40; // The angle of the arm inside the perimeter preparing to intake.
+        public static final double shootInsideAngle = 90; // The angle of the arm inside the perimeter preparing to move to shoot position.
         public static final double intakeAngle = 0; // The angle of the arm in intaking position
         public static final double clamp = 1; // Should be between 0 and 1;
         // public static final double dropAngle = 0;  // This is relative to the starting position of the encoders.
