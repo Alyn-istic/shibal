@@ -13,8 +13,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Commands.EmergencyStopCmd;
 import frc.robot.Commands.Arm.ArmCmd;
 import frc.robot.Commands.Arm.ArmPIDCmd;
-import frc.robot.Commands.Arm.Autos.ArmIntake;
-import frc.robot.Commands.Arm.Autos.ArmShoot;
 import frc.robot.Commands.Autos.ExitZoneTimed;
 import frc.robot.Commands.Autos.AutoLog;
 import frc.robot.Commands.Autos.ScoreInAmpTimed;
@@ -64,6 +62,8 @@ public class RobotContainer {
     SmartDashboard.putNumber("Arm P", ArmConstants.kP);
     SmartDashboard.putNumber("Arm I", ArmConstants.kI);
     SmartDashboard.putNumber("Arm D", ArmConstants.kD);
+    SmartDashboard.putNumber("Arm Setpoint", ArmConstants.insideAngle);
+    SmartDashboard.putNumber("Arm Clamp", ArmConstants.clamp);
 
     autoChooser.setDefaultOption("NONE", "NONE");
     autoChooser.addOption("MOVE OUT OF ZONE", "MOVE_OUT_OF_ZONE");
@@ -85,19 +85,23 @@ public class RobotContainer {
     //     () -> SmartDashboard.getNumber("Arm P", 0),
     //     () -> SmartDashboard.getNumber("Arm I", 0),
     //     () -> SmartDashboard.getNumber("Arm D", 0),
-    //     () -> ArmConstants.intakeAngle,
+    //     // () -> ArmConstants.intakeAngle,
+    //     () -> SmartDashboard.getNumber("Arm Setpoint", 0), // We will replace this with its actual constant after we are done tuning.
     //     () -> ArmConstants.tolerance,
+    //     () -> SmartDashboard.getNumber("Arm Clamp", 0.25),
     //     () -> armSub.dropLimitSwitch()
     // ));
-    commandController.povLeft().or(commandController.povRight()).whileTrue(new ArmPIDCmd(armSub, // When the POV's left or right buttons are pressed, the arm goes back inside the perimeters of the bumpers
+    commandController.a().or(commandController.povRight()).whileTrue(new ArmPIDCmd(armSub, // When the POV's left or right buttons are pressed, the arm goes back inside the perimeters of the bumpers
         // () -> ArmConstants.kP,
         // () -> ArmConstants.kI,
         // () -> ArmConstants.kD,
         () -> SmartDashboard.getNumber("Arm P", 0),
         () -> SmartDashboard.getNumber("Arm I", 0),
         () -> SmartDashboard.getNumber("Arm D", 0),
-        () -> ArmConstants.insideAngle,
+        // () -> ArmConstants.insideAngle,
+        () -> SmartDashboard.getNumber("Arm Setpoint", 0), // We will replace this with its actual constant after we are done tuning.
         () -> ArmConstants.tolerance,
+        () -> SmartDashboard.getNumber("Arm Clamp", 0.25),
         () -> false
     ));
     // commandController.povUp().whileTrue(new ArmPIDCmd(armSub, // When the POV's up button is pressed, the arm goes into shooting position.

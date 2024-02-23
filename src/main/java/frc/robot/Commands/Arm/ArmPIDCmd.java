@@ -18,9 +18,10 @@ import frc.robot.Subsystems.ArmSubsystem;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ArmPIDCmd extends Command {
   private ArmSubsystem armSub;
-  private DoubleSupplier kP, kI, kD, setpoint, tolerance;
+  private DoubleSupplier kP, kI, kD, setpoint, tolerance, clamp;
   private BooleanSupplier limit;
   private PIDController controller;
+
   /** Creates a new ArmRaise. */
   public ArmPIDCmd(
     ArmSubsystem armSub,
@@ -29,6 +30,7 @@ public class ArmPIDCmd extends Command {
     DoubleSupplier kD,
     DoubleSupplier setpoint,
     DoubleSupplier tolerance,
+    DoubleSupplier clamp,
     BooleanSupplier limit
   ) {
     // System.out.println(armSub.getAngle());
@@ -38,6 +40,7 @@ public class ArmPIDCmd extends Command {
     this.kD = kD;
     this.setpoint = setpoint;
     this.tolerance = tolerance;
+    this.clamp = clamp;
     this.limit = limit;
     addRequirements(armSub);
   }
@@ -53,12 +56,14 @@ public class ArmPIDCmd extends Command {
   @Override
   public void execute() {
     // Applying the output to the arm
-    armSub.setMotor(limit.getAsBoolean() ? 0 : -MathUtil.clamp(controller.calculate(armSub.getAngle() % 360), -1, 1)); // If limit = true, then speed is set to 0. Else, speed is set to clamped output.
+    armSub.setMotor(limit.getAsBoolean() ? 0 : -MathUtil.clamp(controller.calculate(armSub.getAngle() % 360), -clamp.getAsDouble(), clamp.getAsDouble())); // If limit = true, then speed is set to 0. Else, speed is set to clamped output.
 
-    // Updating the PID valuess
+    // Updating the PID values
     controller.setP(kP.getAsDouble());
     controller.setI(kI.getAsDouble());
     controller.setD(kD.getAsDouble());
+    controller.setSetpoint(setpoint.getAsDouble());
+    controller.setTolerance(tolerance.getAsDouble());
 
     // Pushing number to SmartDashboard
     SmartDashboard.putNumber("Arm PID Output", controller.calculate(armSub.getAngle() % 360));
@@ -79,62 +84,3 @@ public class ArmPIDCmd extends Command {
     // return (controller.atSetpoint() || limit.getAsBoolean());
   }
 }
-
-// ======= Sadra's stuff
-//  // Copyright (c) FIRST and other WPILib contributors.
-//  // Open Source Software; you can modify and/or share it under the terms of
-//  // the WPILib BSD license file in the root directory of this project.
-
-//  package frc.robot.Commands.Arm;
-
-//  import edu.wpi.first.math.MathUtil;
-//  import edu.wpi.first.math.controller.PIDController;
-//  import edu.wpi.first.wpilibj2.command.PIDCommand;
-//  import frc.robot.Constants.ArmConstants;
-//  import frc.robot.Subsystems.ArmSubsystem;
-//  import java.util.function.DoubleSupplier;
-
-//  // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-//  // information, see:
-//  // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-//  public class ArmPID extends PIDCommand {
-//    private ArmSubsystem armSub;
-//    private DoubleSupplier Kp,Ki,Kd;
-//    private DoubleSupplier setpoint;
-//    private DoubleSupplier tolerance;
-//    /** Creates a new ArmRaise. */
-//    public ArmPID(
-//      ArmSubsystem armSub,
-//      DoubleSupplier Kp,
-//      DoubleSupplier Ki,
-//      DoubleSupplier Kd,
-//      DoubleSupplier setpoint,
-//      DoubleSupplier tolerance
-//    ) {
-//      super(
-//          // The controller that the command will use
-//          new PIDController(Kp.getAsDouble(), Ki.getAsDouble(), Kd.getAsDouble()),
-//          // This should return the measurement
-//          () -> armSub.getAngle(),
-//          // This should return the setpoint (can also be a constant)
-//          () -> setpoint.getAsDouble(),
-//          // This uses the output
-//          output -> {
-//            armSub.setMotor(MathUtil.clamp(output, -1, 1));
-//          });
-//      this.armSub = armSub;
-//      this.Kp = Kp;
-//      this.Ki = Ki;
-//      this.Kd = Kd;
-//      this.setpoint = setpoint;
-//      this.tolerance = tolerance;
-//      addRequirements(armSub);
-//      getController().setTolerance(ArmConstants.Tolerance);
-//    }
-//    // Returns true when the command should end.
-//    @Override
-//    public boolean isFinished() {
-//      return (getController().atSetpoint() || armSub.dropLimitSwitch() || armSub.raiseLimitSwitch()); // When the are is at the setpoint OR if the limit switches are hit.
-//    }
-//  }
-// >>>>>>> Sadra_H
