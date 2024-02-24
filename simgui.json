@@ -18,6 +18,14 @@
     }
   },
   "NetworkTables": {
+    "Persistent Values": {
+      "open": false
+    },
+    "retained": {
+      "SmartDashboard": {
+        "open": true
+      }
+    },
     "transitory": {
       "Shuffleboard": {
         ".metadata": {
@@ -31,25 +39,18 @@
     }
   },
   "NetworkTables Info": {
-    "Clients": {
-      "open": true
-    },
     "Connections": {
       "open": true
     },
     "Server": {
       "Publishers": {
         "open": true
-      },
-      "open": true
+      }
     },
     "shuffleboard@1": {
       "open": true
     },
     "visible": true
-  },
-  "NetworkTables View": {
-    "visible": false
   },
   "Plot": {
     "Plot <0>": {

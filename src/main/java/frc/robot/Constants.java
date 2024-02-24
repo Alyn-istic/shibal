@@ -45,6 +45,8 @@ public class Constants {
         public static final int leftID = 6; // Arm's left motor ID
         public static final int rightID = 5; // Arm's right motor ID
 
+        public static final double armManualSpeed = 0.3;
+
         public static final int countsPerRev = 4096; // The amount of encoder ticks in a full rotation
         public static final double gearRatio = 4; // The gear ratio of the arm
         public static final double startingAngle = 0;
@@ -56,6 +58,7 @@ public class Constants {
         public static final double kI = 0; // I value for the arm PID command
         public static final double kD = 0; // D value for the arm PID command
         public static final double tolerance = 1;
+        public static final double setpointOffset = 0;
 
         public static final double shootAngle = 140; // The angle of the arm in shooting position
         public static final double sourceIntakeAngle = 100; //Intake from source angle
@@ -78,7 +81,8 @@ public class Constants {
     }
 
     public class DriverConstants {
-        public static final int port = 0; // Controller port
+        public static final int driverPort = 0; // Controller port for driver
+        public static final int operatorPort = 1; // Controller port for operator
 
         public static final double joystickDeadband = 0.08; // Deadzone for controller L/R joysticks
         public static final double triggerDeadband = 0.08; // Deadzone for controller L/R triggers
@@ -88,5 +92,8 @@ public class Constants {
 
         public static final int leftTriggerAxis = 2; // Left trigger axis
         public static final int rightTriggerAxis = 3; // Right trigger axis
+
+        public static final int leftBumperButton = 5;
+        public static final int rightBumperButton = 6;
     }
 }
