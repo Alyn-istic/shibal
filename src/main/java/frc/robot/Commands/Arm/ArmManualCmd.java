@@ -2,20 +2,25 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.Commands;
-import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Subsystems.ClimberSubsystem;
+package frc.robot.Commands.Arm;
+
 import java.util.function.DoubleSupplier;
 
-public class ClimberCmd extends Command {
-  /** Creates a new ClimberCmb. */
-  private ClimberSubsystem climbSub;
-  private DoubleSupplier speed;
-  public ClimberCmd(ClimberSubsystem climbSub, DoubleSupplier speed) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    this.speed = speed;
-    this.climbSub = climbSub;
-    addRequirements(climbSub);
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Subsystems.ArmSubsystem;
+
+public class ArmManualCmd extends Command {
+  private ArmSubsystem armSub;
+  private DoubleSupplier speedInput;
+  
+  /** Creates a new ArmTestCmd. */
+  public ArmManualCmd(
+    ArmSubsystem armSub,
+    DoubleSupplier speedInput
+  ) {
+    this.armSub = armSub;
+    this.speedInput = speedInput;
+    addRequirements(armSub);
   }
 
   // Called when the command is initially scheduled.
@@ -25,9 +30,15 @@ public class ClimberCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    climbSub.setMotor(speed.getAsDouble());
+    double speed = speedInput.getAsDouble();
+    if ((speed < 0) && armSub.raiseLimitSwitch()) {
+      speed = 0;
+    } else if ((speed > 0) && armSub.dropLimitSwitch()) {
+      speed = 0;
+    }
+    armSub.setMotor(speed);
   }
-  
+
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {}

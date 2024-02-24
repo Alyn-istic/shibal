@@ -8,46 +8,48 @@ Using SmartDashboard or ShuffleBoard, the operator can access a sendable chooser
 
 The Shuffleboard layout can be found in the file called "ShuffleBoardLayout.json"
 
-# Teleop Mode XBOX Controls:
-## Driver Controls:
-Emergency stop: X-button
+# **Teleop Mode XBOX Controls**:
+## **Driver Controls**:
+**Emergency stop:** X-button
 
-Tank drive: Left/Right Joysticks
+**Tank drive:** Left/Right Joysticks
 
-Intake speed: Left/Right Bumpers
+**Intake speed:** Left/Right Triggers
 
 ### Arm Positions:
-1. Intaking position (around 0°): Down POV Button
-2. Inside perimeters of robot, close to intake (around 40°): Right POV Button
-3. Down-shooting into Amp (around ?°): Up POV Button
-4. Inside perimeters of robot, close to down-shooting into Amp (around 90°): Left POV Button
-5. Intake from source (around ?°): A-Button
+**Jump between positions using left/right bumpers (left makes it go towards intake, right makes it go towards shooting)**
+
+1. Intaking position (around 0°)
+2. Inside perimeters of robot, close to intake (around 40°)
+3. Down-shooting into Amp (around ?°)
+4. Inside perimeters of robot, close to down-shooting into Amp (around 90°)
+5. Intake from source (around ?°)
 
 ## Operator Controls
-Emergency stop: X-button
+**Emergency stop:** X-button
 
-Arm Manual Movement: Right Joystick
+**Arm Manual Movement:** Right Joystick *(e-stop button on either controllers must be hit prior to using this or it won't work)*
 
-Arm Setpoint Offset: Up/Down POV Buttons
+**Arm Setpoint Offset:** Left/Right Bumpers *(offsets the arm's position by increments of 3°, will automatically be reset to 0 when each limit switches are hit)*
 
-Intake Speed: Left/Right Bumpers
+**Intake Speed:** Left/Right Triggers
 
-# How To Set Up Robot:
-TBD
+# **How To Set Up Robot**:
+*TBD*
 
-# SimGUI Mapping (software stuff):
-## Keyboard 0:
-1. Q/A: Left Joystick
-2. E/D: Right Joystick
-3. Z/X/C/V: A/B/X/Y Buttons
-4. W/R: Left/Right Bumpers
-5. S/F: Left/Right Triggers
-6. Arrow Keys: POV Buttons
+# **SimGUI Mapping** *(Software Simulation)*:
+## **Keyboard 0**:
+1. **Q/A:** Left Joystick
+2. **E/D:** Right Joystick
+3. **Z/X/C/V:** A/B/X/Y Buttons
+4. **W/R:** Left/Right Bumpers
+5. **S/F:** Left/Right Triggers
+6. **Arrow Keys:** POV Buttons
 
-## Keyboard 1:
-1. Y/H: Left Joystick
-2. I/K: Right Joystick
-3. B/N/M/,: A/B/X/Y buttons
-4. U/O: Left/Right Bumpers
-5. J/L: Left/Right Triggers
-6. Number Pad Arrow Keys (8/6/2/4): POV Buttons
+## **Keyboard 1**:
+1. **Y/H:** Left Joystick
+2. **I/K:** Right Joystick
+3. **B/N/M/,:** A/B/X/Y buttons
+4. **U/O:** Left/Right Bumpers
+5. **J/L:** Left/Right Triggers
+6. **Number Pad Arrow Keys *(8/6/2/4)*:** POV Buttons
