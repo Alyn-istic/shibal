@@ -136,7 +136,7 @@ public class RobotContainer {
         () -> false
     ));
 
-    //Source Intake: Raise into perimeters of robot, while ready to intake from source.//
+    //Source Intake: Intake from source.//
     commandDriver.a().whileTrue(new ArmPIDCmd(armSub,
         // () -> ArmConstants.kP,
         // () -> ArmConstants.kI,
