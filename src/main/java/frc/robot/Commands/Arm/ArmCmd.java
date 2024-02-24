@@ -11,16 +11,15 @@ import frc.robot.Subsystems.ArmSubsystem;
 
 public class ArmCmd extends Command {
   private ArmSubsystem armSub;
-  private DoubleSupplier raiseInput, dropInput;
+  private DoubleSupplier speedInput;
+  
   /** Creates a new ArmTestCmd. */
   public ArmCmd(
     ArmSubsystem armSub,
-    DoubleSupplier raiseInput,
-    DoubleSupplier dropInput
+    DoubleSupplier speedInput
   ) {
     this.armSub = armSub;
-    this.raiseInput = raiseInput;
-    this.dropInput = dropInput;
+    this.speedInput = speedInput;
     addRequirements(armSub);
   }
 
@@ -31,15 +30,13 @@ public class ArmCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double raise = raiseInput.getAsDouble();
-    double drop = dropInput.getAsDouble();
-    if (!armSub.raiseLimitSwitch()) {
-      raise = 0 ;
+    double speed = speedInput.getAsDouble();
+    if ((speed < 0) && armSub.raiseLimitSwitch()) {
+      speed = 0;
+    } else if ((speed > 0) && armSub.dropLimitSwitch()) {
+      speed = 0;
     }
-    if (!armSub.dropLimitSwitch()) {
-      drop = 0 ;
-    }
-    armSub.setMotor((raise - drop));
+    armSub.setMotor(speed);
   }
 
   // Called once the command ends or is interrupted.

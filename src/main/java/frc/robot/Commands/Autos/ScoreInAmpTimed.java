@@ -2,14 +2,13 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.Commands.Routines;
+package frc.robot.Commands.Autos;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Commands.Drivetrain.Routines.MoveOutOfZoneTimed;
-//import frc.robot.Commands.Arm.Routines.ArmAutonomousBackup;
-import frc.robot.Commands.Drivetrain.Routines.MoveToAmpTimed;
-import frc.robot.Commands.Drivetrain.Routines.TurnToAmpTimed;
-import frc.robot.Commands.IntakeShooter.Routines.DownShootAmpTimed;
+import frc.robot.Commands.Drivetrain.Autos.MoveOutOfZoneTimed;
+import frc.robot.Commands.Drivetrain.Autos.MoveToAmpTimed;
+import frc.robot.Commands.Drivetrain.Autos.TurnToAmpTimed;
+import frc.robot.Commands.IntakeShooter.Autos.DownShootAmpTimed;
 //import frc.robot.Subsystems.ArmSubsystem;
 import frc.robot.Subsystems.DrivetrainSubsystem;
 import frc.robot.Subsystems.IntakeShooterSubsystem;
@@ -31,7 +30,7 @@ public class ScoreInAmpTimed extends SequentialCommandGroup {
       new TurnToAmpTimed(driveSub),
       new MoveToAmpTimed(driveSub),
       new DownShootAmpTimed(intakeShooterSub),
-      new RoutineLog("Done.")
+      new AutoLog("Done.")
     );
   }
 }
