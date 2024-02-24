@@ -8,6 +8,7 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Subsystems.DrivetrainSubsystem;
 
 public class TankDriveCmd extends Command {
@@ -37,8 +38,8 @@ public class TankDriveCmd extends Command {
   @Override
   public void execute() {
     // Creating variables called "left" and "right". Not necessary.
-    double left = leftInput.getAsDouble();
-    double right = rightInput.getAsDouble();
+    double left = leftInput.getAsDouble() * DrivetrainConstants.speed;
+    double right = rightInput.getAsDouble() * DrivetrainConstants.speed;
 
     driveSub.tankDriveSpeed( // Calling the "tankDrive" function in the DrivetrainSubsystem.java file.
       Math.signum(left)*(Math.sqrt(Math.abs(left))), // Applying math stuff to variable "left".

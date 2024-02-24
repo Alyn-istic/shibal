@@ -22,10 +22,10 @@ public class Constants {
     }
 
     public class DrivetrainConstants {
-        public static final int frontLeftID = 2; // Chassis's front-left motor ID
-        public static final int frontRightID = 0; // Chassis's front-right motor ID
-        public static final int backLeftID = 3; // Chassis's back-left motor ID
-        public static final int backRightID = 1; // Chassis's back-right motor ID
+        public static final int frontLeftID = 0; // Chassis's front-left motor ID
+        public static final int frontRightID = 2; // Chassis's front-right motor ID
+        public static final int backLeftID = 1; // Chassis's back-left motor ID
+        public static final int backRightID = 3; // Chassis's back-right motor ID
 
         public static final double distLeftRight = 1; // The distance (in inches) between the left wheels and the right wheels.
         public static final double wheelRadius = 3; // The radius of the wheels
@@ -34,6 +34,8 @@ public class Constants {
         public static final int countsPerRev = 1024; // The amount of encoder counts in a full rotation
 
         public static final Port gyroPort = Port.kUSB; // The port that the gyro is connected to.
+
+        public static final double speed = 1;
 
         // public static final double gyroP = 0.0001; // P value for turning PID command
         // public static final double gyroI = 0; // I value for turning PID command
@@ -58,9 +60,9 @@ public class Constants {
         public static final double raiseI = 0; // I value for the arm PID command
         public static final double raiseD = 0; // D value for the arm PID command
 
-        public static final double dropP = 0.02; // P value for the arm PID command
+        public static final double dropP = 0.03; // P value for the arm PID command
         public static final double dropI = 0; // I value for the arm PID command
-        public static final double dropD = 0; // D value for the arm PID command
+        public static final double dropD = 0.000025; // D value for the arm PID command
 
         public static final double tolerance = 1;
         public static final double setpointOffset = 0;
@@ -70,7 +72,7 @@ public class Constants {
         public static final double intakeInsideAngle = 50; // The angle of the arm inside the perimeter preparing to intake.
         public static final double shootInsideAngle = 90; // The angle of the arm inside the perimeter preparing to move to shoot position.
         public static final double intakeAngle = 0; // The angle of the arm in intaking position
-        public static final double clamp = 0.4; // Should be between 0 and 1;
+        public static final double clamp = 0.6; // Should be between 0 and 1;
         // public static final double dropAngle = 0;  // This is relative to the starting position of the encoders.
     }
 
