@@ -20,7 +20,7 @@ public class TankDriveCmd extends Command {
   public TankDriveCmd(
     // The arguments (settings) that this command will accept.
     DrivetrainSubsystem driveSub,
-    DoubleSupplier leftInput, DoubleSupplier rightInput
+    DoubleSupplier leftInput, DoubleSupplier rightInput //supplied from robotcontainer
   ) {
     this.driveSub = driveSub;
     this.leftInput = leftInput;
@@ -40,7 +40,7 @@ public class TankDriveCmd extends Command {
     double left = leftInput.getAsDouble();
     double right = rightInput.getAsDouble();
 
-    driveSub.tankDrive( // Calling the "tankDrive" function in the DrivetrainSubsystem.java file.
+    driveSub.tankDriveSpeed( // Calling the "tankDrive" function in the DrivetrainSubsystem.java file.
       Math.signum(left)*(Math.sqrt(Math.abs(left))) * 0.75, // Applying math stuff to variable "left".
       Math.signum(right)*(Math.sqrt(Math.abs(right)) * 0.75) // Applying math stuff to variable "right".
     );
