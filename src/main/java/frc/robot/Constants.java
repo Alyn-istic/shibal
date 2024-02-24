@@ -45,7 +45,7 @@ public class Constants {
         public static final int leftID = 6; // Arm's left motor ID
         public static final int rightID = 5; // Arm's right motor ID
 
-        public static final double armManualSpeed = 0.75;
+        public static final double armManualSpeed = 0.5;
 
         public static final int countsPerRev = 4096; // The amount of encoder ticks in a full rotation
         public static final double gearRatio = 4; // The gear ratio of the arm
@@ -62,10 +62,10 @@ public class Constants {
 
         public static final double shootAngle = 100; // The angle of the arm in shooting position
         public static final double sourceIntakeAngle = 95; //Intake from source angle
-        public static final double intakeInsideAngle = 40; // The angle of the arm inside the perimeter preparing to intake.
+        public static final double intakeInsideAngle = 50; // The angle of the arm inside the perimeter preparing to intake.
         public static final double shootInsideAngle = 90; // The angle of the arm inside the perimeter preparing to move to shoot position.
         public static final double intakeAngle = 0; // The angle of the arm in intaking position
-        public static final double clamp = 0.75; // Should be between 0 and 1;
+        public static final double clamp = 0.5; // Should be between 0 and 1;
         // public static final double dropAngle = 0;  // This is relative to the starting position of the encoders.
     }
 
