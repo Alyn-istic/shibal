@@ -57,7 +57,7 @@ public class RobotContainer {
     new ArmIntake(armSub),
     new ArmIntakePerimeter(armSub),
     new ArmShootPerimeter(armSub),
-    new ArmIntakeSource(armSub),
+    //new ArmIntakeSource(armSub),
     new ArmShoot(armSub)
   };
   private final NetworkTableEntry armIndexEntry = NetworkTableInstance.getDefault().getEntry("ArmIndex");
