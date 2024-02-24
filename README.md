@@ -35,7 +35,7 @@ Intake Speed: Left/Right Bumpers
 # How To Set Up Robot:
 TBD
 
-# SimGUI Mapping:
+# SimGUI Mapping (software stuff):
 ## Keyboard 0:
 1. Q/A: Left Joystick
 2. E/D: Right Joystick
