@@ -105,11 +105,11 @@ public class ArmSubsystem extends SubsystemBase {
     /* The thing below is what we are using to "simulate" the encoder... Not reliable, only use to test commands. DO NOT use to tune PID values.
      * There's probably a better way of doing this, but I'm too lazy. - Wilson
     */
-    leftMotor.getSimCollection().addQuadraturePosition((int)(leftMotor.get() * 30.0)); // Random multiplier... THe point is that the simulated encoder works, not for it to be accurate.
+    leftMotor.getSimCollection().addQuadraturePosition((int)(leftMotor.get() * 200.0)); // Random multiplier... THe point is that the simulated encoder works, not for it to be accurate.
   }
 
   public void setMotor(double speed) {
-    leftMotor.set(speed);
+    leftMotor.set(speed); //defining public method to just the left motor, takes doubles, -> speed
    }
 
   public double getAngle() {
@@ -133,7 +133,7 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public void stopMotors() {
-    leftMotor.stopMotor();
+    leftMotor.stopMotor(); //def public stopMotors to stop all motors
     rightMotor.stopMotor();
   }
 
