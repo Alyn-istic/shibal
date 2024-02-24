@@ -5,26 +5,22 @@
 package frc.robot.Commands.IntakeShooter;
 
 import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Subsystems.IntakeShooterSubsystem;
 
-
-
-
 public class IntakeCmd extends Command {
-  /** Creates a new IntakeCmd. */
   private IntakeShooterSubsystem intakeSub;
-  private DoubleSupplier speedInput;
+  private DoubleSupplier speed;
+  /** Creates a new IntakeTest. */
   public IntakeCmd(
     IntakeShooterSubsystem intakeSub,
-    DoubleSupplier speedInput
+    DoubleSupplier speed
   ) {
-    // Use addRequirements() here to declare subsystem dependencies.
     this.intakeSub = intakeSub;
-    this.speedInput = speedInput;
-
-
+    this.speed = speed;
     addRequirements(intakeSub);
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -34,13 +30,9 @@ public class IntakeCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double speed = speedInput.getAsDouble();
-    if (intakeSub.getIntakeLimit()) { // Checking to see if the limit sensor has detected the note.
-      intakeSub.setMotors(speed);
-    } else {
-      intakeSub.setMotors(0);
-    }
+    intakeSub.setMotors(speed.getAsDouble());
   }
+
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {

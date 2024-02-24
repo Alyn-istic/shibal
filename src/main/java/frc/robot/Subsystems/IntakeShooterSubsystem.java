@@ -18,6 +18,8 @@ public class IntakeShooterSubsystem extends SubsystemBase {
 
   /** Creates a new IntakeShooterSubsystem. */
   public IntakeShooterSubsystem() {
+    upperWheel.setInverted(false);
+    lowerWheel.setInverted(false);
      // Setting the neutral mode to brake. This means the motors will stop immediately when told to.
     upperWheel.setNeutralMode(NeutralMode.Brake);
     lowerWheel.setNeutralMode(NeutralMode.Brake);

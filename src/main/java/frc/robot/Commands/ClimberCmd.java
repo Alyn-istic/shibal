@@ -2,25 +2,20 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.Commands.IntakeShooter;
-
+package frc.robot.Commands;
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Subsystems.ClimberSubsystem;
 import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Subsystems.IntakeShooterSubsystem;
-
-public class IntakeTest extends Command {
-  private IntakeShooterSubsystem intakeSub;
+public class ClimberCmd extends Command {
+  /** Creates a new ClimberCmb. */
+  private ClimberSubsystem climbSub;
   private DoubleSupplier speed;
-  /** Creates a new IntakeTest. */
-  public IntakeTest(
-    IntakeShooterSubsystem intakeSub,
-    DoubleSupplier speed
-  ) {
-    this.intakeSub = intakeSub;
-    this.speed = speed;
-    addRequirements(intakeSub);
+  public ClimberCmd(ClimberSubsystem climbSub, DoubleSupplier speed) {
     // Use addRequirements() here to declare subsystem dependencies.
+    this.speed = speed;
+    this.climbSub = climbSub;
+    addRequirements(climbSub);
   }
 
   // Called when the command is initially scheduled.
@@ -30,14 +25,12 @@ public class IntakeTest extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intakeSub.setMotors(speed.getAsDouble());
+    climbSub.setMotor(speed.getAsDouble());
   }
-
+  
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    intakeSub.setMotors(0);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
