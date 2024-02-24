@@ -49,12 +49,12 @@ public class Constants {
 
         public static final int countsPerRev = 4096; // The amount of encoder ticks in a full rotation
         public static final double gearRatio = 4; // The gear ratio of the arm
-        public static final double startingAngle = 0;
+        public static final double startingAngle = 90;
 
         public static final int raiseLimitSwitchChannel = 1;
         public static final int dropLimitSwitchChannel = 0;
 
-        public static final double kP = 0.03; // P value for the arm PID command
+        public static final double kP = 0.003; // P value for the arm PID command
         public static final double kI = 0; // I value for the arm PID command
         public static final double kD = 0; // D value for the arm PID command
         public static final double tolerance = 1;

@@ -9,12 +9,12 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Subsystems.ArmSubsystem;
 
-public class ArmCmd extends Command {
+public class ArmManualCmd extends Command {
   private ArmSubsystem armSub;
   private DoubleSupplier speedInput;
   
   /** Creates a new ArmTestCmd. */
-  public ArmCmd(
+  public ArmManualCmd(
     ArmSubsystem armSub,
     DoubleSupplier speedInput
   ) {
