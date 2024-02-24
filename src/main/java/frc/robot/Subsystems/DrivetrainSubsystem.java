@@ -41,7 +41,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final WPI_VictorSPX backRight = new WPI_VictorSPX(DrivetrainConstants.backRightID);
 
   // Creating a Differential Drive using the front motors. This is like grouping all the motors together.
-  private final DifferentialDrive drive = new DifferentialDrive(frontLeft, frontRight);
+  private final DifferentialDrive drive = new DifferentialDrive(frontLeft, frontRight); //new object, using two parameteres for both sides
 
   // Initiating the gyro.
   private final AHRS gyro = new AHRS(DrivetrainConstants.gyroPort);

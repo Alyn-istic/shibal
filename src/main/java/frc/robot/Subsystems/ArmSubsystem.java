@@ -109,7 +109,7 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public void setMotor(double speed) {
-    leftMotor.set(speed);
+    leftMotor.set(speed); //defining public method to just the left motor, takes doubles, -> speed
    }
 
   public double getAngle() {
@@ -133,7 +133,7 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public void stopMotors() {
-    leftMotor.stopMotor();
+    leftMotor.stopMotor(); //def public stopMotors to stop all motors
     rightMotor.stopMotor();
   }
 
