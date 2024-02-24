@@ -99,20 +99,25 @@ public class RobotContainer {
     configureBindings();
   }
 
-  // This is used to map commands to the Command Xbox driver.
   private void configureBindings() {
-    commandDriver.x().onTrue(new EmergencyStopCmd());
-    commandDriver.axisGreaterThan(DriverConstants.leftTriggerAxis, 0.5).whileTrue(
+
+    ////////////////////////////////////////// Driver Controls //////////////////////////////////////////
+
+    commandDriver.x().onTrue(new EmergencyStopCmd()); // E-stop
+
+    // Using triggers to control intake speed
+    commandDriver.leftTrigger().whileTrue(
       new IntakeCmd(
         intakeShooterSub, () -> MathUtil.applyDeadband(driver.getRawAxis(DriverConstants.leftTriggerAxis), DriverConstants.triggerDeadband)
       )
     );
-    commandDriver.axisGreaterThan(DriverConstants.rightTriggerAxis, 0.5).whileTrue(
+    commandDriver.rightTrigger().whileTrue(
       new IntakeCmd(
         intakeShooterSub, () -> MathUtil.applyDeadband(-driver.getRawAxis(DriverConstants.rightTriggerAxis), DriverConstants.triggerDeadband)
       )
     );
 
+    // Run the climber motors using y and b
     commandDriver.y().whileTrue(new ClimberCmd(climbSub, () -> ClimberConstants.climberSpeed)); // Extending Climber (This will depend on how arm works)
     commandDriver.b().whileTrue(new ClimberCmd(climbSub, () -> ClimberConstants.climberSpeed * -1)); // Retracting climber
 
@@ -135,11 +140,23 @@ public class RobotContainer {
     // //Source Intake: Intake from source.//
     // commandDriver.a().whileTrue(new ArmIntakeSource(armSub));
 
-    // Operator commands
-    commandOperator.x().onTrue(new EmergencyStopCmd());
-    commandOperator.leftTrigger().whileTrue(new IntakeCmd(intakeShooterSub, () -> operator.getRawAxis(DriverConstants.leftTriggerAxis)));
-    commandOperator.rightTrigger().whileTrue(new IntakeCmd(intakeShooterSub, () -> -operator.getRawAxis(DriverConstants.rightTriggerAxis)));
+    ////////////////////////////////////////// Operator Controls //////////////////////////////////////////
 
+    commandOperator.x().onTrue(new EmergencyStopCmd()); // E-stop
+
+    // Use triggers to control intake speed
+    commandOperator.leftTrigger().whileTrue(
+      new IntakeCmd(
+        intakeShooterSub, () -> operator.getRawAxis(DriverConstants.leftTriggerAxis)
+      )
+    );
+    commandOperator.rightTrigger().whileTrue(
+      new IntakeCmd(
+        intakeShooterSub, () -> -operator.getRawAxis(DriverConstants.rightTriggerAxis)
+      )
+    );
+
+    // Use bumpers to offset the arm setpoints by increments of 3°
     commandOperator.rightBumper().onTrue(
       new ArmSetpointOffset(
         () -> 3
@@ -151,8 +168,9 @@ public class RobotContainer {
       )
     );
 
-    // Arm Limit switches
-    // When the drop limit switch is pressed, reset arm position to intake angle, and reset setpoint offset to 0.
+    ////////////////////////////////////////// Arm Limits //////////////////////////////////////////
+
+    // While the drop limit switch is pressed, reset arm position to intake angle, and reset setpoint offset to 0.
     new Trigger(() -> armSub.dropLimitSwitch()).whileTrue(
       new RunCommand(
         () -> armSub.setSensorPosition(armSub.toPosition(ArmConstants.intakeAngle))
@@ -162,7 +180,7 @@ public class RobotContainer {
         )
       )
     );
-    // When the raise limit switch is pressed, reset arm position to shoot angle, and reset setpoint offset to 0.
+    // While the raise limit switch is pressed, reset arm position to shoot angle, and reset setpoint offset to 0.
     new Trigger(() -> armSub.raiseLimitSwitch()).whileTrue(
       new RunCommand(
         () -> armSub.setSensorPosition(armSub.toPosition(ArmConstants.shootAngle))
