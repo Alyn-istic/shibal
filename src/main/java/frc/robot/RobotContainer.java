@@ -84,9 +84,10 @@ public class RobotContainer {
       )
     );
 
-    SmartDashboard.putNumber("Arm P", ArmConstants.kP);
-    SmartDashboard.putNumber("Arm I", ArmConstants.kI);
-    SmartDashboard.putNumber("Arm D", ArmConstants.kD);
+    // SmartDashboard.putNumber("Arm P", ArmConstants.raiseP);
+    // SmartDashboard.putNumber("Arm I", ArmConstants.raiseI);
+    // SmartDashboard.putNumber("Arm D", ArmConstants.raiseD);
+
     // SmartDashboard.putNumber("Arm Setpoint", ArmConstants.shootInsideAngle);
     SmartDashboard.putNumber("Arm Clamp", ArmConstants.clamp);
     SmartDashboard.putNumber("Arm Setpoint Offset", ArmConstants.setpointOffset);

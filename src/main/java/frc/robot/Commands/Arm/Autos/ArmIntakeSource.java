@@ -22,12 +22,12 @@ public class ArmIntakeSource extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new ArmPIDCmd(armSub,
-        // () -> ArmConstants.kP,
-        // () -> ArmConstants.kI,
-        // () -> ArmConstants.kD,
-        () -> SmartDashboard.getNumber("Arm P", 0),
-        () -> SmartDashboard.getNumber("Arm I", 0),
-        () -> SmartDashboard.getNumber("Arm D", 0),
+        () -> ArmConstants.raiseP,
+        () -> ArmConstants.raiseI,
+        () -> ArmConstants.raiseD,
+        () -> ArmConstants.dropP,
+        () -> ArmConstants.dropI,
+        () -> ArmConstants.dropD,
         () -> ArmConstants.sourceIntakeAngle,
         () -> ArmConstants.tolerance,        
         () -> ArmConstants.clamp
