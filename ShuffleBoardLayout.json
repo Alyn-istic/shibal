@@ -11,7 +11,7 @@
         "vgap": 16.0,
         "titleType": 1,
         "tiles": {
-          "3,2": {
+          "8,2": {
             "size": [
               2,
               1
@@ -42,7 +42,7 @@
               }
             }
           },
-          "3,0": {
+          "8,0": {
             "size": [
               2,
               2
@@ -73,8 +73,8 @@
           },
           "0,0": {
             "size": [
-              3,
-              5
+              8,
+              6
             ],
             "content": {
               "_type": "List Layout",
@@ -172,6 +172,13 @@
                     },
                     "1,1": {
                       "_type": "Text View",
+                      "_source0": "network_table:///SmartDashboard/Arm Setpoint Offset",
+                      "_title": "Offset",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    },
+                    "2,1": {
+                      "_type": "Text View",
                       "_source0": "network_table:///SmartDashboard/Arm Clamp",
                       "_title": "Clamp",
                       "_glyph": 148,
@@ -182,7 +189,7 @@
               ]
             }
           },
-          "5,0": {
+          "10,0": {
             "size": [
               3,
               6
@@ -334,9 +341,9 @@
     }
   ],
   "windowGeometry": {
-    "x": -7.199999809265137,
-    "y": -7.199999809265137,
-    "width": 1550.4000244140625,
-    "height": 830.4000244140625
+    "x": 0.800000011920929,
+    "y": 0.800000011920929,
+    "width": 1534.4000244140625,
+    "height": 814.4000244140625
   }
 }

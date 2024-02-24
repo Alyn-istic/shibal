@@ -14,13 +14,29 @@ TBD
 # How To Set Up Robot:
 TBD
 
-# SimGUI Keyboard 0 Map:
+# SimGUI Mapping:
+## Keyboard 0:
 Q/A: Left Joystick
 
 E/D: Right Joystick
 
-Z/X/C/V: A/B/X/Y buttons
+Z/X/C/V: A/B/X/Y Buttons
 
-,/.: Left/Right Bumpers
+W/R: Left/Right Bumpers
+
+S/F: Left/Right Triggers
 
 Arrow Keys: POV Buttons
+
+## Keyboard 1:
+Y/H: Left Joystick
+
+I/K: Right Joystick
+
+B/N/M/,: A/B/X/Y buttons
+
+U/O: Left/Right Bumpers
+
+J/L: Left/Right Triggers
+
+Number Pad Arrow Keys (8/6/2/4): POV Buttons

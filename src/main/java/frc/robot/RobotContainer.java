@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Commands.EmergencyStopCmd;
 import frc.robot.Commands.Arm.ArmCmd;
@@ -27,9 +28,11 @@ import frc.robot.Subsystems.IntakeShooterSubsystem;
 
 public class RobotContainer {
   // Initiating a ordinary Xbox Controller. Nothing special.
-  private final XboxController controller = new XboxController(DriverConstants.port);
+  private final XboxController driver = new XboxController(DriverConstants.driverPort);
+  private final XboxController operator = new XboxController(DriverConstants.operatorPort);
   // Initiating a command Xbox Controller. This will allow us to map commands onto specific buttons.
-  private final CommandXboxController commandController = new CommandXboxController(DriverConstants.port);
+  private final CommandXboxController commandDriver = new CommandXboxController(DriverConstants.driverPort);
+  private final CommandXboxController commandOperator = new CommandXboxController(DriverConstants.operatorPort);
 
   // Initiating all the subsystems. We will need these in order to properly run commands.
   private final DrivetrainSubsystem driveSub = new DrivetrainSubsystem();
@@ -40,30 +43,28 @@ public class RobotContainer {
 
   public RobotContainer() {
     // Telling the robot to run the TankDrive command when no other command is using the Drivetrain.
-    // driveSub.setDefaultCommand(
-    //   new TankDriveCmd(
-    //     driveSub,
-    //     /** The following two lines are just getting the controller's left and right joysticks, and applying a deadzone to them.
-    //      * This can all be configurated in Constants.java */
-    //     () -> MathUtil.applyDeadband(controller.getRawAxis(DriverConstants.leftJoystickAxis), DriverConstants.joystickDeadband),
-    //     () -> MathUtil.applyDeadband(controller.getRawAxis(DriverConstants.rightJoystickAxis), DriverConstants.joystickDeadband)
-    //     // () -> controller.getRawAxis(1),
-    //     // () -> controller.getRawAxis(0)
-    //   )
-    // );
+    driveSub.setDefaultCommand(
+      new TankDriveCmd(
+        driveSub,
+        /** The following two lines are just getting the controller's left and right joysticks, and applying a deadzone to them.
+         * This can all be configurated in Constants.java */
+        () -> MathUtil.applyDeadband(driver.getRawAxis(DriverConstants.leftJoystickAxis), DriverConstants.joystickDeadband),
+        () -> MathUtil.applyDeadband(driver.getRawAxis(DriverConstants.rightJoystickAxis), DriverConstants.joystickDeadband)
+      )
+    );
 
     armSub.setDefaultCommand(
-      new ArmCmd(
-        armSub,
-        () -> MathUtil.applyDeadband(controller.getRawAxis(DriverConstants.leftJoystickAxis) * 0.25, DriverConstants.triggerDeadband)
+      new ArmCmd(armSub,
+        () -> -MathUtil.applyDeadband(operator.getRawAxis(DriverConstants.rightJoystickAxis) * ArmConstants.armManualSpeed, DriverConstants.joystickDeadband)
       )
     );
 
     SmartDashboard.putNumber("Arm P", ArmConstants.kP);
     SmartDashboard.putNumber("Arm I", ArmConstants.kI);
     SmartDashboard.putNumber("Arm D", ArmConstants.kD);
-    SmartDashboard.putNumber("Arm Setpoint", ArmConstants.shootInsideAngle);
+    // SmartDashboard.putNumber("Arm Setpoint", ArmConstants.shootInsideAngle);
     SmartDashboard.putNumber("Arm Clamp", ArmConstants.clamp);
+    SmartDashboard.putNumber("Arm Setpoint Offset", ArmConstants.setpointOffset);
 
     autoChooser.setDefaultOption("NONE", "NONE");
     autoChooser.addOption("MOVE OUT OF ZONE", "MOVE_OUT_OF_ZONE");
@@ -73,14 +74,14 @@ public class RobotContainer {
     configureBindings();
   }
 
-  // This is used to map commands to the Command Xbox Controller.
+  // This is used to map commands to the Command Xbox driver.
   private void configureBindings() {
-    commandController.x().onTrue(new EmergencyStopCmd());
-    commandController.leftBumper().whileTrue(new IntakeCmd(intakeShooterSub, () -> 1));
-    commandController.rightBumper().whileTrue(new IntakeCmd(intakeShooterSub, () -> -1));
+    commandDriver.x().onTrue(new EmergencyStopCmd());
+    commandDriver.leftBumper().whileTrue(new IntakeCmd(intakeShooterSub, () -> 1));
+    commandDriver.rightBumper().whileTrue(new IntakeCmd(intakeShooterSub, () -> -1));
     
     //Intake: Drop into intake angle.//
-    commandController.povDown().whileTrue(new ArmPIDCmd(armSub, //
+    commandDriver.povDown().whileTrue(new ArmPIDCmd(armSub, //
         // () -> ArmConstants.kP,
         // () -> ArmConstants.kI,
         // () -> ArmConstants.kD,
@@ -94,7 +95,7 @@ public class RobotContainer {
     ));
 
     //Inside Angle for Intake: Raise into the perimeters of the robot, while ready for intake//
-    commandController.povRight().whileTrue(new ArmPIDCmd(armSub,
+    commandDriver.povRight().whileTrue(new ArmPIDCmd(armSub,
         // () -> ArmConstants.kP,
         // () -> ArmConstants.kI,
         // () -> ArmConstants.kD,
@@ -108,7 +109,7 @@ public class RobotContainer {
     ));
 
     //Shooter: Raise into shooting position for amp.//
-    commandController.povUp().whileTrue(new ArmPIDCmd(armSub,
+    commandDriver.povUp().whileTrue(new ArmPIDCmd(armSub,
         // () -> ArmConstants.kP,
         // () -> ArmConstants.kI,
         // () -> ArmConstants.kD,
@@ -122,7 +123,7 @@ public class RobotContainer {
     ));
 
     //Inside angle for Shooter: Raise into the perimeters of robot, while ready to downshoot into amp.//
-    commandController.povLeft().whileTrue(new ArmPIDCmd(armSub,
+    commandDriver.povLeft().whileTrue(new ArmPIDCmd(armSub,
         // () -> ArmConstants.kP,
         // () -> ArmConstants.kI,
         // () -> ArmConstants.kD,
@@ -136,7 +137,7 @@ public class RobotContainer {
     ));
 
     //Source Intake: Raise into perimeters of robot, while ready to intake from source.//
-    commandController.a().whileTrue(new ArmPIDCmd(armSub,
+    commandDriver.a().whileTrue(new ArmPIDCmd(armSub,
         // () -> ArmConstants.kP,
         // () -> ArmConstants.kI,
         // () -> ArmConstants.kD,
@@ -148,6 +149,22 @@ public class RobotContainer {
         () -> ArmConstants.clamp,
         () -> false
     ));
+
+    // Operator commands
+    commandOperator.x().onTrue(new EmergencyStopCmd());
+    commandOperator.leftBumper().whileTrue(new IntakeCmd(intakeShooterSub, () -> 1));
+    commandOperator.rightBumper().whileTrue(new IntakeCmd(intakeShooterSub, () -> -1));
+
+    commandOperator.povUp().whileTrue(
+      new RunCommand(
+        () -> SmartDashboard.putNumber("Arm Setpoint Offset", SmartDashboard.getNumber("Arm Setpoint Offset", 0) + 0.1)
+      )
+    );
+    commandOperator.povDown().whileTrue(
+      new RunCommand(
+        () -> SmartDashboard.putNumber("Arm Setpoint Offset", SmartDashboard.getNumber("Arm Setpoint Offset", 0) - 0.1)
+      )
+    );
   }
 
   public Command getAutonomousCommand() {

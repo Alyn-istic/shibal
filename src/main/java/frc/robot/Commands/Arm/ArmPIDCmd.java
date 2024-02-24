@@ -62,7 +62,7 @@ public class ArmPIDCmd extends Command {
     controller.setP(kP.getAsDouble());
     controller.setI(kI.getAsDouble());
     controller.setD(kD.getAsDouble());
-    controller.setSetpoint(setpoint.getAsDouble());
+    controller.setSetpoint(setpoint.getAsDouble() + SmartDashboard.getNumber("Arm Setpoint Offset", 0));
     controller.setTolerance(tolerance.getAsDouble());
 
     // Pushing number to SmartDashboard
