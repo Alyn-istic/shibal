@@ -60,9 +60,9 @@ public class Constants {
         public static final double raiseI = 0; // I value for the arm PID command
         public static final double raiseD = 0; // D value for the arm PID command
 
-        public static final double dropP = 0.03; // P value for the arm PID command
+        public static final double dropP = 0.025; // P value for the arm PID command
         public static final double dropI = 0; // I value for the arm PID command
-        public static final double dropD = 0.000025; // D value for the arm PID command
+        public static final double dropD = 0.00003; // D value for the arm PID command
 
         public static final double tolerance = 1;
         public static final double setpointOffset = 0;

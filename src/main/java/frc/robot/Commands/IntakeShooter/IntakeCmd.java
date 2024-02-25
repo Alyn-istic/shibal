@@ -30,7 +30,7 @@ public class IntakeCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intakeSub.setMotors(speed.getAsDouble());
+    intakeSub.setMotors(speed.getAsDouble()*IntakeShooterConstants.speed);
   }
 
   // Called once the command ends or is interrupted.
