@@ -7,6 +7,7 @@ package frc.robot.Commands.IntakeShooter;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.IntakeShooterConstants;
 import frc.robot.Subsystems.IntakeShooterSubsystem;
 
 public class IntakeCmd extends Command {
