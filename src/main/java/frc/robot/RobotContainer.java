@@ -5,19 +5,28 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Commands.ClimberCmd;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Commands.EmergencyStopCmd;
-import frc.robot.Commands.Arm.ArmCmd;
-import frc.robot.Commands.Arm.ArmPIDCmd;
+import frc.robot.Commands.Arm.ArmManualCmd;
+import frc.robot.Commands.Arm.ArmCommandSelector;
+import frc.robot.Commands.Arm.ArmSetpointOffset;
+import frc.robot.Commands.Arm.Autos.ArmIntake;
+import frc.robot.Commands.Arm.Autos.ArmIntakePerimeter;
+import frc.robot.Commands.Arm.Autos.ArmIntakeSource;
+import frc.robot.Commands.Arm.Autos.ArmShoot;
+import frc.robot.Commands.Arm.Autos.ArmShootPerimeter;
 import frc.robot.Commands.Autos.ExitZoneTimed;
 import frc.robot.Commands.Autos.AutoLog;
 import frc.robot.Commands.Autos.ScoreInAmpTimed;
+import frc.robot.Commands.Climber.ClimberCmd;
 // import frc.robot.Commands.Arm.LimitSwitchSimulation;
 import frc.robot.Commands.Drivetrain.TankDriveCmd;
 import frc.robot.Commands.IntakeShooter.IntakeCmd;
@@ -43,9 +52,21 @@ public class RobotContainer {
   private final IntakeShooterSubsystem intakeShooterSub = new IntakeShooterSubsystem();
   private final ClimberSubsystem climbSub = new ClimberSubsystem();
 
+  // Stuff for ArmPID
+  private final Command[] armPIDCommands = {
+    new ArmIntake(armSub),
+    new ArmIntakePerimeter(armSub),
+    new ArmShootPerimeter(armSub),
+    new ArmIntakeSource(armSub),
+    new ArmShoot(armSub)
+  };
+  private final NetworkTableEntry armIndexEntry = NetworkTableInstance.getDefault().getEntry("ArmIndex");
+
   private final SendableChooser<String> autoChooser = new SendableChooser<>();
 
   public RobotContainer() {
+    armIndexEntry.setInteger(-1);
+
     // Telling the robot to run the TankDrive command when no other command is using the Drivetrain.
     driveSub.setDefaultCommand(
       new TankDriveCmd(
@@ -58,7 +79,7 @@ public class RobotContainer {
     );
 
     armSub.setDefaultCommand(
-      new ArmCmd(armSub,
+      new ArmManualCmd(armSub,
         () -> -MathUtil.applyDeadband(operator.getRawAxis(DriverConstants.rightJoystickAxis) * ArmConstants.armManualSpeed, DriverConstants.joystickDeadband)
       )
     );
@@ -78,98 +99,95 @@ public class RobotContainer {
     configureBindings();
   }
 
-  // This is used to map commands to the Command Xbox driver.
   private void configureBindings() {
-    commandDriver.x().onTrue(new EmergencyStopCmd());
-    commandDriver.leftBumper().whileTrue(new IntakeCmd(intakeShooterSub, () -> 1));
-    commandDriver.rightBumper().whileTrue(new IntakeCmd(intakeShooterSub, () -> -1));
 
-    commandDriver.y().whileTrue(new ClimberCmd(climbSub, () -> ClimberConstants.climberSpeed)); // Extending Climber (This will depend on how arm works)
-    commandDriver.b().whileTrue(new ClimberCmd(climbSub, () -> ClimberConstants.climberSpeed * -1)); // Retracting climber
-    
-    //Intake: Drop into intake angle.//
-    commandDriver.povDown().whileTrue(new ArmPIDCmd(armSub, //
-        // () -> ArmConstants.kP,
-        // () -> ArmConstants.kI,
-        // () -> ArmConstants.kD,
-        () -> SmartDashboard.getNumber("Arm P", 0),
-        () -> SmartDashboard.getNumber("Arm I", 0),
-        () -> SmartDashboard.getNumber("Arm D", 0),
-        () -> ArmConstants.intakeAngle,
-        () -> ArmConstants.tolerance,
-        () -> ArmConstants.clamp,
-        () -> armSub.dropLimitSwitch()
-    ));
+    ////////////////////////////////////////// Driver Controls //////////////////////////////////////////
 
-    //Inside Angle for Intake: Raise into the perimeters of the robot, while ready for intake//
-    commandDriver.povRight().whileTrue(new ArmPIDCmd(armSub,
-        // () -> ArmConstants.kP,
-        // () -> ArmConstants.kI,
-        // () -> ArmConstants.kD,
-        () -> SmartDashboard.getNumber("Arm P", 0),
-        () -> SmartDashboard.getNumber("Arm I", 0),
-        () -> SmartDashboard.getNumber("Arm D", 0),
-        () -> ArmConstants.intakeInsideAngle,
-        () -> ArmConstants.tolerance,
-        () -> ArmConstants.clamp,
-        () -> false
-    ));
+    commandDriver.x().onTrue(new EmergencyStopCmd()); // E-stop
 
-    //Shooter: Raise into shooting position for amp.//
-    commandDriver.povUp().whileTrue(new ArmPIDCmd(armSub,
-        // () -> ArmConstants.kP,
-        // () -> ArmConstants.kI,
-        // () -> ArmConstants.kD,
-        () -> SmartDashboard.getNumber("Arm P", 0),
-        () -> SmartDashboard.getNumber("Arm I", 0),
-        () -> SmartDashboard.getNumber("Arm D", 0),
-        () -> ArmConstants.shootAngle,
-        () -> ArmConstants.tolerance,
-        () -> ArmConstants.clamp,
-        () -> armSub.raiseLimitSwitch()
-    ));
-
-    //Inside angle for Shooter: Raise into the perimeters of robot, while ready to downshoot into amp.//
-    commandDriver.povLeft().whileTrue(new ArmPIDCmd(armSub,
-        // () -> ArmConstants.kP,
-        // () -> ArmConstants.kI,
-        // () -> ArmConstants.kD,
-        () -> SmartDashboard.getNumber("Arm P", 0),
-        () -> SmartDashboard.getNumber("Arm I", 0),
-        () -> SmartDashboard.getNumber("Arm D", 0),
-        () -> ArmConstants.shootInsideAngle,
-        () -> ArmConstants.clamp,  
-        () -> ArmConstants.tolerance,
-        () -> false
-    ));
-
-    //Source Intake: Intake from source.//
-    commandDriver.a().whileTrue(new ArmPIDCmd(armSub,
-        // () -> ArmConstants.kP,
-        // () -> ArmConstants.kI,
-        // () -> ArmConstants.kD,
-        () -> SmartDashboard.getNumber("Arm P", 0),
-        () -> SmartDashboard.getNumber("Arm I", 0),
-        () -> SmartDashboard.getNumber("Arm D", 0),
-        () -> ArmConstants.sourceIntakeAngle,
-        () -> ArmConstants.tolerance,        
-        () -> ArmConstants.clamp,
-        () -> false
-    ));
-
-    // Operator commands
-    commandOperator.x().onTrue(new EmergencyStopCmd());
-    commandOperator.leftBumper().whileTrue(new IntakeCmd(intakeShooterSub, () -> 1));
-    commandOperator.rightBumper().whileTrue(new IntakeCmd(intakeShooterSub, () -> -1));
-
-    commandOperator.povUp().whileTrue(
-      new RunCommand(
-        () -> SmartDashboard.putNumber("Arm Setpoint Offset", SmartDashboard.getNumber("Arm Setpoint Offset", 0) + 0.1)
+    // Using triggers to control intake speed
+    commandDriver.leftTrigger().whileTrue(
+      new IntakeCmd(
+        intakeShooterSub, () -> MathUtil.applyDeadband(driver.getRawAxis(DriverConstants.leftTriggerAxis), DriverConstants.triggerDeadband)
       )
     );
-    commandOperator.povDown().whileTrue(
+    commandDriver.rightTrigger().whileTrue(
+      new IntakeCmd(
+        intakeShooterSub, () -> MathUtil.applyDeadband(-driver.getRawAxis(DriverConstants.rightTriggerAxis), DriverConstants.triggerDeadband)
+      )
+    );
+
+    // Run the climber motors using y and b
+    commandDriver.y().whileTrue(new ClimberCmd(climbSub, () -> ClimberConstants.climberSpeed)); // Extending Climber (This will depend on how arm works)
+    commandDriver.b().whileTrue(new ClimberCmd(climbSub, () -> ClimberConstants.climberSpeed * -1)); // Retracting climber
+
+    // Using left/right bumpers to jump between setpoints for PID
+    commandDriver.leftBumper().onTrue(new ArmCommandSelector(armPIDCommands, () -> -1, armIndexEntry));
+    commandDriver.rightBumper().onTrue(new ArmCommandSelector(armPIDCommands, () -> 1, armIndexEntry));
+
+    // //Intake: Drop into intake angle.//
+    // commandDriver.povDown().whileTrue(new ArmIntake(armSub));
+
+    // //Inside Angle for Intake: Raise into the perimeters of the robot, while ready for intake//
+    // commandDriver.povRight().whileTrue(new ArmIntakePerimeter(armSub));
+
+    // //Shooter: Raise into shooting position for amp.//
+    // commandDriver.povUp().whileTrue(new ArmShoot(armSub));
+
+    // //Inside angle for Shooter: Raise into the perimeters of robot, while ready to downshoot into amp.//
+    // commandDriver.povLeft().whileTrue(new ArmShootPerimeter(armSub));
+
+    // //Source Intake: Intake from source.//
+    // commandDriver.a().whileTrue(new ArmIntakeSource(armSub));
+
+    ////////////////////////////////////////// Operator Controls //////////////////////////////////////////
+
+    commandOperator.x().onTrue(new EmergencyStopCmd()); // E-stop
+
+    // Use triggers to control intake speed
+    commandOperator.leftTrigger().whileTrue(
+      new IntakeCmd(
+        intakeShooterSub, () -> operator.getRawAxis(DriverConstants.leftTriggerAxis)
+      )
+    );
+    commandOperator.rightTrigger().whileTrue(
+      new IntakeCmd(
+        intakeShooterSub, () -> -operator.getRawAxis(DriverConstants.rightTriggerAxis)
+      )
+    );
+
+    // Use bumpers to offset the arm setpoints by increments of 3°
+    commandOperator.rightBumper().onTrue(
+      new ArmSetpointOffset(
+        () -> 3
+      )
+    );
+    commandOperator.leftBumper().onTrue(
+      new ArmSetpointOffset(
+        () -> -3
+      )
+    );
+
+    ////////////////////////////////////////// Arm Limits //////////////////////////////////////////
+
+    // While the drop limit switch is pressed, reset arm position to intake angle, and reset setpoint offset to 0.
+    new Trigger(() -> armSub.dropLimitSwitch()).whileTrue(
       new RunCommand(
-        () -> SmartDashboard.putNumber("Arm Setpoint Offset", SmartDashboard.getNumber("Arm Setpoint Offset", 0) - 0.1)
+        () -> armSub.setSensorPosition(armSub.toPosition(ArmConstants.intakeAngle))
+      ).alongWith(
+        new RunCommand(
+          () -> SmartDashboard.putNumber("Arm Setpoint Offset", 0)
+        )
+      )
+    );
+    // While the raise limit switch is pressed, reset arm position to shoot angle, and reset setpoint offset to 0.
+    new Trigger(() -> armSub.raiseLimitSwitch()).whileTrue(
+      new RunCommand(
+        () -> armSub.setSensorPosition(armSub.toPosition(ArmConstants.shootAngle))
+      ).alongWith(
+        new RunCommand(
+          () -> SmartDashboard.putNumber("Arm Setpoint Offset", 0)
+        )
       )
     );
   }

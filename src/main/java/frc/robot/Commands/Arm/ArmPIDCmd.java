@@ -4,7 +4,6 @@
 
 package frc.robot.Commands.Arm;
 
-import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
@@ -19,7 +18,6 @@ import frc.robot.Subsystems.ArmSubsystem;
 public class ArmPIDCmd extends Command {
   private ArmSubsystem armSub;
   private DoubleSupplier kP, kI, kD, setpoint, tolerance, clamp;
-  private BooleanSupplier limit;
   private PIDController controller;
 
   /** Creates a new ArmRaise. */
@@ -30,8 +28,7 @@ public class ArmPIDCmd extends Command {
     DoubleSupplier kD,
     DoubleSupplier setpoint,
     DoubleSupplier tolerance,
-    DoubleSupplier clamp,
-    BooleanSupplier limit
+    DoubleSupplier clamp
   ) {
     // System.out.println(armSub.getAngle());
     this.armSub = armSub;
@@ -41,22 +38,32 @@ public class ArmPIDCmd extends Command {
     this.setpoint = setpoint;
     this.tolerance = tolerance;
     this.clamp = clamp;
-    this.limit = limit;
+
+    controller = armSub.getController();
     addRequirements(armSub);
   }
 
 
   @Override
   public void initialize() {
-    controller = new PIDController(kP.getAsDouble(), kI.getAsDouble(), kD.getAsDouble());
     controller.setTolerance(tolerance.getAsDouble());
     controller.setSetpoint(setpoint.getAsDouble());
   }
 
   @Override
   public void execute() {
-    // Applying the output to the arm
-    armSub.setMotor(limit.getAsBoolean() ? 0 : -MathUtil.clamp(controller.calculate(armSub.getAngle() % 360), -clamp.getAsDouble(), clamp.getAsDouble())); // If limit = true, then speed is set to 0. Else, speed is set to clamped output.
+    // Applying the output to the arm to variable
+    double speed = -MathUtil.clamp(controller.calculate(armSub.getAngle() % 360), -clamp.getAsDouble(), clamp.getAsDouble());
+
+    /*If arm is raising, and raise limit switch isn't switched.
+     * or
+     * If arm is dropping, and drop limit switch isn't switched.
+    */
+    if ((speed < 0 && !armSub.raiseLimitSwitch()) || (speed > 0 && !armSub.dropLimitSwitch())) {
+      armSub.setMotor(speed);
+    } else {
+      armSub.setMotor(0);
+    }
 
     // Updating the PID values
     controller.setP(kP.getAsDouble());
