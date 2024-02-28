@@ -128,7 +128,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     gyro.reset();
 
     // Pose estimation
-    poseEstimator = new DifferentialDrivePoseEstimator(kinematics, gyro.getRotation2d(), getLeftDistance(), getRightDistance(), new Pose2d(0, 0, new Rotation2d(0)));
+    poseEstimator = new DifferentialDrivePoseEstimator(kinematics, gyro.getRotation2d(), getLeftDistance(), getRightDistance(), new Pose2d(DrivetrainConstants.startPosX, DrivetrainConstants.startPosY, new Rotation2d(0)));
   }
 
   @Override

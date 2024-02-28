@@ -37,6 +37,9 @@ public class Constants {
 
         public static final double speed = 1;
 
+        public static final double startPosX = 0;
+        public static final double startPosY = 0;
+
         // public static final double gyroP = 0.0001; // P value for turning PID command
         // public static final double gyroI = 0; // I value for turning PID command
         // public static final double gyroD = 0; // D value for turning PID command
