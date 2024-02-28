@@ -9,6 +9,8 @@ Using SmartDashboard or ShuffleBoard, the operator can access a sendable chooser
 The Shuffleboard layout can be found in the file called "ShuffleBoardLayout.json"
 
 # **Teleop Mode XBOX Controls**:
+(Any of the following is subject to change)
+
 ## **Driver Controls**:
 **Emergency stop:** X-button
 
