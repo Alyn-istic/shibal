@@ -37,10 +37,12 @@ public class Constants {
 
         public static final double speed = 1;
 
-        // public static final double gyroP = 0.0001; // P value for turning PID command
-        // public static final double gyroI = 0; // I value for turning PID command
-        // public static final double gyroD = 0; // D value for turning PID command
-        // public static final double gyroTolerance = 1; // Tolerance for turning PID command
+        public static final double kS = 0.1817;
+        public static final double kV = 1.9351;
+
+        public static final double kP = 0.0005;
+        public static final double kI = 0.0005;
+        public static final double kD = 0.0005;
     }
 
     public class ArmConstants {

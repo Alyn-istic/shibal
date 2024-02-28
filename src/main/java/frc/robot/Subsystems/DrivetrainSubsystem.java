@@ -7,11 +7,17 @@ package frc.robot.Subsystems;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelPositions;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.Distance;
@@ -19,7 +25,9 @@ import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.MutableMeasure;
 import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -39,6 +47,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final WPI_VictorSPX frontRight = new WPI_VictorSPX(DrivetrainConstants.frontRightID);
   private final WPI_VictorSPX backLeft = new WPI_VictorSPX(DrivetrainConstants.backLeftID);
   private final WPI_VictorSPX backRight = new WPI_VictorSPX(DrivetrainConstants.backRightID);
+
+  // Controllers
+  private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(DrivetrainConstants.kS, DrivetrainConstants.kV);
+  private final PIDController leftPIDController = new PIDController(DrivetrainConstants.kP, DrivetrainConstants.kI, DrivetrainConstants.kD);
+  private final PIDController rightPIDController = new PIDController(DrivetrainConstants.kP, DrivetrainConstants.kI, DrivetrainConstants.kD);
 
   // Creating a Differential Drive using the front motors. This is like grouping all the motors together.
   private final DifferentialDrive drive = new DifferentialDrive(frontLeft, frontRight); //new object, using two parameteres for both sides
@@ -129,12 +142,26 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     // Pose estimation
     poseEstimator = new DifferentialDrivePoseEstimator(kinematics, gyro.getRotation2d(), getLeftDistance(), getRightDistance(), new Pose2d(0, 0, new Rotation2d(0)));
+  
+    // Path planning
+    AutoBuilder.configureRamsete(
+      this::getBotPose,
+      this::resetBotPose,
+      this::getChassisSpeeds,
+      this::chassisSpeedDrive,
+      new ReplanningConfig(),
+      () -> { // Checking robot alliance to determine if it should flip the path
+        if (DriverStation.getAlliance().isPresent()) {
+          return (DriverStation.getAlliance().get() == DriverStation.Alliance.Red); // Returns true if alliance is red
+        }
+        return false; // Returns false if DriverStation doesn't detect alliance as red
+      }
+    );
   }
 
   @Override
   public void periodic() {
     poseEstimator.update(gyro.getRotation2d(), getLeftDistance(), getRightDistance());
-
     SmartDashboard.putNumber("Front Left Motor Speed", frontLeft.get());
     SmartDashboard.putNumber("Front Right Motor Speed", frontRight.get());
 
@@ -150,12 +177,24 @@ public class DrivetrainSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Gyro Angle", getGyroAngle() % 360);
   }
 
-  public void tankDriveSpeed(double leftSpeed, double rightSpeed) { // Tankdrive using speed.
+  public void tankDrive(double leftSpeed, double rightSpeed) { // Tankdrive using speed.
     drive.tankDrive(leftSpeed, rightSpeed);
   }
-  public void tankDriveVoltage(double leftVolts, double rightVolts) { // Tankdrive using voltage. The reason we have this is because "speed" is based on battery voltage (12V).
-    frontLeft.setVoltage(leftVolts);
-    frontRight.setVoltage(rightVolts);
+
+  public void chassisSpeedDrive(ChassisSpeeds chassis) {
+    DifferentialDriveWheelSpeeds speeds = kinematics.toWheelSpeeds(chassis);
+
+    // Receiving feedforward instructions
+    double leftFF = feedforward.calculate(speeds.leftMetersPerSecond);
+    double rightFF = feedforward.calculate(speeds.rightMetersPerSecond);
+
+    // Controlling the robot velocity using PID
+    double leftOutput = leftPIDController.calculate(getLeftVelocity(), speeds.leftMetersPerSecond);
+    double rightOutput = leftPIDController.calculate(getRightVelocity(), speeds.rightMetersPerSecond);
+
+    // Applying voltage
+    frontLeft.setVoltage(leftOutput + leftFF);
+    frontRight.setVoltage(rightOutput + rightFF);
     drive.feed();
   }
 
@@ -165,6 +204,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public Pose2d getBotPose() {
     return poseEstimator.getEstimatedPosition();
+  }
+
+  public void resetBotPose(Pose2d pose) {
+    poseEstimator.resetPosition(gyro.getRotation2d(), new DifferentialDriveWheelPositions(getLeftDistance(), getRightDistance()), pose);
   }
 
   /* Following math is copied from 7476:
@@ -183,7 +226,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
     return Units.inchesToMeters(frontRight.getSelectedSensorVelocity() / DrivetrainConstants.gearRatio * (2*Math.PI) * DrivetrainConstants.wheelRadius);
   }
 
-  public DifferentialDriveWheelSpeeds wheelSpeeds() {
+  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
     return new DifferentialDriveWheelSpeeds(getLeftVelocity(), getRightDistance());
+  }
+
+  public ChassisSpeeds getChassisSpeeds() {
+    return kinematics.toChassisSpeeds(getWheelSpeeds());
   }
 }

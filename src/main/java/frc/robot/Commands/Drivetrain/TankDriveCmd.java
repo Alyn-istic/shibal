@@ -41,7 +41,7 @@ public class TankDriveCmd extends Command {
     double left = leftInput.getAsDouble() * DrivetrainConstants.speed;
     double right = rightInput.getAsDouble() * DrivetrainConstants.speed;
 
-    driveSub.tankDriveSpeed( // Calling the "tankDrive" function in the DrivetrainSubsystem.java file.
+    driveSub.tankDrive( // Calling the "tankDrive" function in the DrivetrainSubsystem.java file.
       Math.signum(left)*(Math.sqrt(Math.abs(left))), // Applying math stuff to variable "left".
       Math.signum(right)*(Math.sqrt(Math.abs(right))) // Applying math stuff to variable "right".
     );
