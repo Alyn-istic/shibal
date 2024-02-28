@@ -27,11 +27,11 @@ public class Constants {
         public static final int backLeftID = 1; // Chassis's back-left motor ID
         public static final int backRightID = 3; // Chassis's back-right motor ID
 
-        public static final double distLeftRight = 1; // The distance (in inches) between the left wheels and the right wheels.
+        public static final double distLeftRight = 24.8; // The distance (in inches) between the left wheels and the right wheels.
         public static final double wheelRadius = 3; // The radius of the wheels
-        public static final double gearRatio = 1; // Gear ratio
+        public static final double gearRatio = 8.46; // Gear ratio
 
-        public static final int countsPerRev = 1024; // The amount of encoder counts in a full rotation
+        public static final int countsPerRev = 4096; // The amount of encoder counts in a full rotation
 
         public static final Port gyroPort = Port.kUSB; // The port that the gyro is connected to.
 

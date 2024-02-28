@@ -138,17 +138,16 @@ public class DrivetrainSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Front Left Motor Speed", frontLeft.get());
     SmartDashboard.putNumber("Front Right Motor Speed", frontRight.get());
 
-    // SmartDashboard.putNumber("Bot X", getBotPose().getX());
-    // SmartDashboard.putNumber("Bot Y", getBotPose().getY());
-    // SmartDashboard.putNumber("Bot Rotation", getBotPose().getRotation().getDegrees());
+    SmartDashboard.putNumber("Bot X", getBotPose().getX());
+    SmartDashboard.putNumber("Bot Y", getBotPose().getY());
+    SmartDashboard.putNumber("Bot Rotation", getBotPose().getRotation().getDegrees());
 
-    // SmartDashboard.putNumber("Left Pos", frontLeft.getSelectedSensorPosition());
-    // SmartDashboard.putNumber("Right Pos", frontRight.getSelectedSensorPosition());
-    // SmartDashboard.putNumber("Left Distance", getLeftDistance());
-    // SmartDashboard.putNumber("Right Distance", getRightDistance());
+    SmartDashboard.putNumber("Left Pos", frontLeft.getSelectedSensorPosition());
+    SmartDashboard.putNumber("Right Pos", frontRight.getSelectedSensorPosition());
+    SmartDashboard.putNumber("Left Distance", getLeftDistance());
+    SmartDashboard.putNumber("Right Distance", getRightDistance());
 
-    // SmartDashboard.putNumber("Gyro Angle", getGyroAngle() % 360);
-
+    SmartDashboard.putNumber("Gyro Angle", getGyroAngle() % 360);
   }
 
   public void tankDriveSpeed(double leftSpeed, double rightSpeed) { // Tankdrive using speed.

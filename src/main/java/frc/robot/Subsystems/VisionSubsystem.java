@@ -15,7 +15,7 @@ public class VisionSubsystem extends SubsystemBase {
 
   public VisionSubsystem() {
       inst = NetworkTableInstance.getDefault();
-      inst.startClient("example client");
+      inst.startClient3("example client");
       inst.setServer("localhost");
       inst.setServerTeam(9127, 0);
 
@@ -26,6 +26,7 @@ public class VisionSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    System.out.println(getDistance() + ", " + getAngle());
   }
 
   public double getDistance() {
