@@ -36,7 +36,7 @@ public class ArmSubsystem extends SubsystemBase {
   private final DigitalInput raiseSwitch = new DigitalInput(ArmConstants.raiseLimitSwitchChannel);
 
   // Controllers
-  private final PIDController controller = new PIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD);
+  private final PIDController controller = new PIDController(ArmConstants.raiseP, ArmConstants.raiseI, ArmConstants.raiseD);
 
   // Mutable holders
   private final MutableMeasure<Voltage> m_appliedVoltage = MutableMeasure.mutable(Volts.of(0));
@@ -97,14 +97,14 @@ public class ArmSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Arm Angle", getAngle());
     SmartDashboard.putNumber("Arm Position", getSensorPosition());
 
-    // if (dropLimitSwitch()) { // The following has been ported to RobotContainer
-    //   leftMotor.setSelectedSensorPosition(toPosition(ArmConstants.intakeAngle));
-    //   SmartDashboard.putNumber("Arm Setpoint Offset", 0);
-    // }
-    // if (raiseLimitSwitch()) {
-    //   leftMotor.setSelectedSensorPosition(toPosition(ArmConstants.shootAngle));
-    //   SmartDashboard.putNumber("Arm Setpoint Offset", 0);
-    // }
+    if (dropLimitSwitch()) { // The following has been ported to RobotContainer
+      leftMotor.setSelectedSensorPosition(toPosition(ArmConstants.intakeAngle));
+      SmartDashboard.putNumber("Arm Setpoint Offset", 0);
+    }
+    if (raiseLimitSwitch()) {
+      leftMotor.setSelectedSensorPosition(toPosition(ArmConstants.shootAngle));
+      SmartDashboard.putNumber("Arm Setpoint Offset", 0);
+    }
   }
   @Override
   public void simulationPeriodic() {

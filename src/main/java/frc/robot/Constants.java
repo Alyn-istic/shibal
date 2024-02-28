@@ -22,18 +22,20 @@ public class Constants {
     }
 
     public class DrivetrainConstants {
-        public static final int frontLeftID = 2; // Chassis's front-left motor ID
-        public static final int frontRightID = 0; // Chassis's front-right motor ID
-        public static final int backLeftID = 3; // Chassis's back-left motor ID
-        public static final int backRightID = 1; // Chassis's back-right motor ID
+        public static final int frontLeftID = 0; // Chassis's front-left motor ID
+        public static final int frontRightID = 2; // Chassis's front-right motor ID
+        public static final int backLeftID = 1; // Chassis's back-left motor ID
+        public static final int backRightID = 3; // Chassis's back-right motor ID
 
-        public static final double distLeftRight = 1; // The distance (in inches) between the left wheels and the right wheels.
+        public static final double distLeftRight = 24.8; // The distance (in inches) between the left wheels and the right wheels.
         public static final double wheelRadius = 3; // The radius of the wheels
-        public static final double gearRatio = 1; // Gear ratio
+        public static final double gearRatio = 8.46; // Gear ratio
 
-        public static final int countsPerRev = 1024; // The amount of encoder counts in a full rotation
+        public static final int countsPerRev = 4096; // The amount of encoder counts in a full rotation
 
         public static final Port gyroPort = Port.kUSB; // The port that the gyro is connected to.
+
+        public static final double speed = 1;
 
         // public static final double gyroP = 0.0001; // P value for turning PID command
         // public static final double gyroI = 0; // I value for turning PID command
@@ -54,23 +56,28 @@ public class Constants {
         public static final int raiseLimitSwitchChannel = 1;
         public static final int dropLimitSwitchChannel = 0;
 
-        public static final double kP = 0.003; // P value for the arm PID command
-        public static final double kI = 0; // I value for the arm PID command
-        public static final double kD = 0; // D value for the arm PID command
+        public static final double raiseP = 0.03; // P value for the arm PID command
+        public static final double raiseI = 0; // I value for the arm PID command
+        public static final double raiseD = 0; // D value for the arm PID command
+
+        public static final double dropP = 0.025; // P value for the arm PID command. Was 0.03.
+        public static final double dropI = 0; // I value for the arm PID command
+        public static final double dropD = 0.00003; // D value for the arm PID command. Was 0.000025.
+
         public static final double tolerance = 1;
         public static final double setpointOffset = 0;
 
-        public static final double shootAngle = 140; // The angle of the arm in shooting position
-        public static final double sourceIntakeAngle = 100; //Intake from source angle
-        public static final double intakeInsideAngle = 40; // The angle of the arm inside the perimeter preparing to intake.
+        public static final double shootAngle = 100; // The angle of the arm in shooting position
+        public static final double sourceIntakeAngle = 95; //Intake from source angle
+        public static final double intakeInsideAngle = 50; // The angle of the arm inside the perimeter preparing to intake.
         public static final double shootInsideAngle = 90; // The angle of the arm inside the perimeter preparing to move to shoot position.
         public static final double intakeAngle = 0; // The angle of the arm in intaking position
-        public static final double clamp = 1; // Should be between 0 and 1;
+        public static final double clamp = 0.6; // Should be between 0 and 1;
         // public static final double dropAngle = 0;  // This is relative to the starting position of the encoders.
     }
 
     public class IntakeShooterConstants {
-        public static final int upperWheelID  = 7; // The motor ID for the intake/shooter's upper wheels
+        public static final int upperWheelID  = 9; // The motor ID for the intake/shooter's upper wheels
         public static final int lowerWheelID = 8; // The motor ID for the intake/shooter's lower wheels
 
         public static final double speed = 1; // The intake/shooter's motor speed.
