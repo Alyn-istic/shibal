@@ -73,7 +73,7 @@
           },
           "0,0": {
             "size": [
-              8,
+              4,
               6
             ],
             "content": {
@@ -163,24 +163,24 @@
                       "_glyph": 148,
                       "_showGlyph": false
                     },
-                    "0,1": {
-                      "_type": "Text View",
-                      "_source0": "network_table:///SmartDashboard/Arm Setpoint",
-                      "_title": "Setpoint",
-                      "_glyph": 148,
-                      "_showGlyph": false
-                    },
                     "1,1": {
                       "_type": "Text View",
                       "_source0": "network_table:///SmartDashboard/Arm Setpoint Offset",
-                      "_title": "Offset",
+                      "_title": "Offset (editable)",
                       "_glyph": 148,
                       "_showGlyph": false
                     },
                     "2,1": {
                       "_type": "Text View",
                       "_source0": "network_table:///SmartDashboard/Arm Clamp",
-                      "_title": "Clamp",
+                      "_title": "Clamp (editable)",
+                      "_glyph": 148,
+                      "_showGlyph": false
+                    },
+                    "0,1": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SmartDashboard/Arm PID Setpoint",
+                      "_title": "Setpoint",
                       "_glyph": 148,
                       "_showGlyph": false
                     }
@@ -344,6 +344,6 @@
     "x": 0.800000011920929,
     "y": 0.800000011920929,
     "width": 1534.4000244140625,
-    "height": 814.4000244140625
+    "height": 853.5999755859375
   }
 }

@@ -7,6 +7,7 @@ package frc.robot.Subsystems;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.units.Angle;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.MutableMeasure;
@@ -33,6 +34,9 @@ public class ArmSubsystem extends SubsystemBase {
   // Initializing the limit switches
   private final DigitalInput dropSwitch = new DigitalInput(ArmConstants.dropLimitSwitchChannel);
   private final DigitalInput raiseSwitch = new DigitalInput(ArmConstants.raiseLimitSwitchChannel);
+
+  // Controllers
+  private final PIDController controller = new PIDController(ArmConstants.raiseP, ArmConstants.raiseI, ArmConstants.raiseD);
 
   // Mutable holders
   private final MutableMeasure<Voltage> m_appliedVoltage = MutableMeasure.mutable(Volts.of(0));
@@ -93,11 +97,13 @@ public class ArmSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Arm Angle", getAngle());
     SmartDashboard.putNumber("Arm Position", getSensorPosition());
 
-    if (dropLimitSwitch()) {
+    if (dropLimitSwitch()) { // The following has been ported to RobotContainer
       leftMotor.setSelectedSensorPosition(toPosition(ArmConstants.intakeAngle));
+      SmartDashboard.putNumber("Arm Setpoint Offset", 0);
     }
     if (raiseLimitSwitch()) {
       leftMotor.setSelectedSensorPosition(toPosition(ArmConstants.shootAngle));
+      SmartDashboard.putNumber("Arm Setpoint Offset", 0);
     }
   }
   @Override
@@ -128,6 +134,10 @@ public class ArmSubsystem extends SubsystemBase {
     return leftMotor.getSelectedSensorPosition();
   }
 
+  public void setSensorPosition(double pos) {
+    leftMotor.setSelectedSensorPosition(pos);
+  }
+
   public double getSensorVelocity() {
     return leftMotor.getSelectedSensorVelocity();
   }
@@ -143,5 +153,9 @@ public class ArmSubsystem extends SubsystemBase {
 
   public boolean dropLimitSwitch() { // True when clicked, false when not
     return !dropSwitch.get();
+  }
+
+  public PIDController getController() {
+    return controller;
   }
 } 

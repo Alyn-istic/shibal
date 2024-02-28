@@ -148,7 +148,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Right Distance", getRightDistance());
 
     SmartDashboard.putNumber("Gyro Angle", getGyroAngle() % 360);
-
   }
 
   public void tankDriveSpeed(double leftSpeed, double rightSpeed) { // Tankdrive using speed.
