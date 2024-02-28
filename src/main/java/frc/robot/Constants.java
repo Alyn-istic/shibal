@@ -7,17 +7,31 @@ import edu.wpi.first.wpilibj.SerialPort.Port;
 public class Constants {
     public class AutonomousConstants {
         public class MoveToAmpTimedConstants {
+            // 1 = first position, 2 = second position, 3 third position
+            //all constant values are wrong, need testing
             public static final double TIME_TURN_TO_AMP = 3.5; // In seconds
-            public static final double TIME_MOVE_TO_AMP = 4.5; // In seconds
-            public static final double TIME_SHOOT_IN_AMP = 1; // In seconds
-
             public static final double SPEED_TURN_TO_AMP = -0.5; // Motor speed
-            public static final double SPEED_MOVE_TO_AMP = 0.4; // Motor speed
+
+            public static final double TIME_MOVE_TO_AMP1 = 4.5; // In seconds
+            public static final double TIME_MOVE_TO_AMP2 = 4.5; // In seconds
+            public static final double TIME_MOVE_TO_AMP3= 4.5; // In seconds
+
+            public static final double TIME_SHOOT_IN_AMP = 1; // In seconds
             public static final double SPEED_SHOOT_IN_AMP = 1; // Motor speed
+
+            public static final double SPEED_MOVE_TO_AMP1 = 0.4; // Motor speed
+            public static final double SPEED_MOVE_TO_AMP2 = 0.4; // Motor speed
+            public static final double SPEED_MOVE_TO_AMP3 = 0.4; // Motor speed
         }
         public class MoveOutOfZoneConstants {
-            public static final double TIME_MOVE_OUT_OF_ZONE = 1; // In seconds
-            public static final double SPEED_MOVE_OUT_OF_ZONE = 0.35; // Motor speed
+            public static final double TIME_MOVE_OUT_OF_ZONE1 = 1; // In seconds
+            public static final double SPEED_MOVE_OUT_OF_ZONE1 = 0.35; // Motor speed
+
+            public static final double TIME_MOVE_OUT_OF_ZONE2 = 1; // In seconds
+            public static final double SPEED_MOVE_OUT_OF_ZONE2 = 0.35; // Motor speed
+
+            public static final double TIME_MOVE_OUT_OF_ZONE3 = 1; // In seconds
+            public static final double SPEED_MOVE_OUT_OF_ZONE3 = 0.35; // Motor speed
         }
     }
 
