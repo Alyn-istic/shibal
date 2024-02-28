@@ -36,6 +36,7 @@ import frc.robot.Subsystems.ArmSubsystem;
 import frc.robot.Subsystems.DrivetrainSubsystem;
 import frc.robot.Subsystems.IntakeShooterSubsystem;
 import frc.robot.Subsystems.ClimberSubsystem;
+import frc.robot.Subsystems.LEDSubsystem;
 import frc.robot.Constants.ClimberConstants;
 
 public class RobotContainer {
@@ -48,6 +49,7 @@ public class RobotContainer {
 
   // Initiating all the subsystems. We will need these in order to properly run commands.
   private final DrivetrainSubsystem driveSub = new DrivetrainSubsystem();
+  public final LEDSubsystem led = new LEDSubsystem();
   private final ArmSubsystem armSub = new ArmSubsystem();
   private final IntakeShooterSubsystem intakeShooterSub = new IntakeShooterSubsystem();
   private final ClimberSubsystem climbSub = new ClimberSubsystem();

@@ -93,6 +93,11 @@ public class Constants {
         
     }
 
+    public class LEDconstants {
+        public static final int LEDTalonPort = 0;
+        
+    }
+
     public class DriverConstants {
         public static final int driverPort = 0; // Controller port for driver
         public static final int operatorPort = 1; // Controller port for operator
