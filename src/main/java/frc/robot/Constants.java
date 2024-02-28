@@ -92,7 +92,7 @@ public class Constants {
 
 
     public class VisionConstants {
-        
+        public static final double cameraHeight = 1; // Camera height off the ground ain inches
     }
 
     public class DriverConstants {

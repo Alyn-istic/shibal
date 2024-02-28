@@ -54,11 +54,11 @@ public class RobotContainer {
 
   // Stuff for ArmPID
   private final Command[] armPIDCommands = {
-    new ArmIntake(armSub),
-    new ArmIntakePerimeter(armSub),
-    new ArmShootPerimeter(armSub),
-    //new ArmIntakeSource(armSub),
-    new ArmShoot(armSub)
+    new ArmIntake(armSub, ()-> false),
+    new ArmIntakePerimeter(armSub, () -> false),
+    new ArmShootPerimeter(armSub, () -> false),
+    //new ArmIntakeSource(armSub, () -> false),
+    new ArmShoot(armSub, () -> false)
   };
   private final NetworkTableEntry armIndexEntry = NetworkTableInstance.getDefault().getEntry("ArmIndex");
 

@@ -13,7 +13,11 @@ public class ArmManualCmd extends Command {
   private ArmSubsystem armSub;
   private DoubleSupplier speedInput;
   
-  /** Creates a new ArmTestCmd. */
+  /**
+   * Manually apply speed to the arm
+   * @param armSub Arm Subsystem
+   * @param speedInput Supplier that returns the speed input
+   */
   public ArmManualCmd(
     ArmSubsystem armSub,
     DoubleSupplier speedInput

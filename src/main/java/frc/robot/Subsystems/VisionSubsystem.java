@@ -26,16 +26,25 @@ public class VisionSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    System.out.println(getDistance() + ", " + getAngle());
+    System.out.println(getNoteDistance() + ", " + getNoteAngle());
   }
 
-  public double getDistance() {
-      // Get distance from NetworkTable
+  /**
+   * Get distance from NetworkTable
+   * @return Horizontal distance in inches
+   */
+  public double getNoteDistance() {
+      // Get distance from NetworkTable in inches
       return distanceEntry.getDouble(0.0); // Default value is 0.0 if entry is not found
   }
 
-  public double getAngle() {
-      // Get angle from NetworkTable
+  /**
+   * Get angle from NetworkTables
+   * @return Horizontal angle in degrees
+   */
+  public double getNoteAngle() {
+      // Get angle from NetworkTable in degrees
       return angleEntry.getDouble(0.0); // Default value is 0.0 if entry is not found
   }
+  
 }

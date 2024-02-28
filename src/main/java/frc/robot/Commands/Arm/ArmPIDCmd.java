@@ -20,7 +20,19 @@ public class ArmPIDCmd extends Command {
   private DoubleSupplier raiseP, raiseI, raiseD, dropP, dropI, dropD, setpoint, tolerance, clamp;
   private PIDController controller;
 
-  /** Creates a new ArmRaise. */
+  /**
+   * PID command that manages the arm
+   * @param armSub Arm Subsystem
+   * @param raiseP P gain used when working against gravity
+   * @param raiseI I gain used when working against gravity
+   * @param raiseD D gain used when working against gravity
+   * @param dropP P gain used when working with gravity
+   * @param dropI I gain used when working with gravity
+   * @param dropD D gain used when working with gravity
+   * @param setpoint The setpoint/angle that the arm should be at (degrees)
+   * @param tolerance The tolerance for the PID controller
+   * @param clamp The clamp for the output
+   */
   public ArmPIDCmd(
     ArmSubsystem armSub,
     DoubleSupplier raiseP,

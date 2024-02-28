@@ -12,6 +12,11 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AutoLog extends InstantCommand {
   private String message;
+
+  /**
+   * Prints and pushes text to Smart Dashboard under the key "Routine Log"
+   * @param message The text to push
+   */
   public AutoLog(String message) {this.message = message;}
 
   // Called when the command is initially scheduled.

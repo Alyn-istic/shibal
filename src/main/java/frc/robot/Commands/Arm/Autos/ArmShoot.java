@@ -4,7 +4,8 @@
 
 package frc.robot.Commands.Arm.Autos;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Commands.Arm.ArmPIDCmd;
@@ -14,9 +15,12 @@ import frc.robot.Subsystems.ArmSubsystem;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ArmShoot extends SequentialCommandGroup {
-  /** Creates a new ArmShoot. */
-  public ArmShoot(
-    ArmSubsystem armSub
+/**
+   * Move the arm into shooting position. This is for down-shooting into the amp
+   * @param armSub Arm Subsystem
+   * @param end Supplier that returns true when the command should end
+   */  public ArmShoot(
+    ArmSubsystem armSub, BooleanSupplier end
   ) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
@@ -31,7 +35,7 @@ public class ArmShoot extends SequentialCommandGroup {
         () -> ArmConstants.shootAngle,
         () -> ArmConstants.tolerance,
         () -> ArmConstants.clamp
-      )
+      ).until(end)
     );
   }
 }

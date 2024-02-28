@@ -4,7 +4,8 @@
 
 package frc.robot.Commands.Arm.Autos;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Commands.Arm.ArmPIDCmd;
@@ -14,12 +15,14 @@ import frc.robot.Subsystems.ArmSubsystem;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ArmIntakeSource extends SequentialCommandGroup {
-  /** Creates a new ArmIntakeSource. */
+  /**
+   * Move the arm into source-intaking position
+   * @param armSub Arm Subsystem
+   * @param end Supplier that returns true when the command should end
+   */
   public ArmIntakeSource(
-    ArmSubsystem armSub
+    ArmSubsystem armSub, BooleanSupplier end
   ) {
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new ArmPIDCmd(armSub,
         () -> ArmConstants.raiseP,
@@ -31,7 +34,7 @@ public class ArmIntakeSource extends SequentialCommandGroup {
         () -> ArmConstants.sourceIntakeAngle,
         () -> ArmConstants.tolerance,        
         () -> ArmConstants.clamp
-      )
+      ).until(end)
     );
   }
 }

@@ -14,6 +14,10 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ArmSetpointOffset extends InstantCommand {
   private DoubleSupplier increment;
+  /**
+   * Offsets the arm's setpoint.
+   * @param increment The amount added to the offset (degrees)
+   */
   public ArmSetpointOffset(
     DoubleSupplier increment
   ) {
