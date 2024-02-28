@@ -26,6 +26,8 @@ import frc.robot.Constants.DriverConstants;
 import frc.robot.Subsystems.ArmSubsystem;
 import frc.robot.Subsystems.DrivetrainSubsystem;
 import frc.robot.Subsystems.IntakeShooterSubsystem;
+import frc.robot.Subsystems.LEDSubsystem;
+import frc.robot.Commands.LEDCmd;
 import frc.robot.Subsystems.ClimberSubsystem;
 import frc.robot.Constants.ClimberConstants;
 
@@ -42,6 +44,7 @@ public class RobotContainer {
   private final ArmSubsystem armSub = new ArmSubsystem();
   private final IntakeShooterSubsystem intakeShooterSub = new IntakeShooterSubsystem();
   private final ClimberSubsystem climbSub = new ClimberSubsystem();
+  private final LEDSubsystem ledSub = new LEDSubsystem();
 
   private final SendableChooser<String> autoChooser = new SendableChooser<>();
 
@@ -63,6 +66,11 @@ public class RobotContainer {
       )
     );
 
+    ledSub.setDefaultCommand(
+      new LEDCmd(ledSub)
+    );
+    
+
     SmartDashboard.putNumber("Arm P", ArmConstants.kP);
     SmartDashboard.putNumber("Arm I", ArmConstants.kI);
     SmartDashboard.putNumber("Arm D", ArmConstants.kD);
@@ -76,6 +84,7 @@ public class RobotContainer {
     autoChooser.addOption("SCORE IN AMP (TIMED)", "SCORE_IN_AMP_TIMED");
     SmartDashboard.putData("Autonomous Routines", autoChooser);
     configureBindings();
+
   }
 
   // This is used to map commands to the Command Xbox driver.
