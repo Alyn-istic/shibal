@@ -37,6 +37,7 @@ import frc.robot.Subsystems.DrivetrainSubsystem;
 import frc.robot.Subsystems.IntakeShooterSubsystem;
 import frc.robot.Subsystems.ClimberSubsystem;
 import frc.robot.Constants.ClimberConstants;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class RobotContainer {
   // Initiating a ordinary Xbox Controller. Nothing special.
@@ -117,6 +118,8 @@ public class RobotContainer {
         intakeShooterSub, () -> MathUtil.applyDeadband(-driver.getRawAxis(DriverConstants.rightTriggerAxis), DriverConstants.triggerDeadband)
       )
     );
+
+    commandOperator.a().whileTrue(driveSub.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
 
     // Run the climber motors using y and b
     commandDriver.y().whileTrue(new ClimberCmd(climbSub, () -> ClimberConstants.climberSpeed)); // Extending Climber (This will depend on how arm works)
