@@ -45,7 +45,7 @@ public class Constants {
         public static final double wheelRadius = 3; // The radius of the wheels (in inches)
         public static final double gearRatio = 8.46; // Gear ratio
 
-        public static final int countsPerRev = 4096; // The amount of encoder counts in a full rotation
+        public static final int countsPerRev = 256; // The amount of encoder counts in a full rotation
 
         public static final Port gyroPort = Port.kUSB; // The port that the gyro is connected to.
 
