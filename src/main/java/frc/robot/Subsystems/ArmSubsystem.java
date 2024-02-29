@@ -36,7 +36,7 @@ public class ArmSubsystem extends SubsystemBase {
   private final DigitalInput raiseSwitch = new DigitalInput(ArmConstants.raiseLimitSwitchChannel);
 
   // Controllers
-  private final PIDController controller = new PIDController(ArmConstants.raiseP, ArmConstants.raiseI, ArmConstants.raiseD);
+  private final PIDController pidcontroller = new PIDController(ArmConstants.raiseP, ArmConstants.raiseI, ArmConstants.raiseD);
 
   // Mutable holders
   private final MutableMeasure<Voltage> m_appliedVoltage = MutableMeasure.mutable(Volts.of(0));
@@ -87,7 +87,7 @@ public class ArmSubsystem extends SubsystemBase {
     rightMotor.setSelectedSensorPosition(toPosition(ArmConstants.startingAngle));
 
     // Controller configs
-    controller.enableContinuousInput(0, 360);
+    pidcontroller.enableContinuousInput(ArmConstants.minAngle, ArmConstants.maxAngle);
   }
 
   @Override
@@ -159,6 +159,6 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public PIDController getController() {
-    return controller;
+    return pidcontroller;
   }
 } 

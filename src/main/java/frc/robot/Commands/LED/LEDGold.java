@@ -23,6 +23,6 @@ public class LEDGold extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    led.setPresetGreen();
+    led.setPresetGold();
   }
 }
