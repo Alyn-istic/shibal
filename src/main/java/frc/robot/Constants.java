@@ -99,6 +99,7 @@ public class Constants {
     public class DriverConstants {
         public static final int driverPort = 0; // Controller port for driver
         public static final int operatorPort = 1; // Controller port for operator
+        public static final int testerPort = 2;
 
         public static final double joystickDeadband = 0.08; // Deadzone for controller L/R joysticks
         public static final double triggerDeadband = 0.08; // Deadzone for controller L/R triggers

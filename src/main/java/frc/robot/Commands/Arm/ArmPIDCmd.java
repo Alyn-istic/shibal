@@ -63,7 +63,7 @@ public class ArmPIDCmd extends Command {
      * or
      * If arm is dropping, and drop limit switch isn't switched.
     */
-    System.out.println("Arm velocity recieved (experimenting, currently does nothing):" + armSub.getSensorVelocity());
+    //System.out.println("Arm velocity recieved (experimenting, currently does nothing):" + armSub.getSensorVelocity());
     if ((speed < 0)) { // Raising
       if (!armSub.raiseLimitSwitch()) {
         armSub.setMotor(speed);

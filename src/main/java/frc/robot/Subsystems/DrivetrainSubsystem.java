@@ -4,7 +4,9 @@
 
 package frc.robot.Subsystems;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
 
@@ -35,8 +37,8 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 public class DrivetrainSubsystem extends SubsystemBase {
 
   // Initializing VictorSPX motors for the drivetrain.
-  private final WPI_VictorSPX frontLeft = new WPI_VictorSPX(DrivetrainConstants.frontLeftID);
-  private final WPI_VictorSPX frontRight = new WPI_VictorSPX(DrivetrainConstants.frontRightID);
+  private final WPI_TalonSRX frontLeft = new WPI_TalonSRX(DrivetrainConstants.frontLeftID);
+  private final WPI_TalonSRX frontRight = new WPI_TalonSRX(DrivetrainConstants.frontRightID);
   private final WPI_VictorSPX backLeft = new WPI_VictorSPX(DrivetrainConstants.backLeftID);
   private final WPI_VictorSPX backRight = new WPI_VictorSPX(DrivetrainConstants.backRightID);
 
@@ -102,6 +104,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   /** Creates a new DrivetrainSubsystem. */
   public DrivetrainSubsystem() {
+    frontLeft.configFactoryDefault();
+    backLeft.configFactoryDefault();
+    frontRight.configFactoryDefault();
+    backRight.configFactoryDefault();
+
     // Inverting the left motors
     frontLeft.setInverted(true);
     backLeft.setInverted(true);
@@ -119,6 +126,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     frontRight.setNeutralMode(NeutralMode.Brake);
 
     // Resetting probably non-existing encoders just for the sake of it.
+
     frontLeft.setSelectedSensorPosition(0);
     frontRight.setSelectedSensorPosition(0);
     backLeft.setSelectedSensorPosition(0);
@@ -148,6 +156,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Right Distance", getRightDistance());
 
     SmartDashboard.putNumber("Gyro Angle", getGyroAngle() % 360);
+    System.out.println(frontLeft.getSelectedSensorPosition() + ", " + frontRight.getSelectedSensorPosition());
   }
 
   public void tankDriveSpeed(double leftSpeed, double rightSpeed) { // Tankdrive using speed.
@@ -165,22 +174,27 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public Pose2d getBotPose() {
     return poseEstimator.getEstimatedPosition();
+
   }
 
   /* Following math is copied from 7476:
    * input / gearRatio * 2PI * wheelRadius
    */
-  public double getLeftDistance() {
-    return Units.inchesToMeters(frontLeft.getSelectedSensorPosition() / DrivetrainConstants.gearRatio * (2*Math.PI) * DrivetrainConstants.wheelRadius);
+  public double getLeftDistance(){
+    return Units.inchesToMeters((frontLeft.getSelectedSensorPosition()/DrivetrainConstants.gearRatio) * 2*Math.PI * DrivetrainConstants.wheelRadius);
+    //                                               gearratio    2PI * Wheel Radius in METRES
   }
-  public double getRightDistance() {
-    return Units.inchesToMeters(frontRight.getSelectedSensorPosition() / DrivetrainConstants.gearRatio * (2*Math.PI) * DrivetrainConstants.wheelRadius);
+  public double getRightDistance(){
+    return Units.inchesToMeters((frontRight.getSelectedSensorPosition()/DrivetrainConstants.gearRatio) * 2*Math.PI * DrivetrainConstants.wheelRadius);
+    //                                               gearratio    2PI * Wheel Radius  in METRES
   }
-  public double getLeftVelocity() {
-    return Units.inchesToMeters(frontLeft.getSelectedSensorVelocity() / DrivetrainConstants.gearRatio * (2*Math.PI) * DrivetrainConstants.wheelRadius);
+  public double getLeftVelocity(){
+    return (frontLeft.getSelectedSensorVelocity()/DrivetrainConstants.gearRatio) * 2*Math.PI * DrivetrainConstants.wheelRadius;
   }
-  public double getRightVelocity() {
-    return Units.inchesToMeters(frontRight.getSelectedSensorVelocity() / DrivetrainConstants.gearRatio * (2*Math.PI) * DrivetrainConstants.wheelRadius);
+
+  public double getRightVelocity(){
+    return (frontRight.getSelectedSensorVelocity()/DrivetrainConstants.gearRatio) * 2*Math.PI * DrivetrainConstants.wheelRadius;
+
   }
 
   public DifferentialDriveWheelSpeeds wheelSpeeds() {

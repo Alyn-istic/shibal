@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Commands.EmergencyStopCmd;
 import frc.robot.Commands.Arm.ArmManualCmd;
 import frc.robot.Commands.Arm.ArmCommandSelector;
@@ -42,9 +43,11 @@ public class RobotContainer {
   // Initiating a ordinary Xbox Controller. Nothing special.
   private final XboxController driver = new XboxController(DriverConstants.driverPort);
   private final XboxController operator = new XboxController(DriverConstants.operatorPort);
+  private final XboxController tester = new XboxController(DriverConstants.testerPort);
   // Initiating a command Xbox Controller. This will allow us to map commands onto specific buttons.
   private final CommandXboxController commandDriver = new CommandXboxController(DriverConstants.driverPort);
   private final CommandXboxController commandOperator = new CommandXboxController(DriverConstants.operatorPort);
+  private final CommandXboxController commandTester = new CommandXboxController(DriverConstants.testerPort);
 
   // Initiating all the subsystems. We will need these in order to properly run commands.
   private final DrivetrainSubsystem driveSub = new DrivetrainSubsystem();
@@ -191,6 +194,12 @@ public class RobotContainer {
         )
       )
     );
+
+    //////////////////////////////////////// Sys ID /////////////////////////////////////////////////////////
+    commandTester.y().whileTrue(driveSub.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    commandTester.a().whileTrue(driveSub.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    commandTester.x().whileTrue(driveSub.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    commandTester.b().whileTrue(driveSub.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
   }
 
   public Command getAutonomousCommand() {
