@@ -21,7 +21,7 @@ public class TankDriveCmd extends Command {
   public TankDriveCmd(
     // The arguments (settings) that this command will accept.
     DrivetrainSubsystem driveSub,
-    DoubleSupplier leftInput, DoubleSupplier rightInput //supplied from robotcontainer
+    DoubleSupplier leftInput, DoubleSupplier rightInput//supplied from robotcontainer
   ) {
     this.driveSub = driveSub;
     this.leftInput = leftInput;

@@ -122,5 +122,11 @@ public class Constants {
 
         public static final int leftBumperButton = 5;
         public static final int rightBumperButton = 6;
+
+        public static final double driveP = 0.0001;
+        public static final double driveI = 0;
+        public static final double driveD = 0;
+        public static final double driveTolerance = 0;
+
     }
 }
