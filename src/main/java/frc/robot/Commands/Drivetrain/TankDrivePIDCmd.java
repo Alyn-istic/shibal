@@ -5,13 +5,9 @@
 package frc.robot.Commands.Drivetrain;
 
 import java.util.function.DoubleSupplier;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.DriverConstants;
-import frc.robot.Constants.DrivetrainConstants;
-import frc.robot.Subsystems.ArmSubsystem;
 import frc.robot.Subsystems.DrivetrainSubsystem;
 
 public class TankDrivePIDCmd extends Command {
@@ -19,7 +15,6 @@ public class TankDrivePIDCmd extends Command {
   private DrivetrainSubsystem driveSub;
   private DoubleSupplier setpoint, tolerance, driveP, driveI, driveD;
   private PIDController controller;
-
 
   /** Creates a new TankDriveCmd. */
   public TankDrivePIDCmd(
@@ -33,7 +28,6 @@ public class TankDrivePIDCmd extends Command {
     this.driveD = driveD;
     this.setpoint = setpoint;
     this.tolerance = tolerance;
-    controller = driveSub.getController();
     addRequirements(driveSub);
   }
 
@@ -43,11 +37,8 @@ public class TankDrivePIDCmd extends Command {
     controller.setP(driveP.getAsDouble());
     controller.setI(driveI.getAsDouble());
     controller.setD(driveD.getAsDouble());
-    SmartDashboard.putNumber("Arm P", driveP.getAsDouble());
-    SmartDashboard.putNumber("Arm I", driveI.getAsDouble());
-    SmartDashboard.putNumber("Arm D", driveD.getAsDouble());
 
-    controller.setTolerance(DriverConstants.driveTolerance);
+    controller.setTolerance(tolerance.getAsDouble());
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -56,13 +47,11 @@ public class TankDrivePIDCmd extends Command {
     controller.setSetpoint(setpoint.getAsDouble());
     double speed = controller.calculate(driveSub.getLeftDistance());
   
-
     driveSub.tankDriveSpeed(speed, speed);
     // Calling the "tankDrive" function in the DrivetrainSubsystem.java file.
 
     // Pushing numbers onto SmartDashboard for debugging purposes.
-    SmartDashboard.putNumber("Drivetrain Straight PID Speed", speed);
-
+    SmartDashboard.putNumber("Drivetrain Straight PID Output", speed);
   }
 
   // Called once the command ends or is interrupted.

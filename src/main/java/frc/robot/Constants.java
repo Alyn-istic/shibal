@@ -42,7 +42,7 @@ public class Constants {
         public static final int backRightID = 3; // Chassis's back-right motor ID
 
         public static final double distLeftRight = 24.8; // The distance (in inches) between the left wheels and the right wheels.
-        public static final double wheelRadius = 3; // The radius of the wheels
+        public static final double wheelRadius = 3; // The radius of the wheels (in inches)
         public static final double gearRatio = 8.46; // Gear ratio
 
         public static final int countsPerRev = 4096; // The amount of encoder counts in a full rotation
@@ -54,10 +54,15 @@ public class Constants {
         public static final double startPosX = 0;
         public static final double startPosY = 0;
 
-        // public static final double gyroP = 0.0001; // P value for turning PID command
-        // public static final double gyroI = 0; // I value for turning PID command
-        // public static final double gyroD = 0; // D value for turning PID command
-        // public static final double gyroTolerance = 1; // Tolerance for turning PID command
+        public static final double driveP = 0.0001;
+        public static final double driveI = 0;
+        public static final double driveD = 0;
+        public static final double driveTolerance = 0;
+
+        public static final double gyroP = 0.0001; // P value for turning PID command
+        public static final double gyroI = 0; // I value for turning PID command
+        public static final double gyroD = 0; // D value for turning PID command
+        public static final double gyroTolerance = 1; // Tolerance for turning PID command
     }
 
     public class ArmConstants {
@@ -131,11 +136,5 @@ public class Constants {
 
         public static final int leftBumperButton = 5;
         public static final int rightBumperButton = 6;
-
-        public static final double driveP = 0.0001;
-        public static final double driveI = 0;
-        public static final double driveD = 0;
-        public static final double driveTolerance = 0;
-
     }
 }

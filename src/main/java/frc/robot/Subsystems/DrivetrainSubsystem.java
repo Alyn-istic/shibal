@@ -28,8 +28,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.Constants.ArmConstants;
-import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.DrivetrainConstants;
 
 // Static imports for units
@@ -52,7 +50,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final AHRS gyro = new AHRS(DrivetrainConstants.gyroPort);
 
   //PID controller
-  private final PIDController controller = new PIDController(DriverConstants.driveP, DriverConstants.driveI, DriverConstants.driveD);
+  private final PIDController controller = new PIDController(DrivetrainConstants.driveP, DrivetrainConstants.driveI, DrivetrainConstants.driveD);
 
   // Kinematics
   private DifferentialDrivePoseEstimator poseEstimator;
@@ -162,7 +160,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Right Distance", getRightDistance());
 
     SmartDashboard.putNumber("Gyro Angle", getGyroAngle() % 360);
-    System.out.println(frontLeft.getSelectedSensorPosition() + ", " + frontRight.getSelectedSensorPosition());
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    frontLeft.getSimCollection().addQuadraturePosition((int)(frontLeft.get() * 200.0));
+    frontRight.getSimCollection().addQuadraturePosition((int)(frontRight.get() * 200.0));
   }
 
   public void tankDriveSpeed(double leftSpeed, double rightSpeed) { // Tankdrive using speed.
@@ -183,23 +186,23 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   }
 
-  /* Following math is copied from 7476:
-   * input / gearRatio * 2PI * wheelRadius
-   */
+  // Math: pos * ((2PI*radius)/CPR)/GearRatio
   public double getLeftDistance(){
-    return Units.inchesToMeters((frontLeft.getSelectedSensorPosition()/DrivetrainConstants.gearRatio) * 2*Math.PI * DrivetrainConstants.wheelRadius);
-    //                                               gearratio    2PI * Wheel Radius in METRES
+    return Units.inchesToMeters(
+      frontLeft.getSelectedSensorPosition() * ((2 * Math.PI * DrivetrainConstants.wheelRadius)/DrivetrainConstants.countsPerRev) / DrivetrainConstants.gearRatio
+    );
   }
   public double getRightDistance(){
-    return Units.inchesToMeters((frontRight.getSelectedSensorPosition()/DrivetrainConstants.gearRatio) * 2*Math.PI * DrivetrainConstants.wheelRadius);
-    //                                               gearratio    2PI * Wheel Radius  in METRES
+    return Units.inchesToMeters(
+      frontRight.getSelectedSensorPosition() * ((2 * Math.PI * DrivetrainConstants.wheelRadius)/DrivetrainConstants.countsPerRev) / DrivetrainConstants.gearRatio
+    );
   }
   public double getLeftVelocity(){
-    return (frontLeft.getSelectedSensorVelocity()/DrivetrainConstants.gearRatio) * 2*Math.PI * DrivetrainConstants.wheelRadius;
+    return frontLeft.getSelectedSensorVelocity() * ((2 * Math.PI * DrivetrainConstants.wheelRadius)/DrivetrainConstants.countsPerRev) / DrivetrainConstants.gearRatio;
   }
 
   public double getRightVelocity(){
-    return (frontRight.getSelectedSensorVelocity()/DrivetrainConstants.gearRatio) * 2*Math.PI * DrivetrainConstants.wheelRadius;
+    return frontRight.getSelectedSensorVelocity() * ((2 * Math.PI * DrivetrainConstants.wheelRadius)/DrivetrainConstants.countsPerRev) / DrivetrainConstants.gearRatio;
 
   }
 

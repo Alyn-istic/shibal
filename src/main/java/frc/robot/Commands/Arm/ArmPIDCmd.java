@@ -44,14 +44,13 @@ public class ArmPIDCmd extends Command {
     this.setpoint = setpoint;
     this.tolerance = tolerance;
     this.clamp = clamp;
-
-    controller = armSub.getController();
     addRequirements(armSub);
   }
 
 
   @Override
   public void initialize() {
+    controller = armSub.getController();
     controller.setTolerance(tolerance.getAsDouble());
     controller.setSetpoint(setpoint.getAsDouble());
   }
