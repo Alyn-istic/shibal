@@ -8,25 +8,39 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Subsystems.DrivetrainSubsystem;
 
 public class TankDrivePIDCmd extends Command {
   // Create the necessary variables.
   private DrivetrainSubsystem driveSub;
-  private DoubleSupplier setpoint, tolerance, driveP, driveI, driveD;
-  private PIDController controller;
+  private DoubleSupplier driveSetpoint, angleSetpoint, tolerance, driveP, driveI, driveD, turnP, turnI, turnD;
+  private PIDController driveController, turnController;
 
   /** Creates a new TankDriveCmd. */
   public TankDrivePIDCmd(
     // The arguments (settings) that this command will accept.
     DrivetrainSubsystem driveSub,
-    DoubleSupplier driveP, DoubleSupplier driveI, DoubleSupplier driveD, DoubleSupplier setpoint, DoubleSupplier tolerance //supplied from robotcontainer
+    DoubleSupplier driveP,
+    DoubleSupplier driveI,
+    DoubleSupplier driveD,
+    DoubleSupplier turnP,
+    DoubleSupplier turnI,
+    DoubleSupplier turnD,
+    DoubleSupplier driveSetpoint,
+    DoubleSupplier angleSetpoint,
+    DoubleSupplier tolerance //supplied from robotcontainer
   ) {
     this.driveSub = driveSub;
     this.driveP = driveP;
     this.driveI = driveI;
     this.driveD = driveD;
-    this.setpoint = setpoint;
+    this.turnP = turnP;
+    this.turnI = turnI;
+    this.turnD = turnD;
+    
+    this.driveSetpoint = driveSetpoint;
+    this.angleSetpoint = angleSetpoint;
     this.tolerance = tolerance;
     addRequirements(driveSub);
   }
@@ -34,21 +48,35 @@ public class TankDrivePIDCmd extends Command {
 // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    controller.setP(driveP.getAsDouble());
-    controller.setI(driveI.getAsDouble());
-    controller.setD(driveD.getAsDouble());
+    driveController = driveSub.getDriveController();
+    turnController = driveSub.getTurnController();
 
-    controller.setTolerance(tolerance.getAsDouble());
+    driveController.setP(driveP.getAsDouble());
+    driveController.setI(driveI.getAsDouble());
+    driveController.setD(driveD.getAsDouble());
+
+    turnController.enableContinuousInput(DrivetrainConstants.minAngle, DrivetrainConstants.maxAngle);
+    turnController.setP(turnP.getAsDouble());
+    turnController.setI(turnI.getAsDouble());
+    turnController.setD(turnD.getAsDouble());
+
+    driveController.setTolerance(tolerance.getAsDouble());
+    turnController.setTolerance(tolerance.getAsDouble());
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    controller.setSetpoint(setpoint.getAsDouble());
-    double speed = controller.calculate(driveSub.getLeftDistance());
+    driveController.setSetpoint(driveSetpoint.getAsDouble());
+    turnController.setSetpoint(angleSetpoint.getAsDouble());
+
+    double speed = driveController.calculate(driveSub.getLeftDistance());
+    double turn = turnController.calculate(driveSub.getGyroAngle() % 360);
   
-    driveSub.tankDriveSpeed(speed, speed);
-    // Calling the "tankDrive" function in the DrivetrainSubsystem.java file.
+    driveSub.arcadeDriveSpeed(
+      speed,
+      turn
+    );
 
     // Pushing numbers onto SmartDashboard for debugging purposes.
     SmartDashboard.putNumber("Drivetrain Straight PID Output", speed);
@@ -61,6 +89,6 @@ public class TankDrivePIDCmd extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return controller.atSetpoint();
+    return false;
   }
 }

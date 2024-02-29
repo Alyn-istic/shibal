@@ -59,9 +59,12 @@ public class Constants {
         public static final double driveD = 0;
         public static final double driveTolerance = 0;
 
-        public static final double gyroP = 0.0001; // P value for turning PID command
-        public static final double gyroI = 0; // I value for turning PID command
-        public static final double gyroD = 0; // D value for turning PID command
+        public static final double minAngle = 0;
+        public static final double maxAngle = 360;
+
+        public static final double turnP = 0.0001; // P value for turning PID command
+        public static final double turnI = 0; // I value for turning PID command
+        public static final double turnD = 0; // D value for turning PID command
         public static final double gyroTolerance = 1; // Tolerance for turning PID command
         public static final double kS = 0.1817;
         public static final double kV = 1.9351;
@@ -91,6 +94,9 @@ public class Constants {
         public static final double dropP = 0.025; // P value for the arm PID command. Was 0.03.
         public static final double dropI = 0; // I value for the arm PID command
         public static final double dropD = 0.00003; // D value for the arm PID command. Was 0.000025.
+
+        public static final double minAngle = 0;
+        public static final double maxAngle = 360;
 
         public static final double tolerance = 1;
         public static final double setpointOffset = 0;

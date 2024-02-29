@@ -49,7 +49,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final AHRS gyro = new AHRS(DrivetrainConstants.gyroPort);
 
   //PID controller
-  private final PIDController controller = new PIDController(DrivetrainConstants.driveP, DrivetrainConstants.driveI, DrivetrainConstants.driveD);
+  private final PIDController driveController = new PIDController(DrivetrainConstants.driveP, DrivetrainConstants.driveI, DrivetrainConstants.driveD);
+  private final PIDController turnController = new PIDController(DrivetrainConstants.turnP, DrivetrainConstants.turnI, DrivetrainConstants.turnD);  
 
   // Kinematics
   private DifferentialDrivePoseEstimator poseEstimator;
@@ -174,6 +175,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
     drive.tankDrive(leftSpeed, rightSpeed);
   }
 
+  public void arcadeDriveSpeed(double speed, double turn) {
+    drive.arcadeDrive(speed, turn);
+  }
+
   public double getGyroAngle() { // Function for getting the gyro's angle.
     return gyro.getAngle();
   }
@@ -202,7 +207,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
     return frontRight.getSelectedSensorVelocity() * ((2 * Math.PI * DrivetrainConstants.wheelRadius)/DrivetrainConstants.countsPerRev) / DrivetrainConstants.gearRatio;
 
   }
-  public PIDController getController() {
-    return controller;
+  public PIDController getDriveController() {
+    return driveController;
+  }
+
+  public PIDController getTurnController() {
+    return turnController;
   }
 }
