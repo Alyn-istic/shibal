@@ -5,29 +5,22 @@
 package frc.robot.Subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
-import edu.wpi.first.math.kinematics.DifferentialDriveWheelPositions;
-import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.Distance;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.MutableMeasure;
 import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -43,21 +36,19 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 public class DrivetrainSubsystem extends SubsystemBase {
 
   // Initializing VictorSPX motors for the drivetrain.
-  private final WPI_VictorSPX frontLeft = new WPI_VictorSPX(DrivetrainConstants.frontLeftID);
-  private final WPI_VictorSPX frontRight = new WPI_VictorSPX(DrivetrainConstants.frontRightID);
+  private final WPI_TalonSRX frontLeft = new WPI_TalonSRX(DrivetrainConstants.frontLeftID);
+  private final WPI_TalonSRX frontRight = new WPI_TalonSRX(DrivetrainConstants.frontRightID);
   private final WPI_VictorSPX backLeft = new WPI_VictorSPX(DrivetrainConstants.backLeftID);
   private final WPI_VictorSPX backRight = new WPI_VictorSPX(DrivetrainConstants.backRightID);
-
-  // Controllers
-  private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(DrivetrainConstants.kS, DrivetrainConstants.kV);
-  private final PIDController leftPIDController = new PIDController(DrivetrainConstants.kP, DrivetrainConstants.kI, DrivetrainConstants.kD);
-  private final PIDController rightPIDController = new PIDController(DrivetrainConstants.kP, DrivetrainConstants.kI, DrivetrainConstants.kD);
 
   // Creating a Differential Drive using the front motors. This is like grouping all the motors together.
   private final DifferentialDrive drive = new DifferentialDrive(frontLeft, frontRight); //new object, using two parameteres for both sides
 
   // Initiating the gyro.
   private final AHRS gyro = new AHRS(DrivetrainConstants.gyroPort);
+
+  //PID controller
+  private final PIDController controller = new PIDController(DrivetrainConstants.driveP, DrivetrainConstants.driveI, DrivetrainConstants.driveD);
 
   // Kinematics
   private DifferentialDrivePoseEstimator poseEstimator;
@@ -115,6 +106,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   /** Creates a new DrivetrainSubsystem. */
   public DrivetrainSubsystem() {
+    frontLeft.configFactoryDefault();
+    backLeft.configFactoryDefault();
+    frontRight.configFactoryDefault();
+    backRight.configFactoryDefault();
+
     // Inverting the left motors
     frontLeft.setInverted(true);
     backLeft.setInverted(true);
@@ -132,6 +128,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     frontRight.setNeutralMode(NeutralMode.Brake);
 
     // Resetting probably non-existing encoders just for the sake of it.
+
     frontLeft.setSelectedSensorPosition(0);
     frontRight.setSelectedSensorPosition(0);
     backLeft.setSelectedSensorPosition(0);
@@ -142,21 +139,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     // Pose estimation
     poseEstimator = new DifferentialDrivePoseEstimator(kinematics, gyro.getRotation2d(), getLeftDistance(), getRightDistance(), new Pose2d(0, 0, new Rotation2d(0)));
-  
-    // Path planning
-    AutoBuilder.configureRamsete(
-      this::getBotPose,
-      this::resetBotPose,
-      this::getChassisSpeeds,
-      this::chassisSpeedDrive,
-      new ReplanningConfig(),
-      () -> { // Checking robot alliance to determine if it should flip the path
-        if (DriverStation.getAlliance().isPresent()) {
-          return (DriverStation.getAlliance().get() == DriverStation.Alliance.Red); // Returns true if alliance is red
-        }
-        return false; // Returns false if DriverStation doesn't detect alliance as red
-      }
-    );
   }
 
   @Override
@@ -177,25 +159,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Gyro Angle", getGyroAngle() % 360);
   }
 
-  public void tankDrive(double leftSpeed, double rightSpeed) { // Tankdrive using speed.
-    drive.tankDrive(leftSpeed, rightSpeed);
+  @Override
+  public void simulationPeriodic() {
+    frontLeft.getSimCollection().addQuadraturePosition((int)(frontLeft.get() * 200.0));
+    frontRight.getSimCollection().addQuadraturePosition((int)(frontRight.get() * 200.0));
   }
 
-  public void chassisSpeedDrive(ChassisSpeeds chassis) {
-    DifferentialDriveWheelSpeeds speeds = kinematics.toWheelSpeeds(chassis);
-
-    // Receiving feedforward instructions
-    double leftFF = feedforward.calculate(speeds.leftMetersPerSecond);
-    double rightFF = feedforward.calculate(speeds.rightMetersPerSecond);
-
-    // Controlling the robot velocity using PID
-    double leftOutput = leftPIDController.calculate(getLeftVelocity(), speeds.leftMetersPerSecond);
-    double rightOutput = leftPIDController.calculate(getRightVelocity(), speeds.rightMetersPerSecond);
-
-    // Applying voltage
-    frontLeft.setVoltage(leftOutput + leftFF);
-    frontRight.setVoltage(rightOutput + rightFF);
-    drive.feed();
+  public void tankDriveSpeed(double leftSpeed, double rightSpeed) { // Tankdrive using speed.
+    drive.tankDrive(leftSpeed, rightSpeed);
   }
 
   public double getGyroAngle() { // Function for getting the gyro's angle.
@@ -204,33 +175,29 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public Pose2d getBotPose() {
     return poseEstimator.getEstimatedPosition();
+
   }
 
-  public void resetBotPose(Pose2d pose) {
-    poseEstimator.resetPosition(gyro.getRotation2d(), new DifferentialDriveWheelPositions(getLeftDistance(), getRightDistance()), pose);
+  // Math: pos * ((2PI*radius)/CPR)/GearRatio
+  public double getLeftDistance(){
+    return Units.inchesToMeters(
+      frontLeft.getSelectedSensorPosition() * ((2 * Math.PI * DrivetrainConstants.wheelRadius)/DrivetrainConstants.countsPerRev) / DrivetrainConstants.gearRatio
+    );
+  }
+  public double getRightDistance(){
+    return Units.inchesToMeters(
+      frontRight.getSelectedSensorPosition() * ((2 * Math.PI * DrivetrainConstants.wheelRadius)/DrivetrainConstants.countsPerRev) / DrivetrainConstants.gearRatio
+    );
+  }
+  public double getLeftVelocity(){
+    return frontLeft.getSelectedSensorVelocity() * ((2 * Math.PI * DrivetrainConstants.wheelRadius)/DrivetrainConstants.countsPerRev) / DrivetrainConstants.gearRatio;
   }
 
-  /* Following math is copied from 7476:
-   * input / gearRatio * 2PI * wheelRadius
-   */
-  public double getLeftDistance() {
-    return Units.inchesToMeters(frontLeft.getSelectedSensorPosition() / DrivetrainConstants.gearRatio * (2*Math.PI) * DrivetrainConstants.wheelRadius);
-  }
-  public double getRightDistance() {
-    return Units.inchesToMeters(frontRight.getSelectedSensorPosition() / DrivetrainConstants.gearRatio * (2*Math.PI) * DrivetrainConstants.wheelRadius);
-  }
-  public double getLeftVelocity() {
-    return Units.inchesToMeters(frontLeft.getSelectedSensorVelocity() / DrivetrainConstants.gearRatio * (2*Math.PI) * DrivetrainConstants.wheelRadius);
-  }
-  public double getRightVelocity() {
-    return Units.inchesToMeters(frontRight.getSelectedSensorVelocity() / DrivetrainConstants.gearRatio * (2*Math.PI) * DrivetrainConstants.wheelRadius);
-  }
+  public double getRightVelocity(){
+    return frontRight.getSelectedSensorVelocity() * ((2 * Math.PI * DrivetrainConstants.wheelRadius)/DrivetrainConstants.countsPerRev) / DrivetrainConstants.gearRatio;
 
-  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds(getLeftVelocity(), getRightDistance());
   }
-
-  public ChassisSpeeds getChassisSpeeds() {
-    return kinematics.toChassisSpeeds(getWheelSpeeds());
+  public PIDController getController() {
+    return controller;
   }
 }

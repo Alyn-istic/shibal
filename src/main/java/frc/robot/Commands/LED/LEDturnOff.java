@@ -2,26 +2,14 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.Commands.Drivetrain;
-
-import java.util.function.DoubleSupplier;
+package frc.robot.Commands.LED;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Subsystems.DrivetrainSubsystem;
-import frc.robot.Subsystems.VisionSubsystem;
 
-public class DriveToNote extends Command {
-  private DrivetrainSubsystem driveSub;
-  private VisionSubsystem visionSub;
-
-  /** Creates a new DriveToNote. */
-  public DriveToNote(
-    DrivetrainSubsystem driveSub,
-    VisionSubsystem visionSub
-  ) {
-    this.driveSub = driveSub;
-    this.visionSub = visionSub;
-    addRequirements(driveSub);
+public class LEDturnOff extends Command {
+  /** Creates a new LEDturnOff. */
+  public LEDturnOff() {
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.

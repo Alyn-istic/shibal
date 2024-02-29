@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Commands.EmergencyStopCmd;
 import frc.robot.Commands.Arm.ArmManualCmd;
 import frc.robot.Commands.Arm.ArmCommandSelector;
@@ -23,9 +24,9 @@ import frc.robot.Commands.Arm.Autos.ArmIntakePerimeter;
 import frc.robot.Commands.Arm.Autos.ArmIntakeSource;
 import frc.robot.Commands.Arm.Autos.ArmShoot;
 import frc.robot.Commands.Arm.Autos.ArmShootPerimeter;
-import frc.robot.Commands.Autos.ExitZoneTimed;
 import frc.robot.Commands.Autos.AutoLog;
-import frc.robot.Commands.Autos.ScoreInAmpTimed;
+import frc.robot.Commands.Autos.ExitZoneTimed.ExitZoneTimed1;
+import frc.robot.Commands.Autos.ScoreInAmpTimed.ScoreInAmpTimed1;
 import frc.robot.Commands.Climber.ClimberCmd;
 // import frc.robot.Commands.Arm.LimitSwitchSimulation;
 import frc.robot.Commands.Drivetrain.TankDriveCmd;
@@ -36,18 +37,23 @@ import frc.robot.Subsystems.ArmSubsystem;
 import frc.robot.Subsystems.DrivetrainSubsystem;
 import frc.robot.Subsystems.IntakeShooterSubsystem;
 import frc.robot.Subsystems.ClimberSubsystem;
+import frc.robot.Subsystems.LEDSubsystem;
 import frc.robot.Constants.ClimberConstants;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class RobotContainer {
   // Initiating a ordinary Xbox Controller. Nothing special.
   private final XboxController driver = new XboxController(DriverConstants.driverPort);
   private final XboxController operator = new XboxController(DriverConstants.operatorPort);
+  private final XboxController tester = new XboxController(DriverConstants.testerPort);
   // Initiating a command Xbox Controller. This will allow us to map commands onto specific buttons.
   private final CommandXboxController commandDriver = new CommandXboxController(DriverConstants.driverPort);
   private final CommandXboxController commandOperator = new CommandXboxController(DriverConstants.operatorPort);
+  private final CommandXboxController commandTester = new CommandXboxController(DriverConstants.testerPort);
 
   // Initiating all the subsystems. We will need these in order to properly run commands.
   private final DrivetrainSubsystem driveSub = new DrivetrainSubsystem();
+  public final LEDSubsystem led = new LEDSubsystem();
   private final ArmSubsystem armSub = new ArmSubsystem();
   private final IntakeShooterSubsystem intakeShooterSub = new IntakeShooterSubsystem();
   private final ClimberSubsystem climbSub = new ClimberSubsystem();
@@ -117,6 +123,8 @@ public class RobotContainer {
         intakeShooterSub, () -> MathUtil.applyDeadband(-driver.getRawAxis(DriverConstants.rightTriggerAxis), DriverConstants.triggerDeadband)
       )
     );
+
+    commandOperator.a().whileTrue(driveSub.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
 
     // Run the climber motors using y and b
     commandDriver.y().whileTrue(new ClimberCmd(climbSub, () -> ClimberConstants.climberSpeed)); // Extending Climber (This will depend on how arm works)
@@ -191,16 +199,22 @@ public class RobotContainer {
         )
       )
     );
+
+    //////////////////////////////////////// Sys ID /////////////////////////////////////////////////////////
+    commandTester.y().whileTrue(driveSub.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    commandTester.a().whileTrue(driveSub.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    commandTester.x().whileTrue(driveSub.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    commandTester.b().whileTrue(driveSub.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
   }
 
   public Command getAutonomousCommand() {
     switch (autoChooser.getSelected()) {
       case "MOVE_OUT_OF_ZONE": // Moves the robot out of the zone.
-        return new ExitZoneTimed(driveSub); // Return the auto command that moves out of the zone
+        return new ExitZoneTimed1(driveSub); // Return the auto command that moves out of the zone
       case "SCORE_IN_AMP_SENSORS":
         return new AutoLog("This routine has not been set up yet."); // Returns the auto command that moves robot to amp, and shoots loaded note, using sensors.
       case "SCORE_IN_AMP_TIMED":
-        return new ScoreInAmpTimed(driveSub, intakeShooterSub); // Returns the auto command that moves robot to amp, and shoots loaded note, using timers.
+        return new ScoreInAmpTimed1(driveSub, intakeShooterSub); // Returns the auto command that moves robot to amp, and shoots loaded note, using timers.
     }
     return new AutoLog("No auto selected.");
   }

@@ -56,14 +56,13 @@ public class ArmPIDCmd extends Command {
     this.setpoint = setpoint;
     this.tolerance = tolerance;
     this.clamp = clamp;
-
-    controller = armSub.getController();
     addRequirements(armSub);
   }
 
 
   @Override
   public void initialize() {
+    controller = armSub.getController();
     controller.setTolerance(tolerance.getAsDouble());
     controller.setSetpoint(setpoint.getAsDouble());
   }
@@ -75,7 +74,7 @@ public class ArmPIDCmd extends Command {
      * or
      * If arm is dropping, and drop limit switch isn't switched.
     */
-    System.out.println("Arm velocity recieved (experimenting, currently does nothing):" + armSub.getSensorVelocity());
+    //System.out.println("Arm velocity recieved (experimenting, currently does nothing):" + armSub.getSensorVelocity());
     if ((speed < 0)) { // Raising
       if (!armSub.raiseLimitSwitch()) {
         armSub.setMotor(speed);

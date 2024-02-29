@@ -7,17 +7,31 @@ import edu.wpi.first.wpilibj.SerialPort.Port;
 public class Constants {
     public class AutonomousConstants {
         public class MoveToAmpTimedConstants {
+            // 1 = first position, 2 = second position, 3 third position
+            //all constant values are wrong, need testing
             public static final double TIME_TURN_TO_AMP = 3.5; // In seconds
-            public static final double TIME_MOVE_TO_AMP = 4.5; // In seconds
-            public static final double TIME_SHOOT_IN_AMP = 1; // In seconds
-
             public static final double SPEED_TURN_TO_AMP = -0.5; // Motor speed
-            public static final double SPEED_MOVE_TO_AMP = 0.4; // Motor speed
+
+            public static final double TIME_MOVE_TO_AMP1 = 4.5; // In seconds
+            public static final double TIME_MOVE_TO_AMP2 = 4.5; // In seconds
+            public static final double TIME_MOVE_TO_AMP3= 4.5; // In seconds
+
+            public static final double TIME_SHOOT_IN_AMP = 1; // In seconds
             public static final double SPEED_SHOOT_IN_AMP = 1; // Motor speed
+
+            public static final double SPEED_MOVE_TO_AMP1 = 0.4; // Motor speed
+            public static final double SPEED_MOVE_TO_AMP2 = 0.4; // Motor speed
+            public static final double SPEED_MOVE_TO_AMP3 = 0.4; // Motor speed
         }
         public class MoveOutOfZoneConstants {
-            public static final double TIME_MOVE_OUT_OF_ZONE = 1; // In seconds
-            public static final double SPEED_MOVE_OUT_OF_ZONE = 0.35; // Motor speed
+            public static final double TIME_MOVE_OUT_OF_ZONE1 = 1; // In seconds
+            public static final double SPEED_MOVE_OUT_OF_ZONE1 = 0.35; // Motor speed
+
+            public static final double TIME_MOVE_OUT_OF_ZONE2 = 1; // In seconds
+            public static final double SPEED_MOVE_OUT_OF_ZONE2 = 0.35; // Motor speed
+
+            public static final double TIME_MOVE_OUT_OF_ZONE3 = 1; // In seconds
+            public static final double SPEED_MOVE_OUT_OF_ZONE3 = 0.35; // Motor speed
         }
     }
 
@@ -28,7 +42,7 @@ public class Constants {
         public static final int backRightID = 3; // Chassis's back-right motor ID
 
         public static final double distLeftRight = 24.8; // The distance (in inches) between the left wheels and the right wheels.
-        public static final double wheelRadius = 3; // The radius of the wheels
+        public static final double wheelRadius = 3; // The radius of the wheels (in inches)
         public static final double gearRatio = 8.46; // Gear ratio
 
         public static final int countsPerRev = 4096; // The amount of encoder counts in a full rotation
@@ -37,6 +51,18 @@ public class Constants {
 
         public static final double speed = 1;
 
+        public static final double startPosX = 0;
+        public static final double startPosY = 0;
+
+        public static final double driveP = 0.0001;
+        public static final double driveI = 0;
+        public static final double driveD = 0;
+        public static final double driveTolerance = 0;
+
+        public static final double gyroP = 0.0001; // P value for turning PID command
+        public static final double gyroI = 0; // I value for turning PID command
+        public static final double gyroD = 0; // D value for turning PID command
+        public static final double gyroTolerance = 1; // Tolerance for turning PID command
         public static final double kS = 0.1817;
         public static final double kV = 1.9351;
 
@@ -95,9 +121,15 @@ public class Constants {
         public static final double cameraHeight = 1; // Camera height off the ground ain inches
     }
 
+    public class LEDconstants {
+        public static final int LEDTalonPort = 0;
+        
+    }
+
     public class DriverConstants {
         public static final int driverPort = 0; // Controller port for driver
         public static final int operatorPort = 1; // Controller port for operator
+        public static final int testerPort = 2;
 
         public static final double joystickDeadband = 0.08; // Deadzone for controller L/R joysticks
         public static final double triggerDeadband = 0.08; // Deadzone for controller L/R triggers

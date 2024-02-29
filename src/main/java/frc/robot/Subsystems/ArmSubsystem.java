@@ -85,6 +85,9 @@ public class ArmSubsystem extends SubsystemBase {
     // Resetting encoder positions
     leftMotor.setSelectedSensorPosition(toPosition(-ArmConstants.startingAngle));
     rightMotor.setSelectedSensorPosition(toPosition(ArmConstants.startingAngle));
+
+    // Controller configs
+    controller.enableContinuousInput(0, 360);
   }
 
   @Override

@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.Commands.Drivetrain.Autos;
+package frc.robot.Commands.Drivetrain.Autos.MoveOutOfZoneTimed;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Commands.Autos.AutoLog;
@@ -13,16 +13,16 @@ import frc.robot.Subsystems.DrivetrainSubsystem;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class MoveOutOfZoneTimed extends SequentialCommandGroup {
+public class MoveOutOfZoneTimed1 extends SequentialCommandGroup {
   /** Creates a new MoveOutOfZone. */
-  public MoveOutOfZoneTimed(
+  public MoveOutOfZoneTimed1(
     DrivetrainSubsystem driveSub
   ) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new AutoLog("moving out of zone"),
-      new TankDriveCmd(driveSub, () -> MoveOutOfZoneConstants.SPEED_MOVE_OUT_OF_ZONE, () -> MoveOutOfZoneConstants.SPEED_MOVE_OUT_OF_ZONE).withTimeout(MoveOutOfZoneConstants.TIME_MOVE_OUT_OF_ZONE)
+      new AutoLog("moving out of zone, pos.1"),
+      new TankDriveCmd(driveSub, () -> MoveOutOfZoneConstants.SPEED_MOVE_OUT_OF_ZONE1, () -> MoveOutOfZoneConstants.SPEED_MOVE_OUT_OF_ZONE1).withTimeout(MoveOutOfZoneConstants.TIME_MOVE_OUT_OF_ZONE1)
     );
   }
 }
