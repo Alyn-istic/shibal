@@ -5,6 +5,7 @@
 package frc.robot.Subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
@@ -134,6 +135,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
     backLeft.setSelectedSensorPosition(0);
     backRight.setSelectedSensorPosition(0);
 
+    //Config Drivetrain encoders
+    frontLeft.configAllSettings(null);
+    frontRight.configAllSettings(null);
+   
     // Resetting gyro
     gyro.reset();
 
