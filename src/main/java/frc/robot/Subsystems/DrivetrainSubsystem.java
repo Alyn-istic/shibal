@@ -10,6 +10,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -27,6 +28,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.DrivetrainConstants;
 
 // Static imports for units
@@ -47,6 +50,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   // Initiating the gyro.
   private final AHRS gyro = new AHRS(DrivetrainConstants.gyroPort);
+
+  //PID controller
+  private final PIDController controller = new PIDController(DriverConstants.driveP, DriverConstants.driveI, DriverConstants.driveD);
 
   // Kinematics
   private DifferentialDrivePoseEstimator poseEstimator;
@@ -199,5 +205,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public DifferentialDriveWheelSpeeds wheelSpeeds() {
     return new DifferentialDriveWheelSpeeds(getLeftVelocity(), getRightDistance());
+  }
+
+  public PIDController getController() {
+    return controller;
   }
 }
