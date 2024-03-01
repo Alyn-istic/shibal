@@ -12,9 +12,9 @@ import frc.robot.Subsystems.DrivetrainSubsystem;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class TestAuto extends SequentialCommandGroup {
+public class TestAuto2 extends SequentialCommandGroup {
   /** Creates a new TestAuto. */
-  public TestAuto(
+  public TestAuto2(
     DrivetrainSubsystem driveSub
   ) {
     // Add your commands in the addCommands() call, e.g.

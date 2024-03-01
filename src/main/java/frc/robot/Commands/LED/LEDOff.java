@@ -7,10 +7,10 @@ package frc.robot.Commands.LED;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Subsystems.LEDSubsystem;
 
-public class LEDTurnOff extends InstantCommand {
+public class LEDOff extends InstantCommand {
   private LEDSubsystem led;
   /** Creates a new LEDturnOff. */
-  public LEDTurnOff(
+  public LEDOff(
     LEDSubsystem led
   ) {
     this.led = led;

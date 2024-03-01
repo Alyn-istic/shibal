@@ -51,8 +51,8 @@ public class Constants {
 
         public static final double speed = 1; // hello world
 
-        public static final double startPosX = 0; // 
-        public static final double startPosY = 0; //
+        public static final double startPosX = 5; // 
+        public static final double startPosY = 5; //
 
         public static final double driveP = 2; // 
         public static final double driveI = 0; // 
@@ -64,7 +64,7 @@ public class Constants {
         public static final double minAngle = 0; // 
         public static final double maxAngle = 360; // 
 
-        public static final double turnP = 0.0001; // P value for turning PID command
+        public static final double turnP = 0.5; // P value for turning PID command
         public static final double turnI = 0; // I value for turning PID command
         public static final double turnD = 0; // D value for turning PID command
         public static final double gyroTolerance = 1; // Tolerance for turning PID command

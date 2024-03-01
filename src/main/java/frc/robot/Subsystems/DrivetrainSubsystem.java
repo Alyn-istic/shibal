@@ -24,6 +24,7 @@ import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -50,11 +51,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final AHRS gyro = new AHRS(DrivetrainConstants.gyroPort);
 
   //PID controller
-  private final PIDController driveController = new PIDController(DrivetrainConstants.driveP, DrivetrainConstants.driveI, DrivetrainConstants.driveD);
+  // private final PIDController driveController = new PIDController(DrivetrainConstants.driveP, DrivetrainConstants.driveI, DrivetrainConstants.driveD);
+  private final PIDController leftDriveController = new PIDController(DrivetrainConstants.driveP, DrivetrainConstants.driveI, DrivetrainConstants.driveD);
+  private final PIDController rightDriveController = new PIDController(DrivetrainConstants.driveP, DrivetrainConstants.driveI, DrivetrainConstants.driveD);
   private final PIDController turnController = new PIDController(DrivetrainConstants.turnP, DrivetrainConstants.turnI, DrivetrainConstants.turnD);  
 
   // Kinematics
   private DifferentialDrivePoseEstimator poseEstimator;
+  private Field2d field;
   private DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(DrivetrainConstants.distLeftRight));
 
   /* Mutable holders
@@ -141,12 +145,21 @@ public class DrivetrainSubsystem extends SubsystemBase {
     gyro.reset();
 
     // Pose estimation
-    poseEstimator = new DifferentialDrivePoseEstimator(kinematics, gyro.getRotation2d(), getLeftDistance(), getRightDistance(), new Pose2d(0, 0, new Rotation2d(0)));
+    poseEstimator = new DifferentialDrivePoseEstimator(
+      kinematics,
+      gyro.getRotation2d(),
+      getLeftDistance(),
+      getRightDistance(),
+      new Pose2d(DrivetrainConstants.startPosX, DrivetrainConstants.startPosY, new Rotation2d(0))
+    );
+    field = new Field2d();
+    SmartDashboard.putData("Field ", field);
   }
 
   @Override
   public void periodic() {
     poseEstimator.update(gyro.getRotation2d(), getLeftDistance(), getRightDistance());
+
     SmartDashboard.putNumber("Front Left Motor Speed", frontLeft.get());
     SmartDashboard.putNumber("Front Right Motor Speed", frontRight.get());
 
@@ -164,8 +177,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   @Override
   public void simulationPeriodic() {
-    frontLeft.getSimCollection().addQuadraturePosition((int)(frontLeft.get() * 200.0));
-    frontRight.getSimCollection().addQuadraturePosition((int)(frontRight.get() * 200.0));
+    frontLeft.getSimCollection().addQuadraturePosition(((int)(frontLeft.get() * 801.0)));
+    frontRight.getSimCollection().addQuadraturePosition((-(int)(frontRight.get() * 801.0)));
+    gyro.setAngleAdjustment(Units.radiansToDegrees(kinematics.toTwist2d(getLeftDistance(), getRightDistance()).dtheta));
+
+    field.setRobotPose(getBotPose());
   }
 
   public void tankDriveSpeed(double leftSpeed, double rightSpeed) { // Tankdrive using speed.
@@ -191,7 +207,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   }
 
-  // Math: pos * ((2PI*radius)/CPR)/GearRatio
+  // Math: pos * ((2PI*radius)/CPR)/GearRatio -> convert from inches to meters
   public double getLeftDistance(){
     return Units.inchesToMeters(
       frontLeft.getSelectedSensorPosition() * ((2 * Math.PI * DrivetrainConstants.wheelRadius)/DrivetrainConstants.countsPerRev) / DrivetrainConstants.gearRatio
@@ -210,9 +226,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
     return frontRight.getSelectedSensorVelocity() * ((2 * Math.PI * DrivetrainConstants.wheelRadius)/DrivetrainConstants.countsPerRev) / DrivetrainConstants.gearRatio;
 
   }
-  public PIDController getDriveController() {
-    return driveController;
-    
+  public PIDController getLeftDriveController() {
+    return leftDriveController;
+  }
+
+  public PIDController getRightDriveController() {
+    return rightDriveController;
   }
 
   public PIDController getTurnController() {
