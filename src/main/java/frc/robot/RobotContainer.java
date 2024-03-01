@@ -26,7 +26,7 @@ import frc.robot.Commands.Arm.Autos.ArmShoot;
 import frc.robot.Commands.Arm.Autos.ArmShootPerimeter;
 import frc.robot.Commands.Arm.Autos.ArmZero;
 import frc.robot.Commands.Autos.AutoLog;
-import frc.robot.Commands.Autos.TestAuto;
+import frc.robot.Commands.Autos.ScoreInAmpSensor1;
 import frc.robot.Commands.Autos.ExitZoneTimed.ExitZoneTimed1;
 import frc.robot.Commands.Autos.ScoreInAmpTimed.ScoreInAmpTimed1;
 import frc.robot.Commands.Climber.ClimberCmd;
@@ -135,8 +135,6 @@ public class RobotContainer {
     commandDriver.leftBumper().onTrue(new ArmCommandSelector(armPIDCommands, () -> -1, armIndexEntry));
     commandDriver.rightBumper().onTrue(new ArmCommandSelector(armPIDCommands, () -> 1, armIndexEntry));
 
-    commandDriver.b().whileTrue(new TestAuto(driveSub));
-
     // //Intake: Drop into intake angle.//
     // commandDriver.povDown().whileTrue(new ArmIntake(armSub));
 
@@ -211,14 +209,14 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    // switch (autoChooser.getSelected()) {
-    //   case "MOVE_OUT_OF_ZONE": // Moves the robot out of the zone.
-    //     return new ExitZoneTimed1(driveSub); // Return the auto command that moves out of the zone
-    //   case "SCORE_IN_AMP_SENSORS":
-    //     return new AutoLog("This routine has not been set up yet."); // Returns the auto command that moves robot to amp, and shoots loaded note, using sensors.
-    //   case "SCORE_IN_AMP_TIMED":
-    //     return new ScoreInAmpTimed1(driveSub, intakeShooterSub); // Returns the auto command that moves robot to amp, and shoots loaded note, using timers.
-    // }
+    switch (autoChooser.getSelected()) {
+      case "MOVE_OUT_OF_ZONE": // Moves the robot out of the zone.
+        return new ExitZoneTimed1(driveSub); // Return the auto command that moves out of the zone
+      case "SCORE_IN_AMP_SENSORS":
+        return new ScoreInAmpSensor1(driveSub, armSub, intakeShooterSub); // Returns the auto command that moves robot to amp, and shoots loaded note, using sensors.
+      case "SCORE_IN_AMP_TIMED":
+        return new ScoreInAmpTimed1(driveSub, intakeShooterSub); // Returns the auto command that moves robot to amp, and shoots loaded note, using timers.
+    }
     return new AutoLog("No auto selected.");
   }
 }

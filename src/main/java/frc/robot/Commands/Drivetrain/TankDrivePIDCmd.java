@@ -4,6 +4,7 @@
 
 package frc.robot.Commands.Drivetrain;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -14,37 +15,35 @@ import frc.robot.Subsystems.DrivetrainSubsystem;
 public class TankDrivePIDCmd extends Command {
   // Create the necessary variables.
   private DrivetrainSubsystem driveSub;
-  private DoubleSupplier leftDriveSetpoint, rightDriveSetpoint, angleSetpoint, driveTolerance, turnTolerance; //driveP, driveI, driveD, turnP, turnI, turnD;
-  private PIDController leftDriveController, rightDriveController, turnController;
+  private DoubleSupplier leftDriveSetpoint, rightDriveSetpoint, driveTolerance; //driveP, driveI, driveD, turnP, turnI, turnD;
+  private PIDController leftDriveController, rightDriveController;
+  private BooleanSupplier periodicalUpdate, endSupplier;
 
+  /**
+   * Applies speed to the left and right motors using PID controllers based on left and right distances
+   * @param driveSub The drivetrain subsystem
+   * @param leftDriveSetpoint Returns the setpoint for the left encoders in meters
+   * @param rightDriveSetpoint Returns the setpoint for the right encoders in meters
+   * @param driveTolerance Returns the tolerance for the PID controllers
+   * @param periodicalUpdate Returns if the controllers's gains should be periodically updated
+   * @param end Returns true when the command should end
+   */
   public TankDrivePIDCmd(
     // The arguments (settings) that this command will accept.
     DrivetrainSubsystem driveSub,
-    // DoubleSupplier driveP,
-    // DoubleSupplier driveI,
-    // DoubleSupplier driveD,
-    // DoubleSupplier turnP,
-    // DoubleSupplier turnI,
-    // DoubleSupplier turnD,
     DoubleSupplier leftDriveSetpoint,
     DoubleSupplier rightDriveSetpoint,
-    DoubleSupplier angleSetpoint,
     DoubleSupplier driveTolerance, //supplied from robotcontainer
-    DoubleSupplier turnTolerance
+    BooleanSupplier periodicalUpdate,
+    BooleanSupplier end
   ) {
     this.driveSub = driveSub;
-    // this.driveP = driveP;
-    // this.driveI = driveI;
-    // this.driveD = driveD;
-    // this.turnP = turnP;
-    // this.turnI = turnI;
-    // this.turnD = turnD;
+    this.periodicalUpdate = periodicalUpdate;
     
     this.leftDriveSetpoint = leftDriveSetpoint;
     this.rightDriveSetpoint = rightDriveSetpoint;
-    this.angleSetpoint = angleSetpoint;
     this.driveTolerance = driveTolerance;
-    this.turnTolerance = turnTolerance;
+    this.endSupplier = end;
     addRequirements(driveSub);
   }
 
@@ -53,11 +52,7 @@ public class TankDrivePIDCmd extends Command {
   public void initialize() {
     leftDriveController = driveSub.getLeftDriveController();
     rightDriveController = driveSub.getRightDriveController();
-    turnController = driveSub.getTurnController();
 
-    // driveController.setP(driveP.getAsDouble());
-    // driveController.setI(driveI.getAsDouble());
-    // driveController.setD(driveD.getAsDouble());
     leftDriveController.setP(DrivetrainConstants.driveP);
     leftDriveController.setI(DrivetrainConstants.driveI);
     leftDriveController.setD(DrivetrainConstants.driveD);
@@ -66,35 +61,31 @@ public class TankDrivePIDCmd extends Command {
     rightDriveController.setI(DrivetrainConstants.driveI);
     rightDriveController.setD(DrivetrainConstants.driveD);
 
-    turnController.enableContinuousInput(DrivetrainConstants.minAngle, DrivetrainConstants.maxAngle);
-    // turnController.setP(turnP.getAsDouble());
-    // turnController.setI(turnI.getAsDouble());
-    // turnController.setD(turnD.getAsDouble());
-    turnController.setP(DrivetrainConstants.turnP);
-    turnController.setI(DrivetrainConstants.turnI);
-    turnController.setD(DrivetrainConstants.turnD);
-
-
     leftDriveController.setTolerance(driveTolerance.getAsDouble());
     rightDriveController.setTolerance(driveTolerance.getAsDouble());
-    turnController.setTolerance(turnTolerance.getAsDouble());
+
+    leftDriveController.setSetpoint(leftDriveSetpoint.getAsDouble());
+    rightDriveController.setSetpoint(rightDriveSetpoint.getAsDouble());
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    leftDriveController.setSetpoint(leftDriveSetpoint.getAsDouble());
-    rightDriveController.setSetpoint(rightDriveSetpoint.getAsDouble());
-    turnController.setSetpoint(angleSetpoint.getAsDouble());
-
-    double turn = turnController.calculate(driveSub.getGyroAngle() % 360);
     double leftSpeed = -leftDriveController.calculate(driveSub.getLeftDistance()) * DrivetrainConstants.speed;
     double rightSpeed = -rightDriveController.calculate(driveSub.getRightDistance()) * DrivetrainConstants.speed;
   
     driveSub.tankDriveSpeed(
-      (leftSpeed + turn),
-      (rightSpeed - turn)
+      (leftSpeed),
+      (rightSpeed)
     );
+
+    if (periodicalUpdate.getAsBoolean()) {
+      leftDriveController.setTolerance(driveTolerance.getAsDouble());
+      rightDriveController.setTolerance(driveTolerance.getAsDouble());
+
+      leftDriveController.setSetpoint(leftDriveSetpoint.getAsDouble());
+      rightDriveController.setSetpoint(rightDriveSetpoint.getAsDouble());
+    }
 
     // Pushing numbers onto SmartDashboard for debugging purposes.
     SmartDashboard.putNumber("Drivetrain Left PID Output", leftSpeed);
@@ -109,6 +100,6 @@ public class TankDrivePIDCmd extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return endSupplier.getAsBoolean();
   }
 }

@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.SerialPort.Port;
 
 public class Constants {
     public class AutonomousConstants {
+        public static final double waitBeforeExecRoutine = 0; // The amount of seconds to wait before executing routines
         public class MoveToAmpTimedConstants {
             // 1 = first position, 2 = second position, 3 third position
             //all constant values are wrong, need testing

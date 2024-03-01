@@ -177,9 +177,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   @Override
   public void simulationPeriodic() {
-    frontLeft.getSimCollection().addQuadraturePosition(((int)(frontLeft.get() * 801.0)));
-    frontRight.getSimCollection().addQuadraturePosition((-(int)(frontRight.get() * 801.0)));
-    gyro.setAngleAdjustment(Units.radiansToDegrees(kinematics.toTwist2d(getLeftDistance(), getRightDistance()).dtheta));
+    frontLeft.getSimCollection().addQuadraturePosition(((int)(frontLeft.get() * 1001.0)));
+    frontRight.getSimCollection().addQuadraturePosition((-(int)(frontRight.get() * 1001.0)));
+    gyro.setAngleAdjustment(Units.radiansToDegrees(kinematics.toTwist2d(-getLeftDistance(), -getRightDistance()).dtheta));
 
     field.setRobotPose(getBotPose());
   }
@@ -188,13 +188,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
     drive.tankDrive(
       MathUtil.clamp(leftSpeed, -DrivetrainConstants.motorClamp, DrivetrainConstants.motorClamp),
       MathUtil.clamp(rightSpeed, -DrivetrainConstants.motorClamp, DrivetrainConstants.motorClamp)
-    );
-  }
-
-  public void arcadeDriveSpeed(double speed, double turn) {
-    drive.arcadeDrive(
-      MathUtil.clamp(speed, -DrivetrainConstants.motorClamp, DrivetrainConstants.motorClamp),
-      MathUtil.clamp(turn, -DrivetrainConstants.motorClamp, DrivetrainConstants.motorClamp)
     );
   }
 
@@ -232,6 +225,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public PIDController getRightDriveController() {
     return rightDriveController;
+  }
+
+  public boolean isDriveControllersAtSetpoint() {
+    return (getLeftDriveController().atSetpoint() && getRightDriveController().atSetpoint());
   }
 
   public PIDController getTurnController() {

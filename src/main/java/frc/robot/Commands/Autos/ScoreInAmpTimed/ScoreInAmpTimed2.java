@@ -6,9 +6,9 @@ package frc.robot.Commands.Autos.ScoreInAmpTimed;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Commands.Autos.AutoLog;
-import frc.robot.Commands.Drivetrain.Autos.TurnToAmpTimed;
-import frc.robot.Commands.Drivetrain.Autos.MoveOutOfZoneTimed.MoveOutOfZoneTimed2;
-import frc.robot.Commands.Drivetrain.Autos.MoveToAmpTimed.MoveToAmpTimed2;
+import frc.robot.Commands.Drivetrain.Autos.Timed.TurnToAmpTimed;
+import frc.robot.Commands.Drivetrain.Autos.Timed.MoveOutOfZoneTimed.MoveOutOfZoneTimed2;
+import frc.robot.Commands.Drivetrain.Autos.Timed.MoveToAmpTimed.MoveToAmpTimed2;
 import frc.robot.Commands.IntakeShooter.Autos.DownShootAmpTimed;
 //import frc.robot.Subsystems.ArmSubsystem;
 import frc.robot.Subsystems.DrivetrainSubsystem;
