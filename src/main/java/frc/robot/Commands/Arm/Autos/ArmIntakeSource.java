@@ -32,8 +32,7 @@ public class ArmIntakeSource extends SequentialCommandGroup {
         () -> ArmConstants.dropI,
         () -> ArmConstants.dropD,
         () -> ArmConstants.sourceIntakeAngle,
-        () -> ArmConstants.tolerance,        
-        () -> ArmConstants.clamp
+        () -> ArmConstants.tolerance
       ).until(end)
     );
   }

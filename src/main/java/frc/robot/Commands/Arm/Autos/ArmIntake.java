@@ -34,8 +34,7 @@ public class ArmIntake extends SequentialCommandGroup {
           () -> ArmConstants.dropI,
           () -> ArmConstants.dropD,
           () -> ArmConstants.intakeAngle,
-          () -> ArmConstants.tolerance,
-          () -> ArmConstants.clamp
+          () -> ArmConstants.tolerance
       ).until(end)
     );
   }

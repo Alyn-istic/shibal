@@ -34,8 +34,7 @@ public class ArmIntakePerimeter extends SequentialCommandGroup {
         () -> ArmConstants.dropI,
         () -> ArmConstants.dropD,
         () -> ArmConstants.intakeInsideAngle,
-        () -> ArmConstants.tolerance,
-        () -> ArmConstants.clamp
+        () -> ArmConstants.tolerance
       ).until(end)
     );
   }

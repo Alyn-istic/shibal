@@ -21,10 +21,12 @@ import frc.robot.Commands.Arm.ArmCommandSelector;
 import frc.robot.Commands.Arm.ArmSetpointOffset;
 import frc.robot.Commands.Arm.Autos.ArmIntake;
 import frc.robot.Commands.Arm.Autos.ArmIntakePerimeter;
-import frc.robot.Commands.Arm.Autos.ArmIntakeSource;
+// import frc.robot.Commands.Arm.Autos.ArmIntakeSource;
 import frc.robot.Commands.Arm.Autos.ArmShoot;
 import frc.robot.Commands.Arm.Autos.ArmShootPerimeter;
+import frc.robot.Commands.Arm.Autos.ArmZero;
 import frc.robot.Commands.Autos.AutoLog;
+import frc.robot.Commands.Autos.TestAuto;
 import frc.robot.Commands.Autos.ExitZoneTimed.ExitZoneTimed1;
 import frc.robot.Commands.Autos.ScoreInAmpTimed.ScoreInAmpTimed1;
 import frc.robot.Commands.Climber.ClimberCmd;
@@ -63,7 +65,6 @@ public class RobotContainer {
     new ArmIntake(armSub, ()-> false),
     new ArmIntakePerimeter(armSub, () -> false),
     new ArmShootPerimeter(armSub, () -> false),
-    //new ArmIntakeSource(armSub, () -> false),
     new ArmShoot(armSub, () -> false)
   };
   private final NetworkTableEntry armIndexEntry = NetworkTableInstance.getDefault().getEntry("ArmIndex");
@@ -95,8 +96,8 @@ public class RobotContainer {
     // SmartDashboard.putNumber("Arm D", ArmConstants.raiseD);
 
     // SmartDashboard.putNumber("Arm Setpoint", ArmConstants.shootInsideAngle);
-    SmartDashboard.putNumber("Arm Clamp", ArmConstants.clamp);
-    SmartDashboard.putNumber("Arm Setpoint Offset", ArmConstants.setpointOffset);
+    // SmartDashboard.putNumber("Arm Clamp", ArmConstants.clamp);
+    // SmartDashboard.putNumber("Arm Setpoint Offset", ArmConstants.setpointOffset);
 
     autoChooser.setDefaultOption("NONE", "NONE");
     autoChooser.addOption("MOVE OUT OF ZONE", "MOVE_OUT_OF_ZONE");
@@ -133,6 +134,8 @@ public class RobotContainer {
     // Using left/right bumpers to jump between setpoints for PID
     commandDriver.leftBumper().onTrue(new ArmCommandSelector(armPIDCommands, () -> -1, armIndexEntry));
     commandDriver.rightBumper().onTrue(new ArmCommandSelector(armPIDCommands, () -> 1, armIndexEntry));
+
+    commandDriver.b().whileTrue(new TestAuto(driveSub));
 
     // //Intake: Drop into intake angle.//
     // commandDriver.povDown().whileTrue(new ArmIntake(armSub));
@@ -203,19 +206,19 @@ public class RobotContainer {
     //////////////////////////////////////// Sys ID /////////////////////////////////////////////////////////
     commandTester.y().whileTrue(driveSub.sysIdDynamic(SysIdRoutine.Direction.kForward));
     commandTester.a().whileTrue(driveSub.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-    commandTester.x().whileTrue(driveSub.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    commandTester.b().whileTrue(driveSub.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    commandTester.povUp().whileTrue(driveSub.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    commandTester.povDown().whileTrue(driveSub.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
   }
 
   public Command getAutonomousCommand() {
-    switch (autoChooser.getSelected()) {
-      case "MOVE_OUT_OF_ZONE": // Moves the robot out of the zone.
-        return new ExitZoneTimed1(driveSub); // Return the auto command that moves out of the zone
-      case "SCORE_IN_AMP_SENSORS":
-        return new AutoLog("This routine has not been set up yet."); // Returns the auto command that moves robot to amp, and shoots loaded note, using sensors.
-      case "SCORE_IN_AMP_TIMED":
-        return new ScoreInAmpTimed1(driveSub, intakeShooterSub); // Returns the auto command that moves robot to amp, and shoots loaded note, using timers.
-    }
+    // switch (autoChooser.getSelected()) {
+    //   case "MOVE_OUT_OF_ZONE": // Moves the robot out of the zone.
+    //     return new ExitZoneTimed1(driveSub); // Return the auto command that moves out of the zone
+    //   case "SCORE_IN_AMP_SENSORS":
+    //     return new AutoLog("This routine has not been set up yet."); // Returns the auto command that moves robot to amp, and shoots loaded note, using sensors.
+    //   case "SCORE_IN_AMP_TIMED":
+    //     return new ScoreInAmpTimed1(driveSub, intakeShooterSub); // Returns the auto command that moves robot to amp, and shoots loaded note, using timers.
+    // }
     return new AutoLog("No auto selected.");
   }
 }

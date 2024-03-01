@@ -33,8 +33,7 @@ public class ArmShoot extends SequentialCommandGroup {
         () -> ArmConstants.dropI,
         () -> ArmConstants.dropD,
         () -> ArmConstants.shootAngle,
-        () -> ArmConstants.tolerance,
-        () -> ArmConstants.clamp
+        () -> ArmConstants.tolerance
       ).until(end)
     );
   }

@@ -10,6 +10,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -135,10 +136,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
     frontRight.setSelectedSensorPosition(0);
     backLeft.setSelectedSensorPosition(0);
     backRight.setSelectedSensorPosition(0);
-
-    //Config Drivetrain encoders
-    frontLeft.configAllSettings(null);
-    frontRight.configAllSettings(null);
    
     // Resetting gyro
     gyro.reset();
@@ -172,11 +169,17 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public void tankDriveSpeed(double leftSpeed, double rightSpeed) { // Tankdrive using speed.
-    drive.tankDrive(leftSpeed, rightSpeed);
+    drive.tankDrive(
+      MathUtil.clamp(leftSpeed, -DrivetrainConstants.motorClamp, DrivetrainConstants.motorClamp),
+      MathUtil.clamp(rightSpeed, -DrivetrainConstants.motorClamp, DrivetrainConstants.motorClamp)
+    );
   }
 
   public void arcadeDriveSpeed(double speed, double turn) {
-    drive.arcadeDrive(speed, turn);
+    drive.arcadeDrive(
+      MathUtil.clamp(speed, -DrivetrainConstants.motorClamp, DrivetrainConstants.motorClamp),
+      MathUtil.clamp(turn, -DrivetrainConstants.motorClamp, DrivetrainConstants.motorClamp)
+    );
   }
 
   public double getGyroAngle() { // Function for getting the gyro's angle.
@@ -209,6 +212,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
   public PIDController getDriveController() {
     return driveController;
+    
   }
 
   public PIDController getTurnController() {

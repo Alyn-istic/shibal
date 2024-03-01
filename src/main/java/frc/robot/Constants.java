@@ -45,33 +45,35 @@ public class Constants {
         public static final double wheelRadius = 3; // The radius of the wheels (in inches)
         public static final double gearRatio = 8.46; // Gear ratio
 
-        public static final int countsPerRev = 256; // The amount of encoder counts in a full rotation
+        public static final int countsPerRev = 1024; // The amount of encoder counts in a full rotation
 
         public static final Port gyroPort = Port.kUSB; // The port that the gyro is connected to.
 
-        public static final double speed = 1;
+        public static final double speed = 1; // hello world
 
-        public static final double startPosX = 0;
-        public static final double startPosY = 0;
+        public static final double startPosX = 0; // 
+        public static final double startPosY = 0; //
 
-        public static final double driveP = 0.0001;
-        public static final double driveI = 0;
-        public static final double driveD = 0;
-        public static final double driveTolerance = 0;
+        public static final double driveP = 2; // 
+        public static final double driveI = 0; // 
+        public static final double driveD = 0; // 
+        public static final double driveTolerance = 0; // 
 
-        public static final double minAngle = 0;
-        public static final double maxAngle = 360;
+        public static final double motorClamp = 0.5; // 
+
+        public static final double minAngle = 0; // 
+        public static final double maxAngle = 360; // 
 
         public static final double turnP = 0.0001; // P value for turning PID command
         public static final double turnI = 0; // I value for turning PID command
         public static final double turnD = 0; // D value for turning PID command
         public static final double gyroTolerance = 1; // Tolerance for turning PID command
-        public static final double kS = 0.1817;
-        public static final double kV = 1.9351;
+        public static final double kS = 0.1817; // 
+        public static final double kV = 1.9351; // 
 
-        public static final double kP = 0.0005;
-        public static final double kI = 0.0005;
-        public static final double kD = 0.0005;
+        public static final double kP = 0.0005; // 
+        public static final double kI = 0.0005; // 
+        public static final double kD = 0.0005; // 
     }
 
     public class ArmConstants {
@@ -82,10 +84,10 @@ public class Constants {
 
         public static final int countsPerRev = 4096; // The amount of encoder ticks in a full rotation
         public static final double gearRatio = 4; // The gear ratio of the arm
-        public static final double startingAngle = 90;
+        public static final double startingAngle = 90; // 
 
-        public static final int raiseLimitSwitchChannel = 1;
-        public static final int dropLimitSwitchChannel = 0;
+        public static final int raiseLimitSwitchChannel = 1; // 
+        public static final int dropLimitSwitchChannel = 0; // 
 
         public static final double raiseP = 0.03; // P value for the arm PID command
         public static final double raiseI = 0; // I value for the arm PID command
@@ -95,18 +97,18 @@ public class Constants {
         public static final double dropI = 0; // I value for the arm PID command
         public static final double dropD = 0.00003; // D value for the arm PID command. Was 0.000025.
 
-        public static final double minAngle = 0;
-        public static final double maxAngle = 360;
+        public static final double minAngle = 0; // 
+        public static final double maxAngle = 360; // 
 
-        public static final double tolerance = 1;
-        public static final double setpointOffset = 0;
+        public static final double tolerance = 1; // 
+        public static final double setpointOffset = 0; // 
 
         public static final double shootAngle = 100; // The angle of the arm in shooting position
         public static final double sourceIntakeAngle = 95; //Intake from source angle
         public static final double intakeInsideAngle = 50; // The angle of the arm inside the perimeter preparing to intake.
         public static final double shootInsideAngle = 90; // The angle of the arm inside the perimeter preparing to move to shoot position.
         public static final double intakeAngle = 0; // The angle of the arm in intaking position
-        public static final double clamp = 0.6; // Should be between 0 and 1;
+        public static final double motorClamp = 0.6; // Should be between 0 and 1;
         // public static final double dropAngle = 0;  // This is relative to the starting position of the encoders.
     }
 
@@ -117,25 +119,23 @@ public class Constants {
         public static final double speed = 1; // The intake/shooter's motor speed.
     }
     public class ClimberConstants{ //Need to change values based on testing
-        public static final int leftClimberID = 8;
-        public static final int rightClimberID = 9;
-        public static final double climberSpeed = 0.2; 
+        public static final int leftClimberID = 8; // 
+        public static final int rightClimberID = 9; // 
+        public static final double climberSpeed = 0.2; // 
     }
 
-
     public class VisionConstants {
-        public static final double cameraHeight = 1; // Camera height off the ground ain inches
+        public static final double cameraAngle = 1; // Camera angle offset in degrees
     }
 
     public class LEDconstants {
-        public static final int LEDTalonPort = 0;
-        
+        public static final int LEDTalonPort = 0; // 
     }
 
     public class DriverConstants {
         public static final int driverPort = 0; // Controller port for driver
         public static final int operatorPort = 1; // Controller port for operator
-        public static final int testerPort = 2;
+        public static final int testerPort = 2; // 
 
         public static final double joystickDeadband = 0.08; // Deadzone for controller L/R joysticks
         public static final double triggerDeadband = 0.08; // Deadzone for controller L/R triggers
@@ -146,7 +146,7 @@ public class Constants {
         public static final int leftTriggerAxis = 2; // Left trigger axis
         public static final int rightTriggerAxis = 3; // Right trigger axis
 
-        public static final int leftBumperButton = 5;
-        public static final int rightBumperButton = 6;
+        public static final int leftBumperButton = 5; // 
+        public static final int rightBumperButton = 6; // 
     }
 }

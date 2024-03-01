@@ -7,6 +7,7 @@ package frc.robot.Subsystems;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.units.Angle;
 import edu.wpi.first.units.Measure;
@@ -118,8 +119,10 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public void setMotor(double speed) {
-    leftMotor.set(speed); //defining public method to just the left motor, takes doubles, -> speed
-   }
+    leftMotor.set(
+      MathUtil.clamp(speed, -ArmConstants.motorClamp, ArmConstants.motorClamp)
+    ); //defining public method to just the left motor, takes doubles, -> speed
+  }
 
   public double getAngle() {
     return (getSensorPosition()*(360.0/ArmConstants.countsPerRev))/ArmConstants.gearRatio;

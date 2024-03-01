@@ -33,7 +33,6 @@ public class ArmShootPerimeter extends SequentialCommandGroup {
         () -> ArmConstants.dropI,
         () -> ArmConstants.dropD,
         () -> ArmConstants.shootInsideAngle,
-        () -> ArmConstants.clamp,  
         () -> ArmConstants.tolerance
       ).until(end)
     );

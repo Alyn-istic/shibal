@@ -6,11 +6,9 @@ package frc.robot.Commands.Arm;
 
 import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.ArmConstants;
 import frc.robot.Subsystems.ArmSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -18,7 +16,7 @@ import frc.robot.Subsystems.ArmSubsystem;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ArmPIDCmd extends Command {
   private ArmSubsystem armSub;
-  private DoubleSupplier raiseP, raiseI, raiseD, dropP, dropI, dropD, setpoint, tolerance, clamp;
+  private DoubleSupplier raiseP, raiseI, raiseD, dropP, dropI, dropD, setpoint, tolerance;
   private PIDController controller;
 
   /**
@@ -43,8 +41,7 @@ public class ArmPIDCmd extends Command {
     DoubleSupplier dropI,
     DoubleSupplier dropD,
     DoubleSupplier setpoint,
-    DoubleSupplier tolerance,
-    DoubleSupplier clamp
+    DoubleSupplier tolerance
   ) {
     // System.out.println(armSub.getAngle());
     this.armSub = armSub;
@@ -56,7 +53,6 @@ public class ArmPIDCmd extends Command {
     this.dropD = dropD;
     this.setpoint = setpoint;
     this.tolerance = tolerance;
-    this.clamp = clamp;
     addRequirements(armSub);
   }
 
@@ -70,7 +66,7 @@ public class ArmPIDCmd extends Command {
 
   @Override
   public void execute() {
-    double speed = -MathUtil.clamp(controller.calculate(armSub.getAngle() % 360), -clamp.getAsDouble(), clamp.getAsDouble());
+    double speed = -controller.calculate(armSub.getAngle() % 360);
     /*If arm is raising, and raise limit switch isn't switched.
      * or
      * If arm is dropping, and drop limit switch isn't switched.

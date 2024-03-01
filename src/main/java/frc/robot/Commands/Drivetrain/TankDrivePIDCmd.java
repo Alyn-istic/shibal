@@ -14,7 +14,7 @@ import frc.robot.Subsystems.DrivetrainSubsystem;
 public class TankDrivePIDCmd extends Command {
   // Create the necessary variables.
   private DrivetrainSubsystem driveSub;
-  private DoubleSupplier driveSetpoint, angleSetpoint, tolerance, driveP, driveI, driveD, turnP, turnI, turnD;
+  private DoubleSupplier driveSetpoint, angleSetpoint, driveTolerance, turnTolerance, driveP, driveI, driveD, turnP, turnI, turnD;
   private PIDController driveController, turnController;
 
   /** Creates a new TankDriveCmd. */
@@ -29,7 +29,8 @@ public class TankDrivePIDCmd extends Command {
     DoubleSupplier turnD,
     DoubleSupplier driveSetpoint,
     DoubleSupplier angleSetpoint,
-    DoubleSupplier tolerance //supplied from robotcontainer
+    DoubleSupplier driveTolerance, //supplied from robotcontainer
+    DoubleSupplier turnTolerance
   ) {
     this.driveSub = driveSub;
     this.driveP = driveP;
@@ -41,7 +42,8 @@ public class TankDrivePIDCmd extends Command {
     
     this.driveSetpoint = driveSetpoint;
     this.angleSetpoint = angleSetpoint;
-    this.tolerance = tolerance;
+    this.driveTolerance = driveTolerance;
+    this.turnTolerance = turnTolerance;
     addRequirements(driveSub);
   }
 
@@ -60,8 +62,8 @@ public class TankDrivePIDCmd extends Command {
     turnController.setI(turnI.getAsDouble());
     turnController.setD(turnD.getAsDouble());
 
-    driveController.setTolerance(tolerance.getAsDouble());
-    turnController.setTolerance(tolerance.getAsDouble());
+    driveController.setTolerance(driveTolerance.getAsDouble());
+    turnController.setTolerance(turnTolerance.getAsDouble());
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -70,7 +72,7 @@ public class TankDrivePIDCmd extends Command {
     driveController.setSetpoint(driveSetpoint.getAsDouble());
     turnController.setSetpoint(angleSetpoint.getAsDouble());
 
-    double speed = driveController.calculate(driveSub.getLeftDistance());
+    double speed = -driveController.calculate(driveSub.getLeftDistance()) * DrivetrainConstants.speed;
     double turn = turnController.calculate(driveSub.getGyroAngle() % 360);
   
     driveSub.arcadeDriveSpeed(

@@ -23,7 +23,7 @@ public class ArmZero extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new ArmManualCmd(armSub,
-        () -> 0.3
+        () -> 0.2
       ).until(
         () -> armSub.dropLimitSwitch()
       )
