@@ -129,10 +129,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
     backRight.follow(frontRight);
 
     // Setting the neutral mode of the motors to "Brake". This means that they will stop immediately when told to.
-    frontLeft.setNeutralMode(NeutralMode.Brake);
-    frontRight.setNeutralMode(NeutralMode.Brake);
-    backLeft.setNeutralMode(NeutralMode.Brake);
-    frontRight.setNeutralMode(NeutralMode.Brake);
+    //They are now in "Cost", no power will be passed in and the moters will continue going a while due to momentum. 
+    frontLeft.setNeutralMode(NeutralMode.Coast);//was brake
+    frontRight.setNeutralMode(NeutralMode.Coast);
+    backLeft.setNeutralMode(NeutralMode.Coast);
+    frontRight.setNeutralMode(NeutralMode.Coast);
 
     // Resetting probably non-existing encoders just for the sake of it.
 

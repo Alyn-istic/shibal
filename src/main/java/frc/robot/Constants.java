@@ -13,20 +13,22 @@ public class Constants {
             public static final double TIME_TURN_TO_AMP = 1.25; // In seconds
             public static final double SPEED_TURN_TO_AMP = -0.55; // Motor speed
 
-            public static final double TIME_MOVE_TO_AMP1 = 4.5; // In seconds
+            public static final double TIME_MOVE_TO_AMP_FWD = 1.25;// In seconds. Move forward before turn and move sideways. 
+            public static final double TIME_MOVE_TO_AMP1 = 4.5; // In seconds. Was 4.5
             public static final double TIME_MOVE_TO_AMP2 = 4.5; // In seconds
             public static final double TIME_MOVE_TO_AMP3= 4.5; // In seconds
 
             public static final double TIME_SHOOT_IN_AMP = 1; // In seconds
             public static final double SPEED_SHOOT_IN_AMP = 1; // Motor speed
 
-            public static final double SPEED_MOVE_TO_AMP1 = 0.4; // Motor speed
+            public static final double SPEED_MOVE_TO_AMP_FWD = -0.3; // Motor speed//was 0.4
+            public static final double SPEED_MOVE_TO_AMP1 = 0.4; // Motor speed//was 0.4
             public static final double SPEED_MOVE_TO_AMP2 = 0.4; // Motor speed
             public static final double SPEED_MOVE_TO_AMP3 = 0.4; // Motor speed
         }
         public class MoveOutOfZoneConstants {
-            public static final double TIME_MOVE_OUT_OF_ZONE1 = 1.25; // In seconds
-            public static final double SPEED_MOVE_OUT_OF_ZONE1 = -0.3; // Motor speed
+            public static final double TIME_MOVE_OUT_OF_ZONE1 = 1.4; // In seconds
+            public static final double SPEED_MOVE_OUT_OF_ZONE1 = -0.4; // Motor speed
 
             public static final double TIME_MOVE_OUT_OF_ZONE2 = 1; // In seconds
             public static final double SPEED_MOVE_OUT_OF_ZONE2 = 0.35; // Motor speed
@@ -104,7 +106,7 @@ public class Constants {
         public static final double tolerance = 1; // 
         public static final double setpointOffset = 0; // 
 
-        public static final double shootAngle = 100; // The angle of the arm in shooting position
+        public static final double shootAngle = 110; // The angle of the arm in shooting position. Was 100.
         public static final double sourceIntakeAngle = 95; //Intake from source angle
         public static final double intakeInsideAngle = 50; // The angle of the arm inside the perimeter preparing to intake.
         public static final double shootInsideAngle = 90; // The angle of the arm inside the perimeter preparing to move to shoot position.

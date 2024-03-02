@@ -9,6 +9,7 @@ import frc.robot.Commands.Autos.AutoLog;
 import frc.robot.Commands.Drivetrain.Autos.Timed.TurnToAmpTimed;
 import frc.robot.Commands.Drivetrain.Autos.Timed.MoveOutOfZoneTimed.MoveOutOfZoneTimed3;
 import frc.robot.Commands.Drivetrain.Autos.Timed.MoveToAmpTimed.MoveToAmpTimed3;
+import frc.robot.Commands.Drivetrain.Autos.Timed.MoveToAmpTimed.MoveToAmpTimedForward;
 import frc.robot.Commands.IntakeShooter.Autos.DownShootAmpTimed;
 //import frc.robot.Subsystems.ArmSubsystem;
 import frc.robot.Subsystems.DrivetrainSubsystem;
@@ -27,7 +28,7 @@ public class ScoreInAmpTimed3 extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new MoveOutOfZoneTimed3(driveSub),
+      new MoveToAmpTimedForward(driveSub),
       new TurnToAmpTimed(driveSub),
       new MoveToAmpTimed3(driveSub),
       new DownShootAmpTimed(intakeShooterSub),
