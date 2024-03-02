@@ -5,11 +5,14 @@
 package frc.robot.Commands.Autos.ScoreInAmpTimed;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Commands.Arm.Autos.ArmShoot;
+import frc.robot.Commands.Arm.Autos.ArmZero;
 import frc.robot.Commands.Autos.AutoLog;
 import frc.robot.Commands.Drivetrain.Autos.Timed.TurnToAmpTimed;
 import frc.robot.Commands.Drivetrain.Autos.Timed.MoveOutOfZoneTimed.MoveOutOfZoneTimed1;
 import frc.robot.Commands.Drivetrain.Autos.Timed.MoveToAmpTimed.MoveToAmpTimed1;
 import frc.robot.Commands.IntakeShooter.Autos.DownShootAmpTimed;
+import frc.robot.Subsystems.ArmSubsystem;
 //import frc.robot.Subsystems.ArmSubsystem;
 import frc.robot.Subsystems.DrivetrainSubsystem;
 import frc.robot.Subsystems.IntakeShooterSubsystem;
@@ -21,17 +24,16 @@ public class ScoreInAmpTimed1 extends SequentialCommandGroup {
   /** Creates a new AutonomousBackup. */
   public ScoreInAmpTimed1(
     DrivetrainSubsystem driveSub,
-    IntakeShooterSubsystem intakeShooterSub
-    //ArmSubsystem armSub
+    IntakeShooterSubsystem intakeShooterSub,
+    ArmSubsystem armSub
   ) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
+      new ArmZero(armSub).until(() -> armSub.dropLimitSwitch()),
       new MoveOutOfZoneTimed1(driveSub),
       new TurnToAmpTimed(driveSub),
-      new MoveToAmpTimed1(driveSub),
-      new DownShootAmpTimed(intakeShooterSub),
-      new AutoLog("Done, pos.1")
+      new ArmShoot(armSub, () -> armSub.getController().atSetpoint())
     );
   }
 }

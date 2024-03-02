@@ -49,9 +49,7 @@ public class TurnPIDCmd extends Command {
     turnController = driveSub.getTurnController();
 
     turnController.enableContinuousInput(DrivetrainConstants.minAngle, DrivetrainConstants.maxAngle);
-    // turnController.setP(turnP.getAsDouble());
-    // turnController.setI(turnI.getAsDouble());
-    // turnController.setD(turnD.getAsDouble());
+    
     turnController.setP(DrivetrainConstants.turnP);
     turnController.setI(DrivetrainConstants.turnI);
     turnController.setD(DrivetrainConstants.turnD);
@@ -73,6 +71,10 @@ public class TurnPIDCmd extends Command {
       turnController.setTolerance(turnTolerance.getAsDouble());
       turnController.setSetpoint(angleSetpoint.getAsDouble());  
     }
+
+    turnController.setP(SmartDashboard.getNumber("P", 0));
+    turnController.setI(SmartDashboard.getNumber("I", 0));
+    turnController.setD(SmartDashboard.getNumber("D", 0));
 
     // Pushing numbers onto SmartDashboard for debugging purposes.  
   }

@@ -10,8 +10,8 @@ public class Constants {
         public class MoveToAmpTimedConstants {
             // 1 = first position, 2 = second position, 3 third position
             //all constant values are wrong, need testing
-            public static final double TIME_TURN_TO_AMP = 3.5; // In seconds
-            public static final double SPEED_TURN_TO_AMP = -0.5; // Motor speed
+            public static final double TIME_TURN_TO_AMP = 1.25; // In seconds
+            public static final double SPEED_TURN_TO_AMP = -0.55; // Motor speed
 
             public static final double TIME_MOVE_TO_AMP1 = 4.5; // In seconds
             public static final double TIME_MOVE_TO_AMP2 = 4.5; // In seconds
@@ -25,8 +25,8 @@ public class Constants {
             public static final double SPEED_MOVE_TO_AMP3 = 0.4; // Motor speed
         }
         public class MoveOutOfZoneConstants {
-            public static final double TIME_MOVE_OUT_OF_ZONE1 = 1; // In seconds
-            public static final double SPEED_MOVE_OUT_OF_ZONE1 = 0.35; // Motor speed
+            public static final double TIME_MOVE_OUT_OF_ZONE1 = 1.25; // In seconds
+            public static final double SPEED_MOVE_OUT_OF_ZONE1 = -0.3; // Motor speed
 
             public static final double TIME_MOVE_OUT_OF_ZONE2 = 1; // In seconds
             public static final double SPEED_MOVE_OUT_OF_ZONE2 = 0.35; // Motor speed
@@ -65,9 +65,9 @@ public class Constants {
         public static final double minAngle = 0; // 
         public static final double maxAngle = 360; // 
 
-        public static final double turnP = 0.5; // P value for turning PID command
+        public static final double turnP = 0.025; // P value for turning PID command
         public static final double turnI = 0; // I value for turning PID command
-        public static final double turnD = 0; // D value for turning PID command
+        public static final double turnD = 0.00003; // D value for turning PID command
         public static final double gyroTolerance = 1; // Tolerance for turning PID command
         public static final double kS = 0.1817; // 
         public static final double kV = 1.9351; // 

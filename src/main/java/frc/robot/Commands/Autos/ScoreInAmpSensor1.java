@@ -29,7 +29,7 @@ public class ScoreInAmpSensor1 extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new ChassisTurn0(driveSub),
+      //new ChassisTurn0(driveSub),
       new MoveOutOfZoneSensor(driveSub),
       new ChassisTurn90(driveSub),
       new AutoLog("Driving backwards towards amp..."),

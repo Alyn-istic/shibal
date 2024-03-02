@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Commands.EmergencyStopCmd;
+import frc.robot.Commands.OperatorReset;
 import frc.robot.Commands.Arm.ArmManualCmd;
 import frc.robot.Commands.Arm.ArmCommandSelector;
 import frc.robot.Commands.Arm.ArmSetpointOffset;
@@ -33,6 +34,7 @@ import frc.robot.Commands.Climber.ClimberCmd;
 // import frc.robot.Commands.Arm.LimitSwitchSimulation;
 import frc.robot.Commands.Drivetrain.TankDriveCmd;
 import frc.robot.Commands.Drivetrain.TankDrivePIDCmd;
+import frc.robot.Commands.Drivetrain.TurnPIDCmd;
 import frc.robot.Commands.Drivetrain.Autos.Sensor.MoveOutOfZoneSensor;
 import frc.robot.Commands.IntakeShooter.IntakeCmd;
 import frc.robot.Constants.ArmConstants;
@@ -94,9 +96,9 @@ public class RobotContainer {
       )
     );
 
-    SmartDashboard.putNumber("P", DrivetrainConstants.driveP);
-    SmartDashboard.putNumber("I",DrivetrainConstants.driveI);
-    SmartDashboard.putNumber("D", DrivetrainConstants.driveD);
+    SmartDashboard.putNumber("P", DrivetrainConstants.turnP);
+    SmartDashboard.putNumber("I",DrivetrainConstants.turnI);
+    SmartDashboard.putNumber("D", DrivetrainConstants.turnD);
 
     // SmartDashboard.putNumber("Arm Setpoint", ArmConstants.shootInsideAngle);
     // SmartDashboard.putNumber("Arm Clamp", ArmConstants.clamp);
@@ -137,8 +139,6 @@ public class RobotContainer {
     // Using left/right bumpers to jump between setpoints for PID
     commandDriver.leftBumper().onTrue(new ArmCommandSelector(armPIDCommands, () -> -1, armIndexEntry));
     commandDriver.rightBumper().onTrue(new ArmCommandSelector(armPIDCommands, () -> 1, armIndexEntry));
-
-    commandDriver.a().whileTrue(new TankDrivePIDCmd(driveSub, () -> 0, () -> 0, () -> 0, () -> false, () -> false));
 
     // //Intake: Drop into intake angle.//
     // commandDriver.povDown().whileTrue(new ArmIntake(armSub));
@@ -183,6 +183,8 @@ public class RobotContainer {
       )
     );
 
+    commandOperator.a().onTrue(new OperatorReset(driveSub));
+
     ////////////////////////////////////////// Arm Limits //////////////////////////////////////////
 
     // While the drop limit switch is pressed, reset arm position to intake angle, and reset setpoint offset to 0.
@@ -220,7 +222,7 @@ public class RobotContainer {
       case "SCORE_IN_AMP_SENSORS":
         return new ScoreInAmpSensor1(driveSub, armSub, intakeShooterSub); // Returns the auto command that moves robot to amp, and shoots loaded note, using sensors.
       case "SCORE_IN_AMP_TIMED":
-        return new ScoreInAmpTimed1(driveSub, intakeShooterSub); // Returns the auto command that moves robot to amp, and shoots loaded note, using timers.
+        return new ScoreInAmpTimed1(driveSub, intakeShooterSub, armSub); // Returns the auto command that moves robot to amp, and shoots loaded note, using timers.
     }
     return new AutoLog("No auto selected.");
   }

@@ -234,4 +234,37 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public PIDController getTurnController() {
     return turnController;
   }
+
+  public void operatorReset() {
+    frontLeft.configFactoryDefault();
+    backLeft.configFactoryDefault();
+    frontRight.configFactoryDefault();
+    backRight.configFactoryDefault();
+
+    // Inverting the left motors
+    frontLeft.setInverted(true);
+    backLeft.setInverted(true);
+    frontRight.setInverted(false);
+    backRight.setInverted(false);
+
+    //Telling back-motors to follow the front-motors because FIRST decided to remove MotorControllerGroups.
+    backLeft.follow(frontLeft);
+    backRight.follow(frontRight);
+
+    // Setting the neutral mode of the motors to "Brake". This means that they will stop immediately when told to.
+    frontLeft.setNeutralMode(NeutralMode.Brake);
+    frontRight.setNeutralMode(NeutralMode.Brake);
+    backLeft.setNeutralMode(NeutralMode.Brake);
+    frontRight.setNeutralMode(NeutralMode.Brake);
+
+    // Resetting probably non-existing encoders just for the sake of it.
+
+    frontLeft.setSelectedSensorPosition(0);
+    frontRight.setSelectedSensorPosition(0);
+    backLeft.setSelectedSensorPosition(0);
+    backRight.setSelectedSensorPosition(0);
+   
+    // Resetting gyro
+    gyro.reset();
+  }
 }
