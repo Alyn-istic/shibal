@@ -87,6 +87,14 @@ public class TankDrivePIDCmd extends Command {
       rightDriveController.setSetpoint(rightDriveSetpoint.getAsDouble());
     }
 
+    // leftDriveController.setP(SmartDashboard.getNumber("P", 0));
+    // leftDriveController.setI(SmartDashboard.getNumber("I", 0));
+    // leftDriveController.setD(SmartDashboard.getNumber("D", 0));
+
+    // rightDriveController.setP(SmartDashboard.getNumber("P", 0));
+    // rightDriveController.setI(SmartDashboard.getNumber("I", 0));
+    // rightDriveController.setD(SmartDashboard.getNumber("D", 0));
+
     // Pushing numbers onto SmartDashboard for debugging purposes.
     SmartDashboard.putNumber("Drivetrain Left PID Output", leftSpeed);
     SmartDashboard.putNumber("Drivetrain Right PID Output", rightSpeed);

@@ -32,9 +32,12 @@ import frc.robot.Commands.Autos.ScoreInAmpTimed.ScoreInAmpTimed1;
 import frc.robot.Commands.Climber.ClimberCmd;
 // import frc.robot.Commands.Arm.LimitSwitchSimulation;
 import frc.robot.Commands.Drivetrain.TankDriveCmd;
+import frc.robot.Commands.Drivetrain.TankDrivePIDCmd;
+import frc.robot.Commands.Drivetrain.Autos.Sensor.MoveOutOfZoneSensor;
 import frc.robot.Commands.IntakeShooter.IntakeCmd;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.DriverConstants;
+import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Subsystems.ArmSubsystem;
 import frc.robot.Subsystems.DrivetrainSubsystem;
 import frc.robot.Subsystems.IntakeShooterSubsystem;
@@ -91,9 +94,9 @@ public class RobotContainer {
       )
     );
 
-    // SmartDashboard.putNumber("Arm P", ArmConstants.raiseP);
-    // SmartDashboard.putNumber("Arm I", ArmConstants.raiseI);
-    // SmartDashboard.putNumber("Arm D", ArmConstants.raiseD);
+    SmartDashboard.putNumber("P", DrivetrainConstants.driveP);
+    SmartDashboard.putNumber("I",DrivetrainConstants.driveI);
+    SmartDashboard.putNumber("D", DrivetrainConstants.driveD);
 
     // SmartDashboard.putNumber("Arm Setpoint", ArmConstants.shootInsideAngle);
     // SmartDashboard.putNumber("Arm Clamp", ArmConstants.clamp);
@@ -134,6 +137,8 @@ public class RobotContainer {
     // Using left/right bumpers to jump between setpoints for PID
     commandDriver.leftBumper().onTrue(new ArmCommandSelector(armPIDCommands, () -> -1, armIndexEntry));
     commandDriver.rightBumper().onTrue(new ArmCommandSelector(armPIDCommands, () -> 1, armIndexEntry));
+
+    commandDriver.a().whileTrue(new TankDrivePIDCmd(driveSub, () -> 0, () -> 0, () -> 0, () -> false, () -> false));
 
     // //Intake: Drop into intake angle.//
     // commandDriver.povDown().whileTrue(new ArmIntake(armSub));

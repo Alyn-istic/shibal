@@ -1,6 +1,6 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.SerialPort.Port;
+import edu.wpi.first.wpilibj.I2C.Port;
 
 // Feel free to add more constants to the list.
 
@@ -48,19 +48,19 @@ public class Constants {
 
         public static final int countsPerRev = 1024; // The amount of encoder counts in a full rotation
 
-        public static final Port gyroPort = Port.kUSB; // The port that the gyro is connected to.
+        public static final Port gyroPort = Port.kOnboard; // The port that the gyro is connected to.
 
         public static final double speed = 1; // hello world
 
         public static final double startPosX = 5; // 
         public static final double startPosY = 5; //
 
-        public static final double driveP = 2; // 
+        public static final double driveP = 1.9; // 
         public static final double driveI = 0; // 
-        public static final double driveD = 0; // 
+        public static final double driveD = 0.2; // 
         public static final double driveTolerance = 0; // 
 
-        public static final double motorClamp = 0.5; // 
+        public static final double motorClamp = 1; // 
 
         public static final double minAngle = 0; // 
         public static final double maxAngle = 360; // 
@@ -109,7 +109,8 @@ public class Constants {
         public static final double intakeInsideAngle = 50; // The angle of the arm inside the perimeter preparing to intake.
         public static final double shootInsideAngle = 90; // The angle of the arm inside the perimeter preparing to move to shoot position.
         public static final double intakeAngle = 0; // The angle of the arm in intaking position
-        public static final double motorClamp = 0.6; // Should be between 0 and 1;
+        public static final double raiseMotorClamp = 0.68; // Should be between 0 and 1;
+        public static final double dropMotorClamp = 0.6;
         // public static final double dropAngle = 0;  // This is relative to the starting position of the encoders.
     }
 

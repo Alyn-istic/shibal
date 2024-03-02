@@ -119,8 +119,14 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public void setMotor(double speed) {
+    double clampedSpeed;
+    if (speed < 0) {
+      clampedSpeed = MathUtil.clamp(speed, -ArmConstants.raiseMotorClamp, ArmConstants.raiseMotorClamp);
+    } else {
+      clampedSpeed = MathUtil.clamp(speed, -ArmConstants.dropMotorClamp, ArmConstants.dropMotorClamp);
+    }
     leftMotor.set(
-      MathUtil.clamp(speed, -ArmConstants.motorClamp, ArmConstants.motorClamp)
+      clampedSpeed
     ); //defining public method to just the left motor, takes doubles, -> speed
   }
 
