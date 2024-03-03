@@ -5,8 +5,9 @@
 package frc.robot.Commands.Drivetrain.Autos.Timed.MoveToAmpTimed;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Commands.Autos.AutoLog;
 import frc.robot.Commands.Drivetrain.TankDriveCmd;
+import frc.robot.Commands.Drivetrain.TankDriveAutoCmd;
+import frc.robot.Commands.MainAutos.AutoLog;
 import frc.robot.Constants.AutonomousConstants.MoveToAmpTimedConstants;
 import frc.robot.Subsystems.DrivetrainSubsystem;
 
@@ -14,7 +15,6 @@ import frc.robot.Subsystems.DrivetrainSubsystem;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class MoveToAmpTimed1 extends SequentialCommandGroup {
-  /** Creates a new AutonomousBackup. */
   public MoveToAmpTimed1(
     DrivetrainSubsystem driveSub
   ) {
@@ -22,7 +22,11 @@ public class MoveToAmpTimed1 extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new AutoLog("Moving to the amp"),
-      new TankDriveCmd(driveSub, () -> MoveToAmpTimedConstants.SPEED_MOVE_TO_AMP1, () -> MoveToAmpTimedConstants.SPEED_MOVE_TO_AMP1).withTimeout(MoveToAmpTimedConstants.TIME_MOVE_TO_AMP1)
+      new TankDriveAutoCmd(driveSub,
+        () -> MoveToAmpTimedConstants.SPEED_MOVE_TO_AMP1,
+        () -> MoveToAmpTimedConstants.SPEED_MOVE_TO_AMP1,
+        () -> MoveToAmpTimedConstants.TIME_MOVE_TO_AMP1
+      ).withTimeout(MoveToAmpTimedConstants.TIME_MOVE_TO_AMP1 * 2)
     );
   }
 }

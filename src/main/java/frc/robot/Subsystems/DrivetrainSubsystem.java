@@ -180,7 +180,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public void simulationPeriodic() {
     frontLeft.getSimCollection().addQuadraturePosition(((int)(frontLeft.get() * 1001.0)));
     frontRight.getSimCollection().addQuadraturePosition((-(int)(frontRight.get() * 1001.0)));
-    gyro.setAngleAdjustment(Units.radiansToDegrees(kinematics.toTwist2d(-getLeftDistance(), -getRightDistance()).dtheta));
+    gyro.setAngleAdjustment(Units.radiansToDegrees(kinematics.toTwist2d(-getLeftDistance(), -getRightDistance()).dtheta)/3.1);
 
     field.setRobotPose(getBotPose());
   }

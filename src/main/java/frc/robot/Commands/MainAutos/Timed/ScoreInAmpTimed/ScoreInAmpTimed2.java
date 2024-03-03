@@ -2,15 +2,15 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.Commands.Autos.ScoreInAmpTimed;
+package frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Commands.Autos.AutoLog;
 import frc.robot.Commands.Drivetrain.Autos.Timed.TurnToAmpTimed;
 import frc.robot.Commands.Drivetrain.Autos.Timed.MoveOutOfZoneTimed.MoveOutOfZoneTimed2;
 import frc.robot.Commands.Drivetrain.Autos.Timed.MoveToAmpTimed.MoveToAmpTimed2;
 import frc.robot.Commands.Drivetrain.Autos.Timed.MoveToAmpTimed.MoveToAmpTimedForward;
 import frc.robot.Commands.IntakeShooter.Autos.DownShootAmpTimed;
+import frc.robot.Commands.MainAutos.AutoLog;
 //import frc.robot.Subsystems.ArmSubsystem;
 import frc.robot.Subsystems.DrivetrainSubsystem;
 import frc.robot.Subsystems.IntakeShooterSubsystem;

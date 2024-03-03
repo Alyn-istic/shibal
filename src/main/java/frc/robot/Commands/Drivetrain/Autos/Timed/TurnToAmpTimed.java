@@ -5,8 +5,9 @@
 package frc.robot.Commands.Drivetrain.Autos.Timed;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Commands.Autos.AutoLog;
+import frc.robot.Commands.Drivetrain.TankDriveAutoCmd;
 import frc.robot.Commands.Drivetrain.TankDriveCmd;
+import frc.robot.Commands.MainAutos.AutoLog;
 import frc.robot.Constants.AutonomousConstants.MoveToAmpTimedConstants;
 import frc.robot.Subsystems.DrivetrainSubsystem;
 
@@ -22,6 +23,11 @@ public class TurnToAmpTimed extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new AutoLog("Turning towards the amp"),
-      new TankDriveCmd(driveSub, () -> MoveToAmpTimedConstants.SPEED_TURN_TO_AMP, () -> -MoveToAmpTimedConstants.SPEED_TURN_TO_AMP).withTimeout(MoveToAmpTimedConstants.TIME_TURN_TO_AMP)    );
+      new TankDriveAutoCmd(driveSub,
+        () -> MoveToAmpTimedConstants.SPEED_TURN_TO_AMP,
+        () -> -MoveToAmpTimedConstants.SPEED_TURN_TO_AMP,
+        ()-> MoveToAmpTimedConstants.TIME_TURN_TO_AMP
+      ).withTimeout(MoveToAmpTimedConstants.TIME_TURN_TO_AMP * 2)
+    );
   }
 }

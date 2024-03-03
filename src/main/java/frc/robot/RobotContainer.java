@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Commands.EmergencyStopCmd;
-import frc.robot.Commands.OperatorReset;
 import frc.robot.Commands.Arm.ArmManualCmd;
 import frc.robot.Commands.Arm.ArmCommandSelector;
 import frc.robot.Commands.Arm.ArmSetpointOffset;
@@ -25,18 +24,15 @@ import frc.robot.Commands.Arm.Autos.ArmIntakePerimeter;
 // import frc.robot.Commands.Arm.Autos.ArmIntakeSource;
 import frc.robot.Commands.Arm.Autos.ArmShoot;
 import frc.robot.Commands.Arm.Autos.ArmShootPerimeter;
-import frc.robot.Commands.Arm.Autos.ArmZero;
-import frc.robot.Commands.Autos.AutoLog;
-import frc.robot.Commands.Autos.ScoreInAmpSensor1;
-import frc.robot.Commands.Autos.ExitZoneTimed.ExitZoneTimed1;
-import frc.robot.Commands.Autos.ScoreInAmpTimed.ScoreInAmpTimed1;
 import frc.robot.Commands.Climber.ClimberCmd;
+import frc.robot.Commands.Drivetrain.OperatorReset;
 // import frc.robot.Commands.Arm.LimitSwitchSimulation;
 import frc.robot.Commands.Drivetrain.TankDriveCmd;
-import frc.robot.Commands.Drivetrain.TankDrivePIDCmd;
-import frc.robot.Commands.Drivetrain.TurnPIDCmd;
-import frc.robot.Commands.Drivetrain.Autos.Sensor.MoveOutOfZoneSensor;
 import frc.robot.Commands.IntakeShooter.IntakeCmd;
+import frc.robot.Commands.MainAutos.AutoLog;
+import frc.robot.Commands.MainAutos.Sensor.ScoreInAmpSensor1;
+import frc.robot.Commands.MainAutos.Timed.ExitZoneTimed;
+import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimed1;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.DrivetrainConstants;
@@ -218,7 +214,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     switch (autoChooser.getSelected()) {
       case "MOVE_OUT_OF_ZONE": // Moves the robot out of the zone.
-        return new ExitZoneTimed1(driveSub); // Return the auto command that moves out of the zone
+        return new ExitZoneTimed(driveSub); // Return the auto command that moves out of the zone
       case "SCORE_IN_AMP_SENSORS":
         return new ScoreInAmpSensor1(driveSub, armSub, intakeShooterSub); // Returns the auto command that moves robot to amp, and shoots loaded note, using sensors.
       case "SCORE_IN_AMP_TIMED":

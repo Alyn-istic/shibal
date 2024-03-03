@@ -5,8 +5,9 @@
 package frc.robot.Commands.Drivetrain.Autos.Timed.MoveOutOfZoneTimed;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Commands.Autos.AutoLog;
 import frc.robot.Commands.Drivetrain.TankDriveCmd;
+import frc.robot.Commands.Drivetrain.TankDriveAutoCmd;
+import frc.robot.Commands.MainAutos.AutoLog;
 import frc.robot.Constants.AutonomousConstants.MoveOutOfZoneConstants;
 import frc.robot.Subsystems.DrivetrainSubsystem;
 
@@ -22,7 +23,10 @@ public class MoveOutOfZoneTimed3 extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new AutoLog("moving out of zone, pos.3"),
-      new TankDriveCmd(driveSub, () -> MoveOutOfZoneConstants.SPEED_MOVE_OUT_OF_ZONE3, () -> MoveOutOfZoneConstants.SPEED_MOVE_OUT_OF_ZONE3).withTimeout(MoveOutOfZoneConstants.TIME_MOVE_OUT_OF_ZONE3)
-    );
+      new TankDriveAutoCmd(driveSub,
+        () -> MoveOutOfZoneConstants.SPEED_MOVE_OUT_OF_ZONE3,
+        () -> MoveOutOfZoneConstants.SPEED_MOVE_OUT_OF_ZONE3,
+        () -> MoveOutOfZoneConstants.TIME_MOVE_OUT_OF_ZONE3
+      ).withTimeout(MoveOutOfZoneConstants.TIME_MOVE_OUT_OF_ZONE3 * 2)    );
   }
 }

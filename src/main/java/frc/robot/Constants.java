@@ -54,15 +54,16 @@ public class Constants {
 
         public static final double speed = 1; // hello world
 
-        public static final double startPosX = 5; // 
-        public static final double startPosY = 5; //
+        public static final double startPosX = 2; // 
+        public static final double startPosY = 7; //
 
         public static final double driveP = 1.9; // 
         public static final double driveI = 0; // 
         public static final double driveD = 0.2; // 
         public static final double driveTolerance = 0; // 
 
-        public static final double motorClamp = 1; // 
+        public static final double motorClamp = 1; //
+        public static final double slewRate = 0.5; // Slewrate for open-looped autonomous routines 
 
         public static final double minAngle = 0; // 
         public static final double maxAngle = 360; // 

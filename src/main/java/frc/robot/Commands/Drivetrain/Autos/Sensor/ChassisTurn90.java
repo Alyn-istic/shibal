@@ -5,8 +5,8 @@
 package frc.robot.Commands.Drivetrain.Autos.Sensor;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Commands.Autos.AutoLog;
 import frc.robot.Commands.Drivetrain.TurnPIDCmd;
+import frc.robot.Commands.MainAutos.AutoLog;
 import frc.robot.Subsystems.DrivetrainSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
