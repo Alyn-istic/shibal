@@ -22,7 +22,7 @@ public class TurnToAmpTimed extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new AutoLog("Turning towards the amp"),
+      new AutoLog("Turning back-side towards the amp"),
       new TankDriveAutoCmd(driveSub,
         () -> MoveToAmpTimedConstants.SPEED_TURN_TO_AMP,
         () -> -MoveToAmpTimedConstants.SPEED_TURN_TO_AMP,

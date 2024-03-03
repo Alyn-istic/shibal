@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -25,7 +26,6 @@ import frc.robot.Commands.Arm.Autos.ArmIntakePerimeter;
 import frc.robot.Commands.Arm.Autos.ArmShoot;
 import frc.robot.Commands.Arm.Autos.ArmShootPerimeter;
 import frc.robot.Commands.Climber.ClimberCmd;
-import frc.robot.Commands.Drivetrain.OperatorReset;
 // import frc.robot.Commands.Arm.LimitSwitchSimulation;
 import frc.robot.Commands.Drivetrain.TankDriveCmd;
 import frc.robot.Commands.IntakeShooter.IntakeCmd;
@@ -126,8 +126,6 @@ public class RobotContainer {
       )
     );
 
-    commandOperator.a().whileTrue(driveSub.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-
     // Run the climber motors using y and b
     commandDriver.y().whileTrue(new ClimberCmd(climbSub, () -> ClimberConstants.climberSpeed)); // Extending Climber (This will depend on how arm works)
     commandDriver.b().whileTrue(new ClimberCmd(climbSub, () -> ClimberConstants.climberSpeed * -1)); // Retracting climber
@@ -179,7 +177,7 @@ public class RobotContainer {
       )
     );
 
-    commandOperator.a().onTrue(new OperatorReset(driveSub));
+    commandOperator.a().and(commandOperator.b()).whileTrue(Commands.run(() -> driveSub.operatorReset(), driveSub));
 
     ////////////////////////////////////////// Arm Limits //////////////////////////////////////////
 

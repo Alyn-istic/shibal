@@ -10,10 +10,10 @@ public class Constants {
         public class MoveToAmpTimedConstants {
             // 1 = first position, 2 = second position, 3 third position
             //all constant values are wrong, need testing
-            public static final double TIME_TURN_TO_AMP = 1.25; // In seconds
+            public static final double TIME_TURN_TO_AMP = 1.4; // In seconds
             public static final double SPEED_TURN_TO_AMP = -0.55; // Motor speed
 
-            public static final double TIME_MOVE_TO_AMP_FWD = 1.25;// In seconds. Move forward before turn and move sideways. 
+            public static final double TIME_MOVE_TO_AMP_FWD = 0.6;// In seconds. Move forward before turn and move sideways. 
             public static final double TIME_MOVE_TO_AMP1 = 4.5; // In seconds. Was 4.5
             public static final double TIME_MOVE_TO_AMP2 = 4.5; // In seconds
             public static final double TIME_MOVE_TO_AMP3= 4.5; // In seconds
@@ -21,10 +21,10 @@ public class Constants {
             public static final double TIME_SHOOT_IN_AMP = 1; // In seconds
             public static final double SPEED_SHOOT_IN_AMP = 1; // Motor speed
 
-            public static final double SPEED_MOVE_TO_AMP_FWD = -0.3; // Motor speed//was 0.4
-            public static final double SPEED_MOVE_TO_AMP1 = 0.4; // Motor speed//was 0.4
-            public static final double SPEED_MOVE_TO_AMP2 = 0.4; // Motor speed
-            public static final double SPEED_MOVE_TO_AMP3 = 0.4; // Motor speed
+            public static final double SPEED_MOVE_TO_AMP_FWD = -0.55; // Motor speed//was 0.4
+            public static final double SPEED_MOVE_TO_AMP1 = -0.4; // Motor speed//was 0.4
+            public static final double SPEED_MOVE_TO_AMP2 = -0.4; // Motor speed
+            public static final double SPEED_MOVE_TO_AMP3 = -0.4; // Motor speed
         }
         public class MoveOutOfZoneConstants {
             public static final double TIME_MOVE_OUT_OF_ZONE1 = 1.4; // In seconds
@@ -63,7 +63,7 @@ public class Constants {
         public static final double driveTolerance = 0; // 
 
         public static final double motorClamp = 1; //
-        public static final double slewRate = 0.5; // Slewrate for open-looped autonomous routines 
+        public static final double autoSlewRate = 0.3; // Slewrate for open-looped autonomous routines 
 
         public static final double minAngle = 0; // 
         public static final double maxAngle = 360; // 

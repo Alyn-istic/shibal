@@ -22,12 +22,12 @@ public class MoveToAmpTimedForward extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new AutoLog("Moving to the amp"),
+      new AutoLog("Moving forward to align with the amp"),
       new TankDriveAutoCmd(driveSub,
         () -> MoveToAmpTimedConstants.SPEED_MOVE_TO_AMP_FWD,
         () -> MoveToAmpTimedConstants.SPEED_MOVE_TO_AMP_FWD,
-        () -> MoveToAmpTimedConstants.SPEED_MOVE_TO_AMP_FWD
-      ).withTimeout(MoveToAmpTimedConstants.SPEED_MOVE_TO_AMP_FWD * 2)
+        () -> MoveToAmpTimedConstants.TIME_MOVE_TO_AMP_FWD
+      ).withTimeout(MoveToAmpTimedConstants.TIME_MOVE_TO_AMP_FWD * 2)
     );
   }
 }

@@ -6,6 +6,7 @@ package frc.robot.Commands.Arm.Autos;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Commands.Arm.ArmManualCmd;
+import frc.robot.Commands.MainAutos.AutoLog;
 import frc.robot.Subsystems.ArmSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -22,6 +23,7 @@ public class ArmZero extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
+      new AutoLog("Slowly lowering the arm back down to into intake position (zeroing the encoders)"),
       new ArmManualCmd(armSub,
         () -> 0.2
       ).until(
