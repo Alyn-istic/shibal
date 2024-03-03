@@ -39,6 +39,16 @@ The Shuffleboard layout can be found in the file called "ShuffleBoardLayout.json
 # **How To Set Up Robot**:
 *TBD*
 
+# Firmware Updating
+Using Phoenix Tuner, the user can update the firmware of the connected devices (motor controllers and PDP). The firmware files are located in a folder called "ctr-device-firmware" in this project.
+1. **TalonSRX (Arm):** Version 22.1
+2. **VictorSPX (Drivetrain):** Version 22.1
+3. **PDP:** Version 1.40
+
+If the installed version is outdated, the frame around the device in Phoenix Tuner will show up as yellow instead of green.
+
+If the installed version is incorrect, the frame around the device in Phoenix Tuner will show up as purple instead of green.
+
 # **SimGUI Mapping** *(Software Simulation)*:
 ## **Keyboard 0**:
 1. **Q/A:** Left Joystick
