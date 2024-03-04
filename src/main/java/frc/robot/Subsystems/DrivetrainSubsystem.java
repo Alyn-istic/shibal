@@ -171,8 +171,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
       () -> {
         var alliance = DriverStation.getAlliance();
         if (alliance.isPresent()) {
-          System.out.println("Path planner detected alliance: " + alliance.get().name());
-          return alliance.get() == DriverStation.Alliance.Red;
+          System.out.println("Path planner detected alliance: " + DriverStation.getAlliance().get().name());
+          return (alliance.get().equals(DriverStation.Alliance.Red));
         }
         return false;
       },

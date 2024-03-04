@@ -2,7 +2,9 @@
   "robotWidth": 0.79,
   "robotLength": 0.7,
   "holonomicMode": false,
-  "pathFolders": [],
+  "pathFolders": [
+    "Test"
+  ],
   "autoFolders": [
     "New Folder"
   ],
