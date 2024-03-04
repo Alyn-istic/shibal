@@ -7,8 +7,6 @@ package frc.robot.Commands.MainAutos.Sensor;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Commands.Arm.Autos.ArmShoot;
 import frc.robot.Commands.Drivetrain.TankDrivePIDCmd;
-import frc.robot.Commands.Drivetrain.TurnPIDCmd;
-import frc.robot.Commands.Drivetrain.Autos.Sensor.ChassisTurn0;
 import frc.robot.Commands.Drivetrain.Autos.Sensor.ChassisTurn90;
 import frc.robot.Commands.Drivetrain.Autos.Sensor.MoveOutOfZoneSensor;
 import frc.robot.Commands.IntakeShooter.IntakeCmd;
