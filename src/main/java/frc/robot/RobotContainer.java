@@ -28,6 +28,7 @@ import frc.robot.Commands.Arm.Autos.ArmShootPerimeter;
 import frc.robot.Commands.Climber.ClimberCmd;
 // import frc.robot.Commands.Arm.LimitSwitchSimulation;
 import frc.robot.Commands.Drivetrain.TankDriveCmd;
+import frc.robot.Commands.Drivetrain.Autos.Sensor.MoveOutOfZoneSensor;
 import frc.robot.Commands.IntakeShooter.IntakeCmd;
 import frc.robot.Commands.MainAutos.AutoLog;
 import frc.robot.Commands.MainAutos.Sensor.ScoreInAmpSensor1;
@@ -70,7 +71,7 @@ public class RobotContainer {
   };
   private final NetworkTableEntry armIndexEntry = NetworkTableInstance.getDefault().getEntry("ArmIndex");
 
-  private final SendableChooser<String> autoChooser = new SendableChooser<>();
+  private final SendableChooser<Command> autoChooser = new SendableChooser<>();
 
   public RobotContainer() {
     armIndexEntry.setInteger(-1);
@@ -100,10 +101,11 @@ public class RobotContainer {
     // SmartDashboard.putNumber("Arm Clamp", ArmConstants.clamp);
     // SmartDashboard.putNumber("Arm Setpoint Offset", ArmConstants.setpointOffset);
 
-    autoChooser.setDefaultOption("NONE", "NONE");
-    autoChooser.addOption("MOVE OUT OF ZONE", "MOVE_OUT_OF_ZONE");
-    autoChooser.addOption("SCORE IN AMP (SENSORS)", "SCORE_IN_AMP_SENSORS");
-    autoChooser.addOption("SCORE IN AMP (TIMED)", "SCORE_IN_AMP_TIMED");
+    autoChooser.setDefaultOption("NONE", new AutoLog("No auto selected."));
+    autoChooser.addOption("MOVE OUT OF ZONE", new MoveOutOfZoneSensor(driveSub));
+    autoChooser.addOption("SCORE IN AMP (SENSORS)", new ScoreInAmpSensor1(driveSub, armSub, intakeShooterSub));
+    autoChooser.addOption("SCORE IN AMP (TIMED)", new ScoreInAmpTimed1(driveSub, intakeShooterSub, armSub));
+    autoChooser.addOption("PATH", new AutoLog("No path."));
     SmartDashboard.putData("Autonomous Routines", autoChooser);
     configureBindings();
   }
@@ -210,14 +212,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    switch (autoChooser.getSelected()) {
-      case "MOVE_OUT_OF_ZONE": // Moves the robot out of the zone.
-        return new ExitZoneTimed(driveSub); // Return the auto command that moves out of the zone
-      case "SCORE_IN_AMP_SENSORS":
-        return new ScoreInAmpSensor1(driveSub, armSub, intakeShooterSub); // Returns the auto command that moves robot to amp, and shoots loaded note, using sensors.
-      case "SCORE_IN_AMP_TIMED":
-        return new ScoreInAmpTimed1(driveSub, intakeShooterSub, armSub); // Returns the auto command that moves robot to amp, and shoots loaded note, using timers.
-    }
-    return new AutoLog("No auto selected.");
+    return autoChooser.getSelected();
   }
 }

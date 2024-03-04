@@ -8,19 +8,26 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelPositions;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.Distance;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.MutableMeasure;
 import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -51,13 +58,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   //PID controller
   // private final PIDController driveController = new PIDController(DrivetrainConstants.driveP, DrivetrainConstants.driveI, DrivetrainConstants.driveD);
+  private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(DrivetrainConstants.kS, DrivetrainConstants.kV);
   private final PIDController leftDriveController = new PIDController(DrivetrainConstants.driveP, DrivetrainConstants.driveI, DrivetrainConstants.driveD);
   private final PIDController rightDriveController = new PIDController(DrivetrainConstants.driveP, DrivetrainConstants.driveI, DrivetrainConstants.driveD);
   private final PIDController turnController = new PIDController(DrivetrainConstants.turnP, DrivetrainConstants.turnI, DrivetrainConstants.turnD);  
 
   // Kinematics
   private DifferentialDrivePoseEstimator poseEstimator;
-  private Field2d field;
+  private Field2d field = new Field2d();
   private DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(DrivetrainConstants.distLeftRight));
 
   /* Mutable holders
@@ -152,8 +160,24 @@ public class DrivetrainSubsystem extends SubsystemBase {
       getRightDistance(),
       new Pose2d(DrivetrainConstants.startPosX, DrivetrainConstants.startPosY, new Rotation2d(0))
     );
-    field = new Field2d();
     SmartDashboard.putData("Field ", field);
+
+    AutoBuilder.configureRamsete(
+      this::getBotPose,
+      this::resetBotPose,
+      this::getChassisSpeeds,
+      this::setChassisSpeed,
+      new ReplanningConfig(),
+      () -> {
+        var alliance = DriverStation.getAlliance();
+        if (alliance.isPresent()) {
+          System.out.println("Path planner detected alliance: " + alliance.get().name());
+          return alliance.get() == DriverStation.Alliance.Red;
+        }
+        return false;
+      },
+      this
+    );
   }
 
   @Override
@@ -197,7 +221,28 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public Pose2d getBotPose() {
     return poseEstimator.getEstimatedPosition();
+  }
 
+  public void resetBotPose(Pose2d pose) {
+    poseEstimator.resetPosition(gyro.getRotation2d(), new DifferentialDriveWheelPositions(getLeftDistance(), getRightDistance()), pose);
+  }
+
+  public ChassisSpeeds getChassisSpeeds() {
+    return kinematics.toChassisSpeeds(new DifferentialDriveWheelSpeeds(getLeftVelocity(), getRightVelocity()));
+  }
+
+  public void setChassisSpeed(ChassisSpeeds chassis) {
+    DifferentialDriveWheelSpeeds speeds = kinematics.toWheelSpeeds(chassis);
+
+    double leftFeedForward = feedforward.calculate(-speeds.leftMetersPerSecond);
+    double rightFeedForward = feedforward.calculate(-speeds.rightMetersPerSecond);
+
+    double leftVelocityCorrection = leftDriveController.calculate(getLeftVelocity(), -speeds.leftMetersPerSecond);
+    double rightVelocityCorrection = leftDriveController.calculate(getRightVelocity(), -speeds.leftMetersPerSecond);
+
+    frontLeft.setVoltage(leftVelocityCorrection + leftFeedForward);
+    frontRight.setVoltage(rightVelocityCorrection + rightFeedForward);
+    drive.feed();
   }
 
   // Math: pos * ((2PI*radius)/CPR)/GearRatio -> convert from inches to meters
