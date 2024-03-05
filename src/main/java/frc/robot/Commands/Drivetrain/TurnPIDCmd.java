@@ -72,9 +72,9 @@ public class TurnPIDCmd extends Command {
       turnController.setSetpoint(angleSetpoint.getAsDouble());  
     }
 
-    turnController.setP(SmartDashboard.getNumber("P", 0));
-    turnController.setI(SmartDashboard.getNumber("I", 0));
-    turnController.setD(SmartDashboard.getNumber("D", 0));
+    // turnController.setP(SmartDashboard.getNumber("P", 0));
+    // turnController.setI(SmartDashboard.getNumber("I", 0));
+    // turnController.setD(SmartDashboard.getNumber("D", 0));
 
     // Pushing numbers onto SmartDashboard for debugging purposes.  
   }

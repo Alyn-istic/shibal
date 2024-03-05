@@ -9,6 +9,8 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.MathUtil;
@@ -58,10 +60,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   //PID controller
   // private final PIDController driveController = new PIDController(DrivetrainConstants.driveP, DrivetrainConstants.driveI, DrivetrainConstants.driveD);
-  private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(DrivetrainConstants.kS, DrivetrainConstants.kV);
+  private final SimpleMotorFeedforward leftFeedForward = new SimpleMotorFeedforward(DrivetrainConstants.kS, DrivetrainConstants.kV);
+  private final SimpleMotorFeedforward rightFeedForward = new SimpleMotorFeedforward(DrivetrainConstants.kS, DrivetrainConstants.kV);
   private final PIDController leftDriveController = new PIDController(DrivetrainConstants.driveP, DrivetrainConstants.driveI, DrivetrainConstants.driveD);
   private final PIDController rightDriveController = new PIDController(DrivetrainConstants.driveP, DrivetrainConstants.driveI, DrivetrainConstants.driveD);
   private final PIDController turnController = new PIDController(DrivetrainConstants.turnP, DrivetrainConstants.turnI, DrivetrainConstants.turnD);  
+
+  // Path planner constraints
+  PathConstraints constraints = new PathConstraints(3.0, 2.0, Units.degreesToRadians(540), Units.degreesToRadians(720));
 
   // Kinematics
   private DifferentialDrivePoseEstimator poseEstimator;
@@ -97,13 +103,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
        * The other calculations such as position and velocity can be found in their repspective functions
        */
       log -> {
-        // Create frame for left motors
-        log.motor("drive-left").voltage(m_appliedVoltage.mut_replace(frontLeft.get() * RobotController.getBatteryVoltage(), Volts))
+        // Create frame for left motors (negated speed)
+        log.motor("drive-left").voltage(m_appliedVoltage.mut_replace(-frontLeft.get() * RobotController.getBatteryVoltage(), Volts))
           .linearPosition(m_distance.mut_replace(getLeftDistance(), Meters))
           .linearVelocity(m_velocity.mut_replace(getLeftVelocity(), MetersPerSecond));
 
-        // Create frame for right motors
-        log.motor("drive-right").voltage(m_appliedVoltage.mut_replace(frontRight.get() * RobotController.getBatteryVoltage(), Volts))
+        // Create frame for right motors (negated speed)
+        log.motor("drive-right").voltage(m_appliedVoltage.mut_replace(-frontRight.get() * RobotController.getBatteryVoltage(), Volts))
           .linearPosition(m_distance.mut_replace(getRightDistance(), Meters))
           .linearVelocity(m_velocity.mut_replace(getRightVelocity(), MetersPerSecond)); 
       }, this
@@ -168,14 +174,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
       this::getChassisSpeeds,
       this::setChassisSpeed,
       new ReplanningConfig(),
-      () -> {
-        var alliance = DriverStation.getAlliance();
-        if (alliance.isPresent()) {
-          System.out.println("Path planner detected alliance: " + DriverStation.getAlliance().get().name());
-          return (alliance.get().equals(DriverStation.Alliance.Red));
-        }
-        return false;
-      },
+      () -> false,
       this
     );
   }
@@ -195,15 +194,32 @@ public class DrivetrainSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Right Pos", frontRight.getSelectedSensorPosition());
     SmartDashboard.putNumber("Left Distance", getLeftDistance());
     SmartDashboard.putNumber("Right Distance", getRightDistance());
+    SmartDashboard.putNumber("Left Velocity", getLeftVelocity());
+    SmartDashboard.putNumber("Right Velocity", getRightVelocity());
 
     SmartDashboard.putNumber("Gyro Angle", getGyroAngle() % 360);
+    System.out.println(getPathInverted());
+  }
+
+  public Boolean getPathInverted() {
+    if (DriverStation.getAlliance().isPresent()) {
+      return (DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red));
+    }
+    return false;
   }
 
   @Override
   public void simulationPeriodic() {
-    frontLeft.getSimCollection().addQuadraturePosition(((int)(frontLeft.get() * 1001.0)));
-    frontRight.getSimCollection().addQuadraturePosition((-(int)(frontRight.get() * 1001.0)));
-    gyro.setAngleAdjustment(Units.radiansToDegrees(kinematics.toTwist2d(-getLeftDistance(), -getRightDistance()).dtheta)/3.1);
+    int left = (int)(MathUtil.clamp(frontLeft.get(), -1, 1) * 1101.0);
+    int right = (-(int)(MathUtil.clamp(frontRight.get(), -1, 1) * 1101.0));
+
+    frontLeft.getSimCollection().addQuadraturePosition(left);
+    frontRight.getSimCollection().addQuadraturePosition(right);
+
+    frontLeft.getSimCollection().setQuadratureVelocity(left);
+    frontRight.getSimCollection().setQuadratureVelocity(right);
+
+    gyro.setAngleAdjustment(Units.radiansToDegrees(kinematics.toTwist2d(-getLeftDistance(), -getRightDistance()).dtheta) * 0.75);
 
     field.setRobotPose(getBotPose());
   }
@@ -234,14 +250,15 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public void setChassisSpeed(ChassisSpeeds chassis) {
     DifferentialDriveWheelSpeeds speeds = kinematics.toWheelSpeeds(chassis);
 
-    double leftFeedForward = feedforward.calculate(-speeds.leftMetersPerSecond);
-    double rightFeedForward = feedforward.calculate(-speeds.rightMetersPerSecond);
+    double leftFF = leftFeedForward.calculate(-speeds.leftMetersPerSecond);
+    double rightFF = rightFeedForward.calculate(-speeds.rightMetersPerSecond);
 
     double leftVelocityCorrection = leftDriveController.calculate(getLeftVelocity(), -speeds.leftMetersPerSecond);
-    double rightVelocityCorrection = leftDriveController.calculate(getRightVelocity(), -speeds.leftMetersPerSecond);
+    double rightVelocityCorrection = rightDriveController.calculate(getRightVelocity(), -speeds.rightMetersPerSecond);
 
-    frontLeft.setVoltage(leftVelocityCorrection + leftFeedForward);
-    frontRight.setVoltage(rightVelocityCorrection + rightFeedForward);
+    frontLeft.setVoltage(leftVelocityCorrection + leftFF);
+    frontRight.setVoltage(rightVelocityCorrection + rightFF);
+    
     drive.feed();
   }
 
@@ -278,6 +295,16 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public PIDController getTurnController() {
     return turnController;
+  }
+
+  public Command testPath1() {
+    PathPlannerPath path = PathPlannerPath.fromPathFile("ToNote1Path");
+    return AutoBuilder.pathfindThenFollowPath(path, constraints);
+  }
+
+  public Command testPath2() {
+    PathPlannerPath path = PathPlannerPath.fromPathFile("TestPath2");
+    return AutoBuilder.pathfindThenFollowPath(path, constraints);
   }
 
   public void operatorReset() {
