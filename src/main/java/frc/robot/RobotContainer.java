@@ -62,10 +62,6 @@ public class RobotContainer {
   private final IntakeShooterSubsystem intakeShooterSub = new IntakeShooterSubsystem();
   private final ClimberSubsystem climbSub = new ClimberSubsystem();
 
-  // Pathfinding commands
-  private final Command PATH_TEST_1 = driveSub.testPath1();
-  private final Command PATH_TEST_2 = driveSub.testPath2();
-
   // Stuff for ArmPID
   private final Command[] armPIDCommands = {
     new ArmIntake(armSub, ()-> false),
@@ -109,8 +105,10 @@ public class RobotContainer {
     autoChooser.addOption("MOVE OUT OF ZONE", new MoveOutOfZoneSensor(driveSub));
     autoChooser.addOption("SCORE IN AMP (SENSORS)", new ScoreInAmpSensor1(driveSub, armSub, intakeShooterSub));
     autoChooser.addOption("SCORE IN AMP (TIMED)", new ScoreInAmpTimed1(driveSub, intakeShooterSub, armSub));
-    autoChooser.addOption("PATH TEST 1", PATH_TEST_1);
-    autoChooser.addOption("PATH TEST 2", PATH_TEST_2);
+    autoChooser.addOption("PATH TEST 0", driveSub.testPath0());
+    // autoChooser.addOption("PATH TEST 1", driveSub.testPath1());
+    // autoChooser.addOption("PATH TEST 2", driveSub.testPath2());
+    autoChooser.addOption("AUTO 1", driveSub.testAuto1());
     SmartDashboard.putData("Autonomous Routines", autoChooser);
     configureBindings();
   }

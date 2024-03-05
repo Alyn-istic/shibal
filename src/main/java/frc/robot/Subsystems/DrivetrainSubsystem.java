@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -35,12 +36,16 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.DrivetrainConstants;
 
 // Static imports for units
 import static edu.wpi.first.units.Units.Volts;
+
+import java.util.List;
+
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
@@ -198,7 +203,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Right Velocity", getRightVelocity());
 
     SmartDashboard.putNumber("Gyro Angle", getGyroAngle() % 360);
-    System.out.println(getPathInverted());
   }
 
   public Boolean getPathInverted() {
@@ -297,14 +301,23 @@ public class DrivetrainSubsystem extends SubsystemBase {
     return turnController;
   }
 
+  public Command testPath0() {
+    PathPlannerPath path = PathPlannerPath.fromPathFile("TestPath1");
+    return AutoBuilder.pathfindThenFollowPath(path, constraints); 
+  }
+
   public Command testPath1() {
-    PathPlannerPath path = PathPlannerPath.fromPathFile("ToNote1Path");
+    PathPlannerPath path = PathPlannerPath.fromPathFile("toNote1");
     return AutoBuilder.pathfindThenFollowPath(path, constraints);
   }
 
   public Command testPath2() {
-    PathPlannerPath path = PathPlannerPath.fromPathFile("TestPath2");
+    PathPlannerPath path = PathPlannerPath.fromPathFile("toAmp");
     return AutoBuilder.pathfindThenFollowPath(path, constraints);
+  }
+
+  public Command testAuto1() {
+    return new PathPlannerAuto("AmpToNote1");
   }
 
   public void operatorReset() {
