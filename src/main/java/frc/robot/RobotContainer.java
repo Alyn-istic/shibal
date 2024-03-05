@@ -42,7 +42,7 @@ import frc.robot.Subsystems.IntakeShooterSubsystem;
 import frc.robot.Subsystems.ClimberSubsystem;
 import frc.robot.Subsystems.LEDSubsystem;
 import frc.robot.Constants.ClimberConstants;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+// import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class RobotContainer {
   // Initiating a ordinary Xbox Controller. Nothing special.
