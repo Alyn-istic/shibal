@@ -11,6 +11,7 @@ import frc.robot.Commands.Arm.Autos.ArmZero;
 import frc.robot.Commands.Drivetrain.Autos.Timed.LeaveAmpTimed;
 import frc.robot.Commands.Drivetrain.Autos.Timed.TurnToAmpTimed;
 import frc.robot.Commands.Drivetrain.Autos.Timed.MoveToAmpTimed.MoveToAmpTimedForward;
+import frc.robot.Commands.IntakeShooter.Autos.DownShootAmpTimed;
 import frc.robot.Subsystems.ArmSubsystem;
 //import frc.robot.Subsystems.ArmSubsystem;
 import frc.robot.Subsystems.DrivetrainSubsystem;
