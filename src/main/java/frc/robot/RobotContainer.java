@@ -119,7 +119,7 @@ public class RobotContainer {
 
     ////////////////////////////////////////// Driver Controls //////////////////////////////////////////
 
-    commandDriver.x().onTrue(new EmergencyStopCmd()); // E-stop
+    commandDriver.x().onTrue(new EmergencyStopCmd(driveSub, armSub, intakeShooterSub)); // E-stop
 
     // Using triggers to control intake speed
     commandDriver.leftTrigger().whileTrue(
@@ -159,7 +159,7 @@ public class RobotContainer {
 
     ////////////////////////////////////////// Operator Controls //////////////////////////////////////////
 
-    commandOperator.x().onTrue(new EmergencyStopCmd()); // E-stop
+    commandOperator.x().onTrue(new EmergencyStopCmd(driveSub, armSub, intakeShooterSub)); // E-stop
 
     // Use triggers to control intake speed
     commandOperator.leftTrigger().whileTrue(
