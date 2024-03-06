@@ -28,7 +28,9 @@ import frc.robot.Commands.Arm.Autos.ArmShootPerimeter;
 import frc.robot.Commands.Climber.ClimberCmd;
 // import frc.robot.Commands.Arm.LimitSwitchSimulation;
 import frc.robot.Commands.Drivetrain.TankDriveCmd;
+import frc.robot.Commands.Drivetrain.resetCmd;
 import frc.robot.Commands.IntakeShooter.IntakeCmd;
+import frc.robot.Commands.IntakeShooter.Test.intakeSeperateCmd;
 import frc.robot.Commands.MainAutos.AutoLog;
 import frc.robot.Commands.MainAutos.Sensor.ScoreInAmpSensor1;
 import frc.robot.Commands.MainAutos.Timed.ExitZoneTimed;
@@ -134,6 +136,7 @@ public class RobotContainer {
     commandDriver.leftBumper().onTrue(new ArmCommandSelector(armPIDCommands, () -> -1, armIndexEntry));
     commandDriver.rightBumper().onTrue(new ArmCommandSelector(armPIDCommands, () -> 1, armIndexEntry));
 
+    commandDriver.a().onTrue(new resetCmd(driveSub));
     // //Intake: Drop into intake angle.//
     // commandDriver.povDown().whileTrue(new ArmIntake(armSub));
 
@@ -203,10 +206,18 @@ public class RobotContainer {
     );
 
     //////////////////////////////////////// Sys ID /////////////////////////////////////////////////////////
-    commandTester.y().whileTrue(driveSub.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    commandTester.a().whileTrue(driveSub.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-    commandTester.povUp().whileTrue(driveSub.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    commandTester.povDown().whileTrue(driveSub.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    // commandTester.y().whileTrue(driveSub.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    // commandTester.a().whileTrue(driveSub.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    // commandTester.povUp().whileTrue(driveSub.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    // commandTester.povDown().whileTrue(driveSub.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+
+    //////////////////////////////////////// Tester /////////////////////////////////////////////////////////
+    commandTester.leftTrigger().whileTrue(
+      new intakeSeperateCmd(
+        intakeShooterSub, () -> MathUtil.applyDeadband(-tester.getRawAxis(DriverConstants.leftTriggerAxis), DriverConstants.triggerDeadband), 
+        () -> MathUtil.applyDeadband(-tester.getRawAxis(DriverConstants.rightTriggerAxis), DriverConstants.triggerDeadband)
+      )
+    );
   }
 
   public Command getAutonomousCommand() {

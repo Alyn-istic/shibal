@@ -13,10 +13,13 @@ public class Constants {
             public static final double TIME_TURN_TO_AMP = 1.4; // In seconds
             public static final double SPEED_TURN_TO_AMP = -0.55; // Motor speed
 
+            public static final double TIME_LEAVE_AMP = 1; // In seconds
+            public static final double SPEED_LEAVE_AMP = -0.55; // Motor speed
+
             public static final double TIME_MOVE_TO_AMP_FWD = 0.6;// In seconds. Move forward before turn and move sideways. 
-            public static final double TIME_MOVE_TO_AMP1 = 4.5; // In seconds. Was 4.5
-            public static final double TIME_MOVE_TO_AMP2 = 4.5; // In seconds
-            public static final double TIME_MOVE_TO_AMP3= 4.5; // In seconds
+            public static final double TIME_MOVE_TO_AMP1 = 0.2; // In seconds. Was 4.5
+            public static final double TIME_MOVE_TO_AMP2 = 0.8; // In seconds
+            public static final double TIME_MOVE_TO_AMP3= 1.4; // In seconds
 
             public static final double TIME_SHOOT_IN_AMP = 1; // In seconds
             public static final double SPEED_SHOOT_IN_AMP = 1; // Motor speed
@@ -27,14 +30,14 @@ public class Constants {
             public static final double SPEED_MOVE_TO_AMP3 = -0.4; // Motor speed
         }
         public class MoveOutOfZoneConstants {
-            public static final double TIME_MOVE_OUT_OF_ZONE1 = 1.4; // In seconds
-            public static final double SPEED_MOVE_OUT_OF_ZONE1 = -0.4; // Motor speed
+            public static final double TIME_MOVE_OUT_OF_ZONE1 = 1.4; // In seconds. Was 1.4s
+            public static final double SPEED_MOVE_OUT_OF_ZONE1 = -0.5; // Motor speed. Was -0.4
 
             public static final double TIME_MOVE_OUT_OF_ZONE2 = 1; // In seconds
-            public static final double SPEED_MOVE_OUT_OF_ZONE2 = 0.35; // Motor speed
+            public static final double SPEED_MOVE_OUT_OF_ZONE2 = -0.5; // Motor speed. Was 0.35
 
             public static final double TIME_MOVE_OUT_OF_ZONE3 = 1; // In seconds
-            public static final double SPEED_MOVE_OUT_OF_ZONE3 = 0.35; // Motor speed
+            public static final double SPEED_MOVE_OUT_OF_ZONE3 = -1.5; // Motor speed
         }
     }
 
@@ -63,7 +66,7 @@ public class Constants {
         public static final double driveTolerance = 0; // 
 
         public static final double motorClamp = 1; //
-        public static final double autoSlewRate = 0.3; // Slewrate for open-looped autonomous routines 
+        public static final double autoSlewRate = 1; // Slewrate for open-looped autonomous routines. was 0.3
 
         public static final double minAngle = 0; // 
         public static final double maxAngle = 360; // 
@@ -91,7 +94,7 @@ public class Constants {
         public static final double startingAngle = 90; // 
 
         public static final int raiseLimitSwitchChannel = 1; // 
-        public static final int dropLimitSwitchChannel = 0; // 
+        public static final int dropLimitSwitchChannel = 9; // 
 
         public static final double raiseP = 0.03; // P value for the arm PID command
         public static final double raiseI = 0; // I value for the arm PID command
@@ -115,13 +118,13 @@ public class Constants {
         public static final double raiseMotorClamp = 0.68; // Should be between 0 and 1;
         public static final double dropMotorClamp = 0.6;
         // public static final double dropAngle = 0;  // This is relative to the starting position of the encoders.
-    }
+    }  
 
     public class IntakeShooterConstants {
         public static final int upperWheelID  = 9; // The motor ID for the intake/shooter's upper wheels
         public static final int lowerWheelID = 8; // The motor ID for the intake/shooter's lower wheels
 
-        public static final double speed = 1; // The intake/shooter's motor speed.
+        public static final double speed = 0.7; // The intake/shooter's motor speed.
     }
     public class ClimberConstants{ //Need to change values based on testing
         public static final int leftClimberID = 8; // 

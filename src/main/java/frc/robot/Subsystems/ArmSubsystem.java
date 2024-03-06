@@ -97,7 +97,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     SmartDashboard.putBoolean("Arm raise limit", raiseLimitSwitch());
     SmartDashboard.putBoolean("Arm drop limit", dropLimitSwitch());
-    System.out.println(dropLimitSwitch());
+    //System.out.println(dropLimitSwitch());
 
     SmartDashboard.putNumber("Arm Angle", getAngle());
     SmartDashboard.putNumber("Arm Position", getSensorPosition());
