@@ -6,9 +6,8 @@ package frc.robot.Commands.MainAutos.Sensor;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Commands.Arm.Autos.ArmShoot;
+import frc.robot.Commands.Arm.Autos.ArmZero;
 import frc.robot.Commands.Drivetrain.TankDrivePIDCmd;
-import frc.robot.Commands.Drivetrain.TurnPIDCmd;
-import frc.robot.Commands.Drivetrain.Autos.Sensor.ChassisTurn0;
 import frc.robot.Commands.Drivetrain.Autos.Sensor.ChassisTurn90;
 import frc.robot.Commands.Drivetrain.Autos.Sensor.MoveOutOfZoneSensor;
 import frc.robot.Commands.IntakeShooter.IntakeCmd;
@@ -30,14 +29,14 @@ public class ScoreInAmpSensor1 extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      //new ChassisTurn0(driveSub),
+      new ArmZero(armSub),
       new MoveOutOfZoneSensor(driveSub),
       new ChassisTurn90(driveSub),
       new AutoLog("Driving backwards towards amp..."),
       new TankDrivePIDCmd(driveSub, // Moves towards the amp
         () -> driveSub.getLeftDistance() - 0.5,
         () -> driveSub.getRightDistance() - 0.5,
-        () -> 0.01,
+        () -> 0.1,
         () -> false,
         () -> driveSub.isDriveControllersAtSetpoint()
       ),

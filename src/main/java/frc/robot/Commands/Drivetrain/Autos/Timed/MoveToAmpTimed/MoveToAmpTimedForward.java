@@ -6,7 +6,6 @@ package frc.robot.Commands.Drivetrain.Autos.Timed.MoveToAmpTimed;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.AutonomousConstants.MoveToAmpTimedConstants;
-import frc.robot.Commands.Drivetrain.TankDriveCmd;
 import frc.robot.Commands.Drivetrain.TankDriveAutoCmd;
 import frc.robot.Commands.MainAutos.AutoLog;
 import frc.robot.Subsystems.DrivetrainSubsystem;
