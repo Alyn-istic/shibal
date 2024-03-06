@@ -43,7 +43,7 @@ public class ScoreInAmpTimed1 extends SequentialCommandGroup {
       new WaitCommand(1),
 
       new TurnToAmpTimed(driveSub, false),
-      new LeaveAmpTimed()
+      new LeaveAmpTimed(driveSub)
     );
   }
 }

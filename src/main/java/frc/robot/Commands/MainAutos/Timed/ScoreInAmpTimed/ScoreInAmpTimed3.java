@@ -33,7 +33,7 @@ public class ScoreInAmpTimed3 extends SequentialCommandGroup {
       new MoveToAmpTimed3(driveSub),
       new DownShootAmpTimed(intakeShooterSub),
       new TurnToAmpTimed(driveSub, false),
-      new LeaveAmpTimed(),
+      new LeaveAmpTimed(driveSub),
       new AutoLog("Done, pos.3")
     );
   }

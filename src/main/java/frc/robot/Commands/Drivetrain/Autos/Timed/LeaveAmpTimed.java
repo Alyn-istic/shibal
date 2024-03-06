@@ -15,8 +15,9 @@ import frc.robot.Subsystems.DrivetrainSubsystem;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class LeaveAmpTimed extends SequentialCommandGroup {
   /** Creates a new LeaveAmpTimed. */
-  private DrivetrainSubsystem driveSub;
-  public LeaveAmpTimed() {
+  public LeaveAmpTimed(
+        DrivetrainSubsystem driveSub
+  ) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
