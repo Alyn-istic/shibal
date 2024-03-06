@@ -26,7 +26,7 @@ public class MoveToAmpTimedForward extends SequentialCommandGroup {
         () -> MoveToAmpTimedConstants.SPEED_MOVE_TO_AMP_FWD,
         () -> MoveToAmpTimedConstants.SPEED_MOVE_TO_AMP_FWD,
         () -> MoveToAmpTimedConstants.TIME_MOVE_TO_AMP_FWD
-      ).withTimeout(MoveToAmpTimedConstants.TIME_MOVE_TO_AMP_FWD * 2)
+      )
     );
   }
 }

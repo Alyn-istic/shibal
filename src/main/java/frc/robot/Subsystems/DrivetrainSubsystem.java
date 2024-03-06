@@ -18,6 +18,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -70,6 +71,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final PIDController leftDriveController = new PIDController(DrivetrainConstants.driveP, DrivetrainConstants.driveI, DrivetrainConstants.driveD);
   private final PIDController rightDriveController = new PIDController(DrivetrainConstants.driveP, DrivetrainConstants.driveI, DrivetrainConstants.driveD);
   private final PIDController turnController = new PIDController(DrivetrainConstants.turnP, DrivetrainConstants.turnI, DrivetrainConstants.turnD);  
+
+  // Slew rate limiters
+  private final SlewRateLimiter leftSlewRateLimiter = new SlewRateLimiter(DrivetrainConstants.autoSlewRate);
+  private final SlewRateLimiter rightSlewRateLimiter = new SlewRateLimiter(DrivetrainConstants.autoSlewRate);
 
   // Path planner constraints
   PathConstraints constraints = new PathConstraints(3.0, 2.0, Units.degreesToRadians(540), Units.degreesToRadians(720));
@@ -299,6 +304,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public PIDController getTurnController() {
     return turnController;
+  }
+
+  public SlewRateLimiter getLeftSlewRateLimiter() {
+    return leftSlewRateLimiter;
+  }
+
+  public SlewRateLimiter getRightSlewRateLimiter() {
+    return rightSlewRateLimiter;
   }
 
   public Command testPath0() {

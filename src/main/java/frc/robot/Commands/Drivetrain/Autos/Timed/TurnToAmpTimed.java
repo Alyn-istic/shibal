@@ -33,7 +33,7 @@ public class TurnToAmpTimed extends SequentialCommandGroup {
         () -> dir*MoveToAmpTimedConstants.SPEED_TURN_TO_AMP,
         () -> dir*-MoveToAmpTimedConstants.SPEED_TURN_TO_AMP,
         ()-> MoveToAmpTimedConstants.TIME_TURN_TO_AMP
-      ).withTimeout(MoveToAmpTimedConstants.TIME_TURN_TO_AMP * 2)
+      )
     );
   }
 }

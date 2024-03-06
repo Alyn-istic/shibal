@@ -26,7 +26,7 @@ public class MoveOutOfZoneTimed1 extends SequentialCommandGroup {
         () -> MoveOutOfZoneConstants.SPEED_MOVE_OUT_OF_ZONE1,
         () -> MoveOutOfZoneConstants.SPEED_MOVE_OUT_OF_ZONE1,
         () -> MoveOutOfZoneConstants.TIME_MOVE_OUT_OF_ZONE1
-      ).withTimeout(MoveOutOfZoneConstants.TIME_MOVE_OUT_OF_ZONE1 * 2)
+      )
     );
   }
 }
