@@ -28,7 +28,10 @@ import frc.robot.Commands.Arm.Autos.ArmShootPerimeter;
 import frc.robot.Commands.Climber.ClimberCmd;
 // import frc.robot.Commands.Arm.LimitSwitchSimulation;
 import frc.robot.Commands.Drivetrain.TankDriveCmd;
+import frc.robot.Commands.Drivetrain.resetCmd;
+import frc.robot.Commands.Drivetrain.Autos.Sensor.MoveOutOfZoneSensor;
 import frc.robot.Commands.IntakeShooter.IntakeCmd;
+import frc.robot.Commands.IntakeShooter.Test.intakeSeperateCmd;
 import frc.robot.Commands.MainAutos.AutoLog;
 import frc.robot.Commands.MainAutos.Sensor.ScoreInAmpSensor1;
 import frc.robot.Commands.MainAutos.Timed.ExitZoneTimed;
@@ -70,7 +73,7 @@ public class RobotContainer {
   };
   private final NetworkTableEntry armIndexEntry = NetworkTableInstance.getDefault().getEntry("ArmIndex");
 
-  private final SendableChooser<String> autoChooser = new SendableChooser<>();
+  private final SendableChooser<Command> autoChooser = new SendableChooser<>();
 
   public RobotContainer() {
     armIndexEntry.setInteger(-1);
@@ -92,18 +95,22 @@ public class RobotContainer {
       )
     );
 
-    SmartDashboard.putNumber("P", DrivetrainConstants.turnP);
-    SmartDashboard.putNumber("I",DrivetrainConstants.turnI);
-    SmartDashboard.putNumber("D", DrivetrainConstants.turnD);
+    // SmartDashboard.putNumber("P", DrivetrainConstants.turnP);
+    // SmartDashboard.putNumber("I",DrivetrainConstants.turnI);
+    // SmartDashboard.putNumber("D", DrivetrainConstants.turnD);
 
     // SmartDashboard.putNumber("Arm Setpoint", ArmConstants.shootInsideAngle);
     // SmartDashboard.putNumber("Arm Clamp", ArmConstants.clamp);
     // SmartDashboard.putNumber("Arm Setpoint Offset", ArmConstants.setpointOffset);
 
-    autoChooser.setDefaultOption("NONE", "NONE");
-    autoChooser.addOption("MOVE OUT OF ZONE", "MOVE_OUT_OF_ZONE");
-    autoChooser.addOption("SCORE IN AMP (SENSORS)", "SCORE_IN_AMP_SENSORS");
-    autoChooser.addOption("SCORE IN AMP (TIMED)", "SCORE_IN_AMP_TIMED");
+    autoChooser.setDefaultOption("NONE", new AutoLog("No auto selected."));
+    autoChooser.addOption("MOVE OUT OF ZONE", new MoveOutOfZoneSensor(driveSub));
+    autoChooser.addOption("SCORE IN AMP (SENSORS)", new ScoreInAmpSensor1(driveSub, armSub, intakeShooterSub));
+    autoChooser.addOption("SCORE IN AMP (TIMED)", new ScoreInAmpTimed1(driveSub, intakeShooterSub, armSub));
+    autoChooser.addOption("PATH TEST 0", driveSub.testPath0());
+    // autoChooser.addOption("PATH TEST 1", driveSub.testPath1());
+    // autoChooser.addOption("PATH TEST 2", driveSub.testPath2());
+    autoChooser.addOption("AUTO 1", driveSub.testAuto1());
     SmartDashboard.putData("Autonomous Routines", autoChooser);
     configureBindings();
   }
@@ -134,6 +141,7 @@ public class RobotContainer {
     commandDriver.leftBumper().onTrue(new ArmCommandSelector(armPIDCommands, () -> -1, armIndexEntry));
     commandDriver.rightBumper().onTrue(new ArmCommandSelector(armPIDCommands, () -> 1, armIndexEntry));
 
+    commandDriver.a().onTrue(new resetCmd(driveSub));
     // //Intake: Drop into intake angle.//
     // commandDriver.povDown().whileTrue(new ArmIntake(armSub));
 
@@ -203,21 +211,21 @@ public class RobotContainer {
     );
 
     //////////////////////////////////////// Sys ID /////////////////////////////////////////////////////////
-    commandTester.y().whileTrue(driveSub.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    commandTester.a().whileTrue(driveSub.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-    commandTester.povUp().whileTrue(driveSub.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    commandTester.povDown().whileTrue(driveSub.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    // commandTester.y().whileTrue(driveSub.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    // commandTester.a().whileTrue(driveSub.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    // commandTester.povUp().whileTrue(driveSub.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    // commandTester.povDown().whileTrue(driveSub.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+
+    //////////////////////////////////////// Tester /////////////////////////////////////////////////////////
+    commandTester.leftTrigger().whileTrue(
+      new intakeSeperateCmd(
+        intakeShooterSub, () -> MathUtil.applyDeadband(-tester.getRawAxis(DriverConstants.leftTriggerAxis), DriverConstants.triggerDeadband), 
+        () -> MathUtil.applyDeadband(-tester.getRawAxis(DriverConstants.rightTriggerAxis), DriverConstants.triggerDeadband)
+      )
+    );
   }
 
   public Command getAutonomousCommand() {
-    switch (autoChooser.getSelected()) {
-      case "MOVE_OUT_OF_ZONE": // Moves the robot out of the zone.
-        return new ExitZoneTimed(driveSub); // Return the auto command that moves out of the zone
-      case "SCORE_IN_AMP_SENSORS":
-        return new ScoreInAmpSensor1(driveSub, armSub, intakeShooterSub); // Returns the auto command that moves robot to amp, and shoots loaded note, using sensors.
-      case "SCORE_IN_AMP_TIMED":
-        return new ScoreInAmpTimed1(driveSub, intakeShooterSub, armSub); // Returns the auto command that moves robot to amp, and shoots loaded note, using timers.
-    }
-    return new AutoLog("No auto selected.");
+    return autoChooser.getSelected();
   }
 }

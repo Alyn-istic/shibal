@@ -37,6 +37,11 @@ public class IntakeShooterSubsystem extends SubsystemBase {
     lowerWheel.set(speed);
   }
 
+  public void setSeperateMotor(double upperSpeed, double lowerSpeed){
+    upperWheel.set(upperSpeed);
+    lowerWheel.set(lowerSpeed);
+  }
+  
   public boolean getIntakeLimit() { // Returns if the note has been detected by a intake sensor
     return true;
   }

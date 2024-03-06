@@ -96,8 +96,8 @@ public class TankDrivePIDCmd extends Command {
     // rightDriveController.setD(SmartDashboard.getNumber("D", 0));
 
     // Pushing numbers onto SmartDashboard for debugging purposes.
-    SmartDashboard.putNumber("Drivetrain Left PID Output", leftSpeed);
-    SmartDashboard.putNumber("Drivetrain Right PID Output", rightSpeed);
+    // SmartDashboard.putNumber("Drivetrain Left PID Output", leftSpeed);
+    // SmartDashboard.putNumber("Drivetrain Right PID Output", rightSpeed);
     
   }
 

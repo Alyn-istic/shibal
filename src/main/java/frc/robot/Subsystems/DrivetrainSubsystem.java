@@ -8,30 +8,44 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelPositions;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.Distance;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.MutableMeasure;
 import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.DrivetrainConstants;
 
 // Static imports for units
 import static edu.wpi.first.units.Units.Volts;
+
+import java.util.List;
+
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
@@ -51,13 +65,18 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   //PID controller
   // private final PIDController driveController = new PIDController(DrivetrainConstants.driveP, DrivetrainConstants.driveI, DrivetrainConstants.driveD);
+  private final SimpleMotorFeedforward leftFeedForward = new SimpleMotorFeedforward(DrivetrainConstants.kS, DrivetrainConstants.kV);
+  private final SimpleMotorFeedforward rightFeedForward = new SimpleMotorFeedforward(DrivetrainConstants.kS, DrivetrainConstants.kV);
   private final PIDController leftDriveController = new PIDController(DrivetrainConstants.driveP, DrivetrainConstants.driveI, DrivetrainConstants.driveD);
   private final PIDController rightDriveController = new PIDController(DrivetrainConstants.driveP, DrivetrainConstants.driveI, DrivetrainConstants.driveD);
   private final PIDController turnController = new PIDController(DrivetrainConstants.turnP, DrivetrainConstants.turnI, DrivetrainConstants.turnD);  
 
+  // Path planner constraints
+  PathConstraints constraints = new PathConstraints(3.0, 2.0, Units.degreesToRadians(540), Units.degreesToRadians(720));
+
   // Kinematics
   private DifferentialDrivePoseEstimator poseEstimator;
-  private Field2d field;
+  private Field2d field = new Field2d();
   private DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(DrivetrainConstants.distLeftRight));
 
   /* Mutable holders
@@ -89,13 +108,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
        * The other calculations such as position and velocity can be found in their repspective functions
        */
       log -> {
-        // Create frame for left motors
-        log.motor("drive-left").voltage(m_appliedVoltage.mut_replace(frontLeft.get() * RobotController.getBatteryVoltage(), Volts))
+        // Create frame for left motors (negated speed)
+        log.motor("drive-left").voltage(m_appliedVoltage.mut_replace(-frontLeft.get() * RobotController.getBatteryVoltage(), Volts))
           .linearPosition(m_distance.mut_replace(getLeftDistance(), Meters))
           .linearVelocity(m_velocity.mut_replace(getLeftVelocity(), MetersPerSecond));
 
-        // Create frame for right motors
-        log.motor("drive-right").voltage(m_appliedVoltage.mut_replace(frontRight.get() * RobotController.getBatteryVoltage(), Volts))
+        // Create frame for right motors (negated speed)
+        log.motor("drive-right").voltage(m_appliedVoltage.mut_replace(-frontRight.get() * RobotController.getBatteryVoltage(), Volts))
           .linearPosition(m_distance.mut_replace(getRightDistance(), Meters))
           .linearVelocity(m_velocity.mut_replace(getRightVelocity(), MetersPerSecond)); 
       }, this
@@ -152,8 +171,17 @@ public class DrivetrainSubsystem extends SubsystemBase {
       getRightDistance(),
       new Pose2d(DrivetrainConstants.startPosX, DrivetrainConstants.startPosY, new Rotation2d(0))
     );
-    field = new Field2d();
     SmartDashboard.putData("Field ", field);
+
+    AutoBuilder.configureRamsete(
+      this::getBotPose,
+      this::resetBotPose,
+      this::getChassisSpeeds,
+      this::setChassisSpeed,
+      new ReplanningConfig(),
+      () -> false,
+      this
+    );
   }
 
   @Override
@@ -171,15 +199,31 @@ public class DrivetrainSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Right Pos", frontRight.getSelectedSensorPosition());
     SmartDashboard.putNumber("Left Distance", getLeftDistance());
     SmartDashboard.putNumber("Right Distance", getRightDistance());
+    SmartDashboard.putNumber("Left Velocity", getLeftVelocity());
+    SmartDashboard.putNumber("Right Velocity", getRightVelocity());
 
     SmartDashboard.putNumber("Gyro Angle", getGyroAngle() % 360);
   }
 
+  public Boolean getPathInverted() {
+    if (DriverStation.getAlliance().isPresent()) {
+      return (DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red));
+    }
+    return false;
+  }
+
   @Override
   public void simulationPeriodic() {
-    frontLeft.getSimCollection().addQuadraturePosition(((int)(frontLeft.get() * 1001.0)));
-    frontRight.getSimCollection().addQuadraturePosition((-(int)(frontRight.get() * 1001.0)));
-    gyro.setAngleAdjustment(Units.radiansToDegrees(kinematics.toTwist2d(-getLeftDistance(), -getRightDistance()).dtheta)/3.1);
+    int left = (int)(MathUtil.clamp(frontLeft.get(), -1, 1) * 1101.0);
+    int right = (-(int)(MathUtil.clamp(frontRight.get(), -1, 1) * 1101.0));
+
+    frontLeft.getSimCollection().addQuadraturePosition(left);
+    frontRight.getSimCollection().addQuadraturePosition(right);
+
+    frontLeft.getSimCollection().setQuadratureVelocity(left);
+    frontRight.getSimCollection().setQuadratureVelocity(right);
+
+    gyro.setAngleAdjustment(Units.radiansToDegrees(kinematics.toTwist2d(-getLeftDistance(), -getRightDistance()).dtheta) * 0.75);
 
     field.setRobotPose(getBotPose());
   }
@@ -197,7 +241,29 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public Pose2d getBotPose() {
     return poseEstimator.getEstimatedPosition();
+  }
 
+  public void resetBotPose(Pose2d pose) {
+    poseEstimator.resetPosition(gyro.getRotation2d(), new DifferentialDriveWheelPositions(getLeftDistance(), getRightDistance()), pose);
+  }
+
+  public ChassisSpeeds getChassisSpeeds() {
+    return kinematics.toChassisSpeeds(new DifferentialDriveWheelSpeeds(getLeftVelocity(), getRightVelocity()));
+  }
+
+  public void setChassisSpeed(ChassisSpeeds chassis) {
+    DifferentialDriveWheelSpeeds speeds = kinematics.toWheelSpeeds(chassis);
+
+    double leftFF = leftFeedForward.calculate(-speeds.leftMetersPerSecond);
+    double rightFF = rightFeedForward.calculate(-speeds.rightMetersPerSecond);
+
+    double leftVelocityCorrection = leftDriveController.calculate(getLeftVelocity(), -speeds.leftMetersPerSecond);
+    double rightVelocityCorrection = rightDriveController.calculate(getRightVelocity(), -speeds.rightMetersPerSecond);
+
+    frontLeft.setVoltage(leftVelocityCorrection + leftFF);
+    frontRight.setVoltage(rightVelocityCorrection + rightFF);
+    
+    drive.feed();
   }
 
   // Math: pos * ((2PI*radius)/CPR)/GearRatio -> convert from inches to meters
@@ -235,27 +301,26 @@ public class DrivetrainSubsystem extends SubsystemBase {
     return turnController;
   }
 
+  public Command testPath0() {
+    PathPlannerPath path = PathPlannerPath.fromPathFile("TestPath1");
+    return AutoBuilder.pathfindThenFollowPath(path, constraints); 
+  }
+
+  public Command testPath1() {
+    PathPlannerPath path = PathPlannerPath.fromPathFile("toNote1");
+    return AutoBuilder.pathfindThenFollowPath(path, constraints);
+  }
+
+  public Command testPath2() {
+    PathPlannerPath path = PathPlannerPath.fromPathFile("toAmp");
+    return AutoBuilder.pathfindThenFollowPath(path, constraints);
+  }
+
+  public Command testAuto1() {
+    return new PathPlannerAuto("AmpToNote1");
+  }
+
   public void operatorReset() {
-    frontLeft.configFactoryDefault();
-    backLeft.configFactoryDefault();
-    frontRight.configFactoryDefault();
-    backRight.configFactoryDefault();
-
-    // Inverting the left motors
-    frontLeft.setInverted(true);
-    backLeft.setInverted(true);
-    frontRight.setInverted(false);
-    backRight.setInverted(false);
-
-    //Telling back-motors to follow the front-motors because FIRST decided to remove MotorControllerGroups.
-    backLeft.follow(frontLeft);
-    backRight.follow(frontRight);
-
-    // Setting the neutral mode of the motors to "Brake". This means that they will stop immediately when told to.
-    frontLeft.setNeutralMode(NeutralMode.Brake);
-    frontRight.setNeutralMode(NeutralMode.Brake);
-    backLeft.setNeutralMode(NeutralMode.Brake);
-    frontRight.setNeutralMode(NeutralMode.Brake);
 
     // Resetting probably non-existing encoders just for the sake of it.
 
