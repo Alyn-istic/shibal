@@ -9,18 +9,22 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.IntakeShooterConstants;
 import frc.robot.Subsystems.IntakeShooterSubsystem;
+import frc.robot.Subsystems.LEDSubsystem;
 
 public class IntakeCmd extends Command {
   private IntakeShooterSubsystem intakeSub;
+  private LEDSubsystem led;
   private DoubleSupplier speed;
   /** Creates a new IntakeTest. */
   public IntakeCmd(
     IntakeShooterSubsystem intakeSub,
+    LEDSubsystem led,
     DoubleSupplier speed
   ) {
     this.intakeSub = intakeSub;
     this.speed = speed;
-    addRequirements(intakeSub);
+    this.led = led;
+    addRequirements(intakeSub, led);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -32,6 +36,7 @@ public class IntakeCmd extends Command {
   @Override
   public void execute() {
     intakeSub.setMotors(speed.getAsDouble()*IntakeShooterConstants.speed);
+    led.setPresetGold();
   }
 
   // Called once the command ends or is interrupted.

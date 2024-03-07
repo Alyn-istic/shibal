@@ -19,6 +19,7 @@ import frc.robot.Commands.MainAutos.AutoLog;
 import frc.robot.Subsystems.ArmSubsystem;
 import frc.robot.Subsystems.DrivetrainSubsystem;
 import frc.robot.Subsystems.IntakeShooterSubsystem;
+import frc.robot.Subsystems.LEDSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -28,7 +29,8 @@ public class ScoreInAmpSensor1 extends SequentialCommandGroup {
   public ScoreInAmpSensor1(
     DrivetrainSubsystem driveSub,
     ArmSubsystem armSub,
-    IntakeShooterSubsystem intakeSub
+    IntakeShooterSubsystem intakeSub,
+    LEDSubsystem led
   ) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
@@ -46,7 +48,7 @@ public class ScoreInAmpSensor1 extends SequentialCommandGroup {
       new AutoLog("Moving arm into shooting position..."),
       new ArmShoot(armSub, () -> armSub.getController().atSetpoint()),
       new AutoLog("Down-shooting into amp..."),
-      new IntakeCmd(intakeSub, () -> 1).withTimeout(1),
+      new IntakeCmd(intakeSub, led, () -> 1).withTimeout(1),
       new ArmIntake(armSub,  () -> armSub.getController().atSetpoint()),
       new TankDrivePIDCmd(driveSub, // Moves towards the amp
         () -> driveSub.getLeftDistance() + 0.58,
@@ -62,7 +64,7 @@ public class ScoreInAmpSensor1 extends SequentialCommandGroup {
         () -> 0.1,
         () -> false,
         () -> driveSub.isDriveControllersAtSetpoint()
-      ).raceWith(new IntakeCmd(intakeSub, () -> 1)),
+      ).raceWith(new IntakeCmd(intakeSub, led, () -> 1)),
 
       new TankDrivePIDCmd(driveSub, // Moves towards the amp
         () -> driveSub.getLeftDistance() - 1,
@@ -80,7 +82,7 @@ public class ScoreInAmpSensor1 extends SequentialCommandGroup {
         () -> false,
         () -> driveSub.isDriveControllersAtSetpoint()
       ).alongWith(new ArmShoot(armSub,  () -> armSub.getController().atSetpoint())),
-      new IntakeCmd(intakeSub, () -> 1).withTimeout(1),
+      new IntakeCmd(intakeSub, led, () -> 1).withTimeout(1),
       
       new TankDrivePIDCmd(driveSub, // Moves towards the amp
         () -> driveSub.getLeftDistance() + 0.58,

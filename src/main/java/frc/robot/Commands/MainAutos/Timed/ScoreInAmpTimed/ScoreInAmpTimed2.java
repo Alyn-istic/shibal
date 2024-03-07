@@ -23,6 +23,7 @@ import frc.robot.Subsystems.ArmSubsystem;
 //import frc.robot.Subsystems.ArmSubsystem;
 import frc.robot.Subsystems.DrivetrainSubsystem;
 import frc.robot.Subsystems.IntakeShooterSubsystem;
+import frc.robot.Subsystems.LEDSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -32,6 +33,7 @@ public class ScoreInAmpTimed2 extends SequentialCommandGroup {
   public ScoreInAmpTimed2(
     DrivetrainSubsystem driveSub,
     IntakeShooterSubsystem intakeShooterSub,
+    LEDSubsystem led,
     ArmSubsystem armSub
   ) {
     // Add your commands in the addCommands() call, e.g.
@@ -57,7 +59,7 @@ public class ScoreInAmpTimed2 extends SequentialCommandGroup {
       new ArmIntake(armSub, () -> armSub.getController().atSetpoint()),
      new ParallelCommandGroup(
       new LeaveAmpTimed(driveSub),
-      new IntakeCmd(intakeShooterSub, () -> 1).withTimeout(1.5)
+      new IntakeCmd(intakeShooterSub, led, () -> 1).withTimeout(1.5)
      ),
       new TankDriveAutoCmd(driveSub,
         () -> MoveToAmpTimedConstants.SPEED_TURN_TO_AMP,

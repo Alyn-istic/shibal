@@ -32,6 +32,7 @@ import frc.robot.Commands.Drivetrain.resetCmd;
 import frc.robot.Commands.Drivetrain.Autos.Sensor.MoveOutOfZoneSensor;
 import frc.robot.Commands.IntakeShooter.IntakeCmd;
 import frc.robot.Commands.IntakeShooter.Test.intakeSeperateCmd;
+import frc.robot.Commands.LED.LEDGreen;
 import frc.robot.Commands.MainAutos.AutoLog;
 import frc.robot.Commands.MainAutos.Sensor.ScoreInAmpSensor1;
 import frc.robot.Commands.MainAutos.Timed.ExitZoneTimed;
@@ -97,6 +98,10 @@ public class RobotContainer {
       )
     );
 
+    led.setDefaultCommand(
+      new LEDGreen(led)
+    );
+
     // SmartDashboard.putNumber("P", DrivetrainConstants.turnP);
     // SmartDashboard.putNumber("I",DrivetrainConstants.turnI);
     // SmartDashboard.putNumber("D", DrivetrainConstants.turnD);
@@ -107,10 +112,10 @@ public class RobotContainer {
 
     autoChooser.setDefaultOption("NONE", new AutoLog("No auto selected."));
     autoChooser.addOption("MOVE OUT OF ZONE", new MoveOutOfZoneSensor(driveSub));
-    autoChooser.addOption("SCORE IN AMP (SENSORS)", new ScoreInAmpSensor1(driveSub, armSub, intakeShooterSub));
-    autoChooser.addOption("SCORE IN AMP 1 (TIMED)", new ScoreInAmpTimed1(driveSub, intakeShooterSub, armSub));
-    autoChooser.addOption("SCORE IN AMP 2 (TIMED)", new ScoreInAmpTimed2(driveSub, intakeShooterSub, armSub));
-    autoChooser.addOption("SCORE IN AMP 3 (TIMED)", new ScoreInAmpTimed3(driveSub, intakeShooterSub, armSub));
+    autoChooser.addOption("SCORE IN AMP (SENSORS)", new ScoreInAmpSensor1(driveSub, armSub, intakeShooterSub, led));
+    autoChooser.addOption("SCORE IN AMP 1 (TIMED)", new ScoreInAmpTimed1(driveSub, intakeShooterSub, led, armSub));
+    autoChooser.addOption("SCORE IN AMP 2 (TIMED)", new ScoreInAmpTimed2(driveSub, intakeShooterSub, led, armSub));
+    autoChooser.addOption("SCORE IN AMP 3 (TIMED)", new ScoreInAmpTimed3(driveSub, intakeShooterSub, led, armSub));
     // autoChooser.addOption("PATH TEST 0", driveSub.testPath0());
     // autoChooser.addOption("PATH TEST 1", driveSub.testPath1());
     // autoChooser.addOption("PATH TEST 2", driveSub.testPath2());
@@ -128,12 +133,12 @@ public class RobotContainer {
     // Using triggers to control intake speed
     commandDriver.leftTrigger().whileTrue(
       new IntakeCmd(
-        intakeShooterSub, () -> MathUtil.applyDeadband(driver.getRawAxis(DriverConstants.leftTriggerAxis), DriverConstants.triggerDeadband)
+        intakeShooterSub, led, () -> MathUtil.applyDeadband(driver.getRawAxis(DriverConstants.leftTriggerAxis), DriverConstants.triggerDeadband)
       ).alongWith(Commands.run(()->led.setPresetGold(), led))
     );
     commandDriver.rightTrigger().whileTrue(
       new IntakeCmd(
-        intakeShooterSub, () -> MathUtil.applyDeadband(-driver.getRawAxis(DriverConstants.rightTriggerAxis), DriverConstants.triggerDeadband)
+        intakeShooterSub, led, () -> MathUtil.applyDeadband(-driver.getRawAxis(DriverConstants.rightTriggerAxis), DriverConstants.triggerDeadband)
       )
     );
 
@@ -167,12 +172,12 @@ public class RobotContainer {
     // Use triggers to control intake speed
     commandOperator.leftTrigger().whileTrue(
       new IntakeCmd(
-        intakeShooterSub, () -> operator.getRawAxis(DriverConstants.leftTriggerAxis)
+        intakeShooterSub, led, () -> operator.getRawAxis(DriverConstants.leftTriggerAxis)
       )
     );
     commandOperator.rightTrigger().whileTrue(
       new IntakeCmd(
-        intakeShooterSub, () -> -operator.getRawAxis(DriverConstants.rightTriggerAxis)
+        intakeShooterSub, led, () -> -operator.getRawAxis(DriverConstants.rightTriggerAxis)
       )
     );
 

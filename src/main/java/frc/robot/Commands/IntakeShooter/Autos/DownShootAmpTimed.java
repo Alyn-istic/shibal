@@ -17,12 +17,13 @@ public class DownShootAmpTimed extends SequentialCommandGroup {
   /** Creates a new DownShootAmpTimed. */
   public DownShootAmpTimed(
     IntakeShooterSubsystem shooterSub
+    LEDSubsystem led
   ) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new AutoLog("Down shooting into amp."),
-      new IntakeCmd(shooterSub, () -> MoveToAmpTimedConstants.SPEED_SHOOT_IN_AMP).withTimeout(MoveToAmpTimedConstants.TIME_SHOOT_IN_AMP)
+      new IntakeCmd(shooterSub, led, () -> MoveToAmpTimedConstants.SPEED_SHOOT_IN_AMP).withTimeout(MoveToAmpTimedConstants.TIME_SHOOT_IN_AMP)
     );
   }
 }
