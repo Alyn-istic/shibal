@@ -13,7 +13,7 @@ public class Constants {
             public static final double TIME_TURN_TO_AMP = 1; // In seconds
             public static final double SPEED_TURN_TO_AMP = 0.6; // Motor speed
 
-            public static final double TIME_LEAVE_AMP = 1; // In seconds
+            public static final double TIME_LEAVE_AMP = 2; // In seconds
             public static final double SPEED_LEAVE_AMP = -0.55; // Motor speed
 
             public static final double TIME_MOVE_TO_AMP_FWD = 0.6;// In seconds. Move forward before turn and move sideways. 

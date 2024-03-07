@@ -35,14 +35,14 @@ public class ScoreInAmpTimed1 extends SequentialCommandGroup {
       new MoveToAmpTimedForward(driveSub),
       new WaitCommand(1),
 
-      new TurnToAmpTimed(driveSub, true),
+      new TurnToAmpTimed(driveSub, -1),
       new WaitCommand(1),
 
       new ArmShoot(armSub, () -> armSub.getController().atSetpoint()),
       new DownShootAmpTimed(intakeShooterSub),
       new WaitCommand(1),
 
-      new TurnToAmpTimed(driveSub, false),
+      new TurnToAmpTimed(driveSub, 1),
       new LeaveAmpTimed(driveSub)
     );
   }
