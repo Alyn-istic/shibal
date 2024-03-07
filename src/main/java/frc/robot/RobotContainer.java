@@ -35,8 +35,9 @@ import frc.robot.Commands.IntakeShooter.Test.intakeSeperateCmd;
 import frc.robot.Commands.MainAutos.AutoLog;
 import frc.robot.Commands.MainAutos.Sensor.ScoreInAmpSensor1;
 import frc.robot.Commands.MainAutos.Timed.ExitZoneTimed;
-import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimed0;
 import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimed1;
+import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimed2;
+import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimed3;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.DrivetrainConstants;
@@ -108,11 +109,12 @@ public class RobotContainer {
     autoChooser.addOption("MOVE OUT OF ZONE", new MoveOutOfZoneSensor(driveSub));
     autoChooser.addOption("SCORE IN AMP (SENSORS)", new ScoreInAmpSensor1(driveSub, armSub, intakeShooterSub));
     autoChooser.addOption("SCORE IN AMP 1 (TIMED)", new ScoreInAmpTimed1(driveSub, intakeShooterSub, armSub));
-    autoChooser.addOption("SCORE IN AMP 0 (TIMED)", new ScoreInAmpTimed0(driveSub, intakeShooterSub, armSub));
-    autoChooser.addOption("PATH TEST 0", driveSub.testPath0());
+    autoChooser.addOption("SCORE IN AMP 2 (TIMED)", new ScoreInAmpTimed2(driveSub, intakeShooterSub, armSub));
+    autoChooser.addOption("SCORE IN AMP 3 (TIMED)", new ScoreInAmpTimed3(driveSub, intakeShooterSub, armSub));
+    // autoChooser.addOption("PATH TEST 0", driveSub.testPath0());
     // autoChooser.addOption("PATH TEST 1", driveSub.testPath1());
     // autoChooser.addOption("PATH TEST 2", driveSub.testPath2());
-    autoChooser.addOption("AUTO 1", driveSub.testAuto1());
+    // autoChooser.addOption("AUTO 1", driveSub.testAuto1());
     SmartDashboard.putData("Autonomous Routines", autoChooser);
     configureBindings();
   }
@@ -218,12 +220,13 @@ public class RobotContainer {
     // commandTester.povDown().whileTrue(driveSub.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
 
     //////////////////////////////////////// Tester /////////////////////////////////////////////////////////
-    commandTester.leftTrigger().whileTrue(
-      new intakeSeperateCmd(
-        intakeShooterSub, () -> MathUtil.applyDeadband(-tester.getRawAxis(DriverConstants.leftTriggerAxis), DriverConstants.triggerDeadband), 
-        () -> MathUtil.applyDeadband(-tester.getRawAxis(DriverConstants.rightTriggerAxis), DriverConstants.triggerDeadband)
-      )
-    );
+    // commandTester.leftTrigger().whileTrue(
+    //   new intakeSeperateCmd(
+    //     intakeShooterSub, () -> MathUtil.applyDeadband(-tester.getRawAxis(DriverConstants.leftTriggerAxis), DriverConstants.triggerDeadband), 
+    //     () -> MathUtil.applyDeadband(-tester.getRawAxis(DriverConstants.rightTriggerAxis), DriverConstants.triggerDeadband)
+    //   )
+    // );
+
   }
 
   public Command getAutonomousCommand() {

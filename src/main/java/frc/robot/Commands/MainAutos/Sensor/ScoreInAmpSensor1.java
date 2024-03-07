@@ -5,9 +5,13 @@
 package frc.robot.Commands.MainAutos.Sensor;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Commands.Arm.Autos.ArmIntake;
 import frc.robot.Commands.Arm.Autos.ArmShoot;
 import frc.robot.Commands.Arm.Autos.ArmZero;
 import frc.robot.Commands.Drivetrain.TankDrivePIDCmd;
+import frc.robot.Commands.Drivetrain.Autos.Sensor.ChassisTurn0;
+import frc.robot.Commands.Drivetrain.Autos.Sensor.ChassisTurn270;
+import frc.robot.Commands.Drivetrain.Autos.Sensor.ChassisTurn315;
 import frc.robot.Commands.Drivetrain.Autos.Sensor.ChassisTurn90;
 import frc.robot.Commands.Drivetrain.Autos.Sensor.MoveOutOfZoneSensor;
 import frc.robot.Commands.IntakeShooter.IntakeCmd;
@@ -30,12 +34,11 @@ public class ScoreInAmpSensor1 extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new ArmZero(armSub),
-      new MoveOutOfZoneSensor(driveSub),
-      new ChassisTurn90(driveSub),
+      // new MoveOutOfZoneSensor(driveSub),
       new AutoLog("Driving backwards towards amp..."),
       new TankDrivePIDCmd(driveSub, // Moves towards the amp
-        () -> driveSub.getLeftDistance() - 0.5,
-        () -> driveSub.getRightDistance() - 0.5,
+        () -> driveSub.getLeftDistance() - 0.58,
+        () -> driveSub.getRightDistance() - 0.58,
         () -> 0.1,
         () -> false,
         () -> driveSub.isDriveControllersAtSetpoint()
@@ -43,7 +46,51 @@ public class ScoreInAmpSensor1 extends SequentialCommandGroup {
       new AutoLog("Moving arm into shooting position..."),
       new ArmShoot(armSub, () -> armSub.getController().atSetpoint()),
       new AutoLog("Down-shooting into amp..."),
-      new IntakeCmd(intakeSub, () -> -1).withTimeout(2),
+      new IntakeCmd(intakeSub, () -> 1).withTimeout(1),
+      new ArmIntake(armSub,  () -> armSub.getController().atSetpoint()),
+      new TankDrivePIDCmd(driveSub, // Moves towards the amp
+        () -> driveSub.getLeftDistance() + 0.58,
+        () -> driveSub.getRightDistance() + 0.58,
+        () -> 0.1,
+        () -> false,
+        () -> driveSub.isDriveControllersAtSetpoint()
+      ),
+      new ChassisTurn270(driveSub),
+      new TankDrivePIDCmd(driveSub, // Moves towards the amp
+        () -> driveSub.getLeftDistance() + 1,
+        () -> driveSub.getRightDistance() + 1,
+        () -> 0.1,
+        () -> false,
+        () -> driveSub.isDriveControllersAtSetpoint()
+      ).raceWith(new IntakeCmd(intakeSub, () -> 1)),
+
+      new TankDrivePIDCmd(driveSub, // Moves towards the amp
+        () -> driveSub.getLeftDistance() - 1,
+        () -> driveSub.getRightDistance() - 1,
+        () -> 0.1,
+        () -> false,
+        () -> driveSub.isDriveControllersAtSetpoint()
+      ),
+
+      new ChassisTurn0(driveSub),
+      new TankDrivePIDCmd(driveSub, // Moves towards the amp
+        () -> driveSub.getLeftDistance() - 0.58,
+        () -> driveSub.getRightDistance() - 0.58,
+        () -> 0.1,
+        () -> false,
+        () -> driveSub.isDriveControllersAtSetpoint()
+      ).alongWith(new ArmShoot(armSub,  () -> armSub.getController().atSetpoint())),
+      new IntakeCmd(intakeSub, () -> 1).withTimeout(1),
+      
+      new TankDrivePIDCmd(driveSub, // Moves towards the amp
+        () -> driveSub.getLeftDistance() + 0.58,
+        () -> driveSub.getRightDistance() + 0.58,
+        () -> 0.1,
+        () -> false,
+        () -> driveSub.isDriveControllersAtSetpoint()
+      ),
+      new ChassisTurn315(driveSub).alongWith(new ArmIntake(armSub,  () -> armSub.getController().atSetpoint())),
+
       new AutoLog("Done")
     );
   }

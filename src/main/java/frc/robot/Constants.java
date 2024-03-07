@@ -21,7 +21,7 @@ public class Constants {
             public static final double TIME_MOVE_TO_AMP2 = 0.8; // In seconds
             public static final double TIME_MOVE_TO_AMP3= 1.4; // In seconds
 
-            public static final double TIME_SHOOT_IN_AMP = 2; // In seconds
+            public static final double TIME_SHOOT_IN_AMP = 1.5; // In seconds
             public static final double SPEED_SHOOT_IN_AMP = 1; // Motor speed
 
             public static final double SPEED_MOVE_TO_AMP_FWD = -0.55; // Motor speed//was 0.4
@@ -71,12 +71,12 @@ public class Constants {
         public static final double minAngle = 0; // 
         public static final double maxAngle = 360; // 
 
-        public static final double turnP = 0.025; // P value for turning PID command
-        public static final double turnI = 0.001; // I value for turning PID command
+        public static final double turnP = 0.02; // P value for turning PID command
+        public static final double turnI = 0.005; // I value for turning PID command
         public static final double turnD = 0.00002; // D value for turning PID command
         public static final double gyroTolerance = 1; // Tolerance for turning PID command
-        public static final double kS = 0.8672; // 
-        public static final double kV = 0.0266; // 
+        public static final double kS = 1.4796; // 
+        public static final double kV = 0.6432; // 
     }
 
     public class ArmConstants {
