@@ -41,11 +41,8 @@ public class Robot extends TimedRobot {
 
     if (m_autonomousCommand != null) {
       CommandScheduler.getInstance().schedule(
-        new SequentialCommandGroup(
-          new WaitCommand(AutonomousConstants.waitBeforeExecRoutine),
-          m_autonomousCommand
-        )
-      );;
+          new WaitCommand(AutonomousConstants.waitBeforeExecRoutine).andThen(m_autonomousCommand)
+      );
     }
   }
 
