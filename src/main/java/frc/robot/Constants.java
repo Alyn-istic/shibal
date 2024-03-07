@@ -90,7 +90,7 @@ public class Constants {
         public static final double startingAngle = 90; // 
 
         public static final int raiseLimitSwitchChannel = 1; // 
-        public static final int dropLimitSwitchChannel = 9; // 
+        public static final int dropLimitSwitchChannel = 0; // 
 
         public static final double raiseP = 0.03; // P value for the arm PID command
         public static final double raiseI = 0; // I value for the arm PID command
