@@ -125,7 +125,7 @@ public class RobotContainer {
     commandDriver.leftTrigger().whileTrue(
       new IntakeCmd(
         intakeShooterSub, () -> MathUtil.applyDeadband(driver.getRawAxis(DriverConstants.leftTriggerAxis), DriverConstants.triggerDeadband)
-      )
+      ).alongWith(Commands.run(()->led.setPresetGold(), led))
     );
     commandDriver.rightTrigger().whileTrue(
       new IntakeCmd(
@@ -141,7 +141,6 @@ public class RobotContainer {
     commandDriver.leftBumper().onTrue(new ArmCommandSelector(armPIDCommands, () -> -1, armIndexEntry));
     commandDriver.rightBumper().onTrue(new ArmCommandSelector(armPIDCommands, () -> 1, armIndexEntry));
 
-    commandDriver.a().onTrue(new resetCmd(driveSub));
     // //Intake: Drop into intake angle.//
     // commandDriver.povDown().whileTrue(new ArmIntake(armSub));
 
