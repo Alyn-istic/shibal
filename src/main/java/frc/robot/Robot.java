@@ -4,11 +4,14 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.AutonomousConstants;
+import frc.robot.Constants.LEDconstants;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -18,6 +21,18 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
+
+    AddressableLED m_led = new AddressableLED(LEDconstants.LEDTalonPort);
+
+    // Reuse buffer
+    // Default to a length of 60, start empty output
+    // Length is expensive to set, so only set it once, then just update data
+    AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(149);
+    m_led.setLength(m_ledBuffer.getLength());
+
+    // Set the data
+    m_led.setData(m_ledBuffer);
+    m_led.start();
   }
 
   @Override
@@ -75,3 +90,5 @@ public class Robot extends TimedRobot {
   @Override
   public void testExit() {}
 }
+
+
