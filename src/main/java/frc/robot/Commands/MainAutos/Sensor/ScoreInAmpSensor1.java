@@ -12,8 +12,6 @@ import frc.robot.Commands.Drivetrain.TankDrivePIDCmd;
 import frc.robot.Commands.Drivetrain.Autos.Sensor.ChassisTurn0;
 import frc.robot.Commands.Drivetrain.Autos.Sensor.ChassisTurn270;
 import frc.robot.Commands.Drivetrain.Autos.Sensor.ChassisTurn315;
-import frc.robot.Commands.Drivetrain.Autos.Sensor.ChassisTurn90;
-import frc.robot.Commands.Drivetrain.Autos.Sensor.MoveOutOfZoneSensor;
 import frc.robot.Commands.IntakeShooter.IntakeCmd;
 import frc.robot.Commands.MainAutos.AutoLog;
 import frc.robot.Subsystems.ArmSubsystem;

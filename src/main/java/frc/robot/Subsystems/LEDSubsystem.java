@@ -5,6 +5,7 @@
 package frc.robot.Subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import frc.robot.Constants.LEDconstants;
 
@@ -26,6 +27,14 @@ public class LEDSubsystem extends SubsystemBase {
 
   public void turnOff() {
     LEDController.set(0);
+  }
+
+  public DriverStation.Alliance getAllianceColor() {
+    var alliance = DriverStation.getAlliance();
+    if (alliance.isPresent()) {
+      return alliance.get();
+    }
+    return DriverStation.Alliance.Blue;
   }
 
   @Override

@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Commands.EmergencyStopCmd;
 import frc.robot.Commands.Arm.ArmManualCmd;
 import frc.robot.Commands.Arm.ArmCommandSelector;
@@ -28,20 +27,15 @@ import frc.robot.Commands.Arm.Autos.ArmShootPerimeter;
 import frc.robot.Commands.Climber.ClimberCmd;
 // import frc.robot.Commands.Arm.LimitSwitchSimulation;
 import frc.robot.Commands.Drivetrain.TankDriveCmd;
-import frc.robot.Commands.Drivetrain.resetCmd;
 import frc.robot.Commands.Drivetrain.Autos.Sensor.MoveOutOfZoneSensor;
 import frc.robot.Commands.IntakeShooter.IntakeCmd;
-import frc.robot.Commands.IntakeShooter.Test.intakeSeperateCmd;
-import frc.robot.Commands.LED.LEDGreen;
 import frc.robot.Commands.MainAutos.AutoLog;
 import frc.robot.Commands.MainAutos.Sensor.ScoreInAmpSensor1;
-import frc.robot.Commands.MainAutos.Timed.ExitZoneTimed;
 import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimed1;
 import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimed2;
 import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimed3;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.DriverConstants;
-import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Subsystems.ArmSubsystem;
 import frc.robot.Subsystems.DrivetrainSubsystem;
 import frc.robot.Subsystems.IntakeShooterSubsystem;
@@ -98,9 +92,9 @@ public class RobotContainer {
       )
     );
 
-    led.setDefaultCommand(
-      new LEDGreen(led)
-    );
+    // led.setDefaultCommand(
+    //   Commands.run(() -> led.setPresetGreen(), led)
+    // );
 
     // SmartDashboard.putNumber("P", DrivetrainConstants.turnP);
     // SmartDashboard.putNumber("I",DrivetrainConstants.turnI);
@@ -143,8 +137,8 @@ public class RobotContainer {
     );
 
     // Run the climber motors using y and b
-    commandDriver.y().whileTrue(new ClimberCmd(climbSub, () -> ClimberConstants.climberSpeed)); // Extending Climber (This will depend on how arm works)
-    commandDriver.b().whileTrue(new ClimberCmd(climbSub, () -> ClimberConstants.climberSpeed * -1)); // Retracting climber
+    commandDriver.y().whileTrue(new ClimberCmd(climbSub, led, () -> ClimberConstants.climberSpeed)); // Extending Climber (This will depend on how arm works)
+    commandDriver.b().whileTrue(new ClimberCmd(climbSub, led, () -> ClimberConstants.climberSpeed * -1)); // Retracting climber
 
     // Using left/right bumpers to jump between setpoints for PID
     commandDriver.leftBumper().onTrue(new ArmCommandSelector(armPIDCommands, () -> -1, armIndexEntry));

@@ -24,25 +24,27 @@ public class IntakeCmd extends Command {
     this.intakeSub = intakeSub;
     this.speed = speed;
     this.led = led;
-    addRequirements(intakeSub, led);
+    addRequirements(intakeSub);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    led.setPresetGold();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     intakeSub.setMotors(speed.getAsDouble()*IntakeShooterConstants.speed);
-    led.setPresetGold();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     intakeSub.setMotors(0);
+    led.setPresetGreen();
   }
 
   // Returns true when the command should end.

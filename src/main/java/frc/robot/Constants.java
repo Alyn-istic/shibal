@@ -90,7 +90,7 @@ public class Constants {
         public static final double startingAngle = 90; // 
 
         public static final int raiseLimitSwitchChannel = 1; // 
-        public static final int dropLimitSwitchChannel = 0; // 
+        public static final int dropLimitSwitchChannel = 9; // 
 
         public static final double raiseP = 0.03; // P value for the arm PID command
         public static final double raiseI = 0; // I value for the arm PID command
@@ -120,7 +120,7 @@ public class Constants {
         public static final int upperWheelID  = 9; // The motor ID for the intake/shooter's upper wheels
         public static final int lowerWheelID = 8; // The motor ID for the intake/shooter's lower wheels
 
-        public static final double speed = 0.7; // The intake/shooter's motor speed.
+        public static final double speed = 0.85; // The intake/shooter's motor speed.
     }
     public class ClimberConstants{ //Need to change values based on testing
         public static final int leftClimberID = 8; // 
@@ -133,7 +133,7 @@ public class Constants {
     }
 
     public class LEDconstants {
-        public static final int LEDTalonPort = 0; // 
+        public static final int LEDTalonPort = 8; // 
     }
 
     public class DriverConstants {
