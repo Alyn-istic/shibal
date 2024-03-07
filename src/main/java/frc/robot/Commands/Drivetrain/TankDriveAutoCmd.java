@@ -17,8 +17,8 @@ public class TankDriveAutoCmd extends Command {
   // Create the necessary variables.
   private DrivetrainSubsystem driveSub;
   private DoubleSupplier leftInput, rightInput, timeout;
-  private final SlewRateLimiter leftLimiter = new SlewRateLimiter(DrivetrainConstants.autoSlewRate);
-  private final SlewRateLimiter rightLimiter = new SlewRateLimiter(DrivetrainConstants.autoSlewRate);
+  private final SlewRateLimiter leftLimiter;
+  private final SlewRateLimiter rightLimiter;
 
   private Timer timer = new Timer();
 
@@ -32,6 +32,9 @@ public class TankDriveAutoCmd extends Command {
     this.leftInput = leftInput;
     this.rightInput = rightInput;
     this.timeout = timeout;
+
+    leftLimiter = driveSub.getLeftSlewRateLimiter();
+    rightLimiter = driveSub.getRightSlewRateLimiter();
 
     addRequirements(driveSub);
   }

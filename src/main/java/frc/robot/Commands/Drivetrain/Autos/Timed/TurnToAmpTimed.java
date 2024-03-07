@@ -16,17 +16,24 @@ import frc.robot.Subsystems.DrivetrainSubsystem;
 public class TurnToAmpTimed extends SequentialCommandGroup {
   /** Creates a new AutonomousBackup. */
   public TurnToAmpTimed(
-    DrivetrainSubsystem driveSub
+    DrivetrainSubsystem driveSub, 
+    boolean turningToAmp //1:turn to amp, -1: turn to the front
   ) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
+    int dir;
+    if(turningToAmp == true){
+      dir = 1;
+    }else{
+      dir = -1;
+    }
     addCommands(
       new AutoLog("Turning back-side towards the amp"),
       new TankDriveAutoCmd(driveSub,
-        () -> MoveToAmpTimedConstants.SPEED_TURN_TO_AMP,
-        () -> -MoveToAmpTimedConstants.SPEED_TURN_TO_AMP,
+        () -> dir*MoveToAmpTimedConstants.SPEED_TURN_TO_AMP,
+        () -> dir*-MoveToAmpTimedConstants.SPEED_TURN_TO_AMP,
         ()-> MoveToAmpTimedConstants.TIME_TURN_TO_AMP
-      ).withTimeout(MoveToAmpTimedConstants.TIME_TURN_TO_AMP * 2)
+      )
     );
   }
 }
