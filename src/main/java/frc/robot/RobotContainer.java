@@ -134,18 +134,19 @@ public class RobotContainer {
     // Using triggers to control intake speed
     commandDriver.leftTrigger().whileTrue(
       new IntakeCmd(
-        intakeShooterSub, led, () -> MathUtil.applyDeadband(driver.getRawAxis(DriverConstants.leftTriggerAxis), DriverConstants.triggerDeadband)
-      ).alongWith(Commands.run(()->led.setPresetGold(), led))
+        intakeShooterSub, () -> MathUtil.applyDeadband(driver.getRawAxis(DriverConstants.leftTriggerAxis), DriverConstants.triggerDeadband)
+      )
+      //.alongWith(Commands.run(()->led.setPresetGold(), led))
     );
     commandDriver.rightTrigger().whileTrue(
       new IntakeCmd(
-        intakeShooterSub, led, () -> MathUtil.applyDeadband(-driver.getRawAxis(DriverConstants.rightTriggerAxis), DriverConstants.triggerDeadband)
+        intakeShooterSub, () -> MathUtil.applyDeadband(-driver.getRawAxis(DriverConstants.rightTriggerAxis), DriverConstants.triggerDeadband)
       )
     );
 
     // Run the climber motors using y and b
-    commandDriver.y().whileTrue(new ClimberCmd(climbSub, led, () -> ClimberConstants.climberSpeed)); // Extending Climber (This will depend on how arm works)
-    commandDriver.b().whileTrue(new ClimberCmd(climbSub, led, () -> ClimberConstants.climberSpeed * -1)); // Retracting climber
+    commandDriver.y().whileTrue(new ClimberCmd(climbSub, () -> ClimberConstants.climberSpeed)); // Extending Climber (This will depend on how arm works)
+    commandDriver.b().whileTrue(new ClimberCmd(climbSub, () -> ClimberConstants.climberSpeed * -1)); // Retracting climber
 
     // Using left/right bumpers to jump between setpoints for PID
     commandDriver.leftBumper().onTrue(new ArmCommandSelector(armPIDCommands, () -> -1, armIndexEntry));
@@ -173,12 +174,12 @@ public class RobotContainer {
     // Use triggers to control intake speed
     commandOperator.leftTrigger().whileTrue(
       new IntakeCmd(
-        intakeShooterSub, led, () -> operator.getRawAxis(DriverConstants.leftTriggerAxis)
+        intakeShooterSub, () -> operator.getRawAxis(DriverConstants.leftTriggerAxis)
       )
     );
     commandOperator.rightTrigger().whileTrue(
       new IntakeCmd(
-        intakeShooterSub, led, () -> -operator.getRawAxis(DriverConstants.rightTriggerAxis)
+        intakeShooterSub, () -> -operator.getRawAxis(DriverConstants.rightTriggerAxis)
       )
     );
 

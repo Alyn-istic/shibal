@@ -32,13 +32,13 @@ public class LEDSubsystem extends SubsystemBase {
     LEDController.set(0);
   }
 
-  public DriverStation.Alliance getAllianceColor() {
-    var alliance = DriverStation.getAlliance();
-    if (alliance.isPresent()) {
-      return alliance.get();
-    }
-    return DriverStation.Alliance.Blue;
-  }
+  // public DriverStation.Alliance getAllianceColor() {
+  //   var alliance = DriverStation.getAlliance();
+  //   if (alliance.isPresent()) {
+  //     return alliance.get();
+  //   }
+  //   return DriverStation.Alliance.Blue;
+  // }
 
   @Override
   public void periodic() {

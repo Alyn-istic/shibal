@@ -5,14 +5,12 @@
 package frc.robot.Commands.Climber;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Subsystems.ClimberSubsystem;
-import frc.robot.Subsystems.LEDSubsystem;
 
 import java.util.function.DoubleSupplier;
 
 public class ClimberCmd extends Command {
   /** Creates a new ClimberCmb. */
   private ClimberSubsystem climbSub;
-  private LEDSubsystem led;
   private DoubleSupplier speed;
 
   /**
@@ -20,20 +18,17 @@ public class ClimberCmd extends Command {
    * @param climbSub Climber Subsystem
    * @param speed Supplier that returns the speed of the motors
    */
-  public ClimberCmd(ClimberSubsystem climbSub, LEDSubsystem led, DoubleSupplier speed) {
+  public ClimberCmd(ClimberSubsystem climbSub, DoubleSupplier speed) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.speed = speed;
     this.climbSub = climbSub;
-    this.led = led;
 
-    addRequirements(climbSub, led);
+    addRequirements(climbSub);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    led.setRainbow();
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override

@@ -6,21 +6,19 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.LEDconstants;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
-  private RobotContainer m_robotContainer;
-
-  @Override
-  public void robotInit() {
-    m_robotContainer = new RobotContainer();
       // PWM port 9
       // Must be a PWM header, not MXP or DIO
       AddressableLED m_led = new AddressableLED(8);
@@ -29,6 +27,13 @@ public class Robot extends TimedRobot {
       // Default to a length of 60, start empty output
       // Length is expensive to set, so only set it once, then just update data
       AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(149);
+
+  private RobotContainer m_robotContainer;
+
+  @Override
+  public void robotInit() {
+    m_robotContainer = new RobotContainer();
+
       m_led.setLength(m_ledBuffer.getLength());
   
       // Set the data
@@ -37,16 +42,15 @@ public class Robot extends TimedRobot {
     
 
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-      // Sets the specified LED to the RGB values for red
-      m_ledBuffer.setRGB(i, 255, 0, 0);
+      // Sets the specified LED to the RGB values for green
+      m_ledBuffer.setRGB(i, 0, 255, 0);
    }
-   
-   m_led.setData(m_ledBuffer);
   }
 
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+    m_led.setData(m_ledBuffer);
   }
 
   @Override
@@ -66,6 +70,21 @@ public class Robot extends TimedRobot {
       CommandScheduler.getInstance().schedule(
           new WaitCommand(AutonomousConstants.waitBeforeExecRoutine).andThen(m_autonomousCommand)
       );
+     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+      // Sets the specified LED to the RGB values for gold
+      m_ledBuffer.setRGB(i, 255, 215, 0);
+
+      // if(DriverStation.getAlliance().get() == Alliance.Blue){
+      //   for(var i = 0; i < m_ledBuffer.getLength(); i++){
+      //   m_ledBuffer.setRGB(i, 0, 0, 255);
+      //   }
+      // }
+      // else{
+      //   for(var i = 0; i < m_ledBuffer.getLength(); i++){
+      //   m_ledBuffer.setRGB(i, 255, 0, 0);
+      //   }
+      // }
+     }
     }
   }
 
@@ -80,10 +99,24 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-  }
+    }
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic(){ 
+  if(SmartDashboard.getNumber("Intake/Shooter Motor 1 Speed", 0) > 0 || 
+    SmartDashboard.getNumber("Intake/Shooter Motor 2 Speed", 0) > 0){
+      for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+      // Sets the specified LED to the RGB values for gold
+      m_ledBuffer.setRGB(i, 255, 215, 0);
+      }
+    }
+    else{
+      for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+      // Sets the specified LED to the RGB values for green
+      m_ledBuffer.setRGB(i, 0, 255, 0);
+      }
+    }
+}
 
   @Override
   public void teleopExit() {}
