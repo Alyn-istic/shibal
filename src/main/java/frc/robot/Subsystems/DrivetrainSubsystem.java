@@ -18,6 +18,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -36,15 +37,12 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.DrivetrainConstants;
 
 // Static imports for units
 import static edu.wpi.first.units.Units.Volts;
-
-import java.util.List;
 
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
@@ -70,6 +68,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final PIDController leftDriveController = new PIDController(DrivetrainConstants.driveP, DrivetrainConstants.driveI, DrivetrainConstants.driveD);
   private final PIDController rightDriveController = new PIDController(DrivetrainConstants.driveP, DrivetrainConstants.driveI, DrivetrainConstants.driveD);
   private final PIDController turnController = new PIDController(DrivetrainConstants.turnP, DrivetrainConstants.turnI, DrivetrainConstants.turnD);  
+
+  // Slew rate limiters
+  private final SlewRateLimiter leftSlewRateLimiter = new SlewRateLimiter(DrivetrainConstants.autoSlewRate);
+  private final SlewRateLimiter rightSlewRateLimiter = new SlewRateLimiter(DrivetrainConstants.autoSlewRate);
 
   // Path planner constraints
   PathConstraints constraints = new PathConstraints(3.0, 2.0, Units.degreesToRadians(540), Units.degreesToRadians(720));
@@ -235,6 +237,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
     );
   }
 
+  public void arcadeDriveSpeed(double forwardSpeed, double turnSpeed) {
+    drive.tankDrive(
+      MathUtil.clamp(forwardSpeed, -DrivetrainConstants.motorClamp, DrivetrainConstants.motorClamp),
+      MathUtil.clamp(turnSpeed, -DrivetrainConstants.motorClamp, DrivetrainConstants.motorClamp)
+    );
+  }
+
   public double getGyroAngle() { // Function for getting the gyro's angle.
     return gyro.getAngle();
   }
@@ -299,6 +308,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public PIDController getTurnController() {
     return turnController;
+  }
+
+  public SlewRateLimiter getLeftSlewRateLimiter() {
+    return leftSlewRateLimiter;
+  }
+
+  public SlewRateLimiter getRightSlewRateLimiter() {
+    return rightSlewRateLimiter;
   }
 
   public Command testPath0() {

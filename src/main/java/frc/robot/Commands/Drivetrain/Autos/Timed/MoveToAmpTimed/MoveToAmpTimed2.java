@@ -26,7 +26,7 @@ public class MoveToAmpTimed2 extends SequentialCommandGroup {
         () -> MoveToAmpTimedConstants.SPEED_MOVE_TO_AMP2,
         () -> MoveToAmpTimedConstants.SPEED_MOVE_TO_AMP2,
         () -> MoveToAmpTimedConstants.TIME_MOVE_TO_AMP2
-      ).withTimeout(MoveToAmpTimedConstants.TIME_MOVE_TO_AMP2 * 2)
+      )
     );
   }
 }

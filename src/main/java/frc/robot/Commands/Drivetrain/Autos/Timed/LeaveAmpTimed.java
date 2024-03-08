@@ -23,10 +23,10 @@ public class LeaveAmpTimed extends SequentialCommandGroup {
     addCommands(
       new AutoLog("Leaving the amp"),
       new TankDriveAutoCmd(driveSub,
-        () -> MoveToAmpTimedConstants.SPEED_TURN_TO_AMP,
-        () -> -MoveToAmpTimedConstants.SPEED_TURN_TO_AMP,
-        ()-> MoveToAmpTimedConstants.TIME_TURN_TO_AMP
-      ).withTimeout(MoveToAmpTimedConstants.TIME_TURN_TO_AMP * 2)
+        () -> MoveToAmpTimedConstants.SPEED_LEAVE_AMP,
+        () -> MoveToAmpTimedConstants.SPEED_LEAVE_AMP,
+        ()-> MoveToAmpTimedConstants.TIME_LEAVE_AMP
+      )
     );
   }
 }

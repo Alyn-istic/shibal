@@ -17,8 +17,8 @@ public class TankDriveAutoCmd extends Command {
   // Create the necessary variables.
   private DrivetrainSubsystem driveSub;
   private DoubleSupplier leftInput, rightInput, timeout;
-  private final SlewRateLimiter leftLimiter = new SlewRateLimiter(DrivetrainConstants.autoSlewRate);
-  private final SlewRateLimiter rightLimiter = new SlewRateLimiter(DrivetrainConstants.autoSlewRate);
+  private final SlewRateLimiter leftLimiter;
+  private final SlewRateLimiter rightLimiter;
 
   private Timer timer = new Timer();
 
@@ -33,6 +33,9 @@ public class TankDriveAutoCmd extends Command {
     this.rightInput = rightInput;
     this.timeout = timeout;
 
+    leftLimiter = driveSub.getLeftSlewRateLimiter();
+    rightLimiter = driveSub.getRightSlewRateLimiter();
+
     addRequirements(driveSub);
   }
 
@@ -45,7 +48,6 @@ public class TankDriveAutoCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println(timer.get());
     // Creating variables called "left" and "right". Not necessary.
     double left;
     double right;
