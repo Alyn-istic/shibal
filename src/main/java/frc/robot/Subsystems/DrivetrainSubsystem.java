@@ -237,6 +237,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
     );
   }
 
+  public void arcadeDriveSpeed(double forwardSpeed, double turnSpeed) {
+    drive.tankDrive(
+      MathUtil.clamp(forwardSpeed, -DrivetrainConstants.motorClamp, DrivetrainConstants.motorClamp),
+      MathUtil.clamp(turnSpeed, -DrivetrainConstants.motorClamp, DrivetrainConstants.motorClamp)
+    );
+  }
+
   public double getGyroAngle() { // Function for getting the gyro's angle.
     return gyro.getAngle();
   }

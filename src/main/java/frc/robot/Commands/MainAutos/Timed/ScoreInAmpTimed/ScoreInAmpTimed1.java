@@ -63,7 +63,7 @@ public class ScoreInAmpTimed1 extends SequentialCommandGroup {
       new TankDriveAutoCmd(driveSub,
         () -> MoveToAmpTimedConstants.SPEED_TURN_TO_AMP,
         () -> -MoveToAmpTimedConstants.SPEED_TURN_TO_AMP,
-        ()-> 0.5
+        ()-> 0.3
       ),
       new LeaveAmpTimed(driveSub).alongWith(new ArmIntakePerimeter(armSub, () -> armSub.getController().atSetpoint())
 )

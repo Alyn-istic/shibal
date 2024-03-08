@@ -13,7 +13,7 @@ import frc.robot.Constants.LEDconstants;
 
 public class LEDSubsystem extends SubsystemBase {
   /** Creates a new LEDSubsystem. */
-  private Spark LEDController = new Spark(LEDconstants.LEDTalonPort);
+  private Spark LEDController = new Spark(10);
   
   public void setPresetGold(){
     LEDController.set(0.33);
