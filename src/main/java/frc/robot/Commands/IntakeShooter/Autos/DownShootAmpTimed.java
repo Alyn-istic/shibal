@@ -9,6 +9,7 @@ import frc.robot.Commands.IntakeShooter.IntakeCmd;
 import frc.robot.Commands.MainAutos.AutoLog;
 import frc.robot.Constants.AutonomousConstants.MoveToAmpTimedConstants;
 import frc.robot.Subsystems.IntakeShooterSubsystem;
+import frc.robot.Subsystems.LEDSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -16,13 +17,14 @@ import frc.robot.Subsystems.IntakeShooterSubsystem;
 public class DownShootAmpTimed extends SequentialCommandGroup {
   /** Creates a new DownShootAmpTimed. */
   public DownShootAmpTimed(
-    IntakeShooterSubsystem shooterSub
+    IntakeShooterSubsystem shooterSub,
+    LEDSubsystem led
   ) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new AutoLog("Down shooting into amp."),
-      new IntakeCmd(shooterSub, () -> MoveToAmpTimedConstants.SPEED_SHOOT_IN_AMP).withTimeout(MoveToAmpTimedConstants.TIME_SHOOT_IN_AMP)
+      new IntakeCmd(shooterSub, led, () -> MoveToAmpTimedConstants.SPEED_SHOOT_IN_AMP).withTimeout(MoveToAmpTimedConstants.TIME_SHOOT_IN_AMP)
     );
   }
 }

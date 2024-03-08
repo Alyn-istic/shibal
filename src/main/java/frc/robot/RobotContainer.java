@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Commands.EmergencyStopCmd;
 import frc.robot.Commands.Arm.ArmManualCmd;
 import frc.robot.Commands.Arm.ArmCommandSelector;
@@ -28,17 +27,15 @@ import frc.robot.Commands.Arm.Autos.ArmShootPerimeter;
 import frc.robot.Commands.Climber.ClimberCmd;
 // import frc.robot.Commands.Arm.LimitSwitchSimulation;
 import frc.robot.Commands.Drivetrain.TankDriveCmd;
-import frc.robot.Commands.Drivetrain.resetCmd;
 import frc.robot.Commands.Drivetrain.Autos.Sensor.MoveOutOfZoneSensor;
 import frc.robot.Commands.IntakeShooter.IntakeCmd;
-import frc.robot.Commands.IntakeShooter.Test.intakeSeperateCmd;
 import frc.robot.Commands.MainAutos.AutoLog;
 import frc.robot.Commands.MainAutos.Sensor.ScoreInAmpSensor1;
-import frc.robot.Commands.MainAutos.Timed.ExitZoneTimed;
 import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimed1;
+import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimed2;
+import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimed3;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.DriverConstants;
-import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Subsystems.ArmSubsystem;
 import frc.robot.Subsystems.DrivetrainSubsystem;
 import frc.robot.Subsystems.IntakeShooterSubsystem;
@@ -95,6 +92,10 @@ public class RobotContainer {
       )
     );
 
+    // led.setDefaultCommand(
+    //   Commands.run(() -> led.setPresetGreen(), led)
+    // );
+
     // SmartDashboard.putNumber("P", DrivetrainConstants.turnP);
     // SmartDashboard.putNumber("I",DrivetrainConstants.turnI);
     // SmartDashboard.putNumber("D", DrivetrainConstants.turnD);
@@ -105,12 +106,14 @@ public class RobotContainer {
 
     autoChooser.setDefaultOption("NONE", new AutoLog("No auto selected."));
     autoChooser.addOption("MOVE OUT OF ZONE", new MoveOutOfZoneSensor(driveSub));
-    autoChooser.addOption("SCORE IN AMP (SENSORS)", new ScoreInAmpSensor1(driveSub, armSub, intakeShooterSub));
-    autoChooser.addOption("SCORE IN AMP (TIMED)", new ScoreInAmpTimed1(driveSub, intakeShooterSub, armSub));
-    autoChooser.addOption("PATH TEST 0", driveSub.testPath0());
+    autoChooser.addOption("SCORE IN AMP (SENSORS)", new ScoreInAmpSensor1(driveSub, armSub, intakeShooterSub, led));
+    autoChooser.addOption("SCORE IN AMP 1 (TIMED)", new ScoreInAmpTimed1(driveSub, intakeShooterSub, led, armSub));
+    autoChooser.addOption("SCORE IN AMP 2 (TIMED)", new ScoreInAmpTimed2(driveSub, intakeShooterSub, led, armSub));
+    autoChooser.addOption("SCORE IN AMP 3 (TIMED)", new ScoreInAmpTimed3(driveSub, intakeShooterSub, led, armSub));
+    // autoChooser.addOption("PATH TEST 0", driveSub.testPath0());
     // autoChooser.addOption("PATH TEST 1", driveSub.testPath1());
     // autoChooser.addOption("PATH TEST 2", driveSub.testPath2());
-    autoChooser.addOption("AUTO 1", driveSub.testAuto1());
+    // autoChooser.addOption("AUTO 1", driveSub.testAuto1());
     SmartDashboard.putData("Autonomous Routines", autoChooser);
     configureBindings();
   }
@@ -119,29 +122,28 @@ public class RobotContainer {
 
     ////////////////////////////////////////// Driver Controls //////////////////////////////////////////
 
-    commandDriver.x().onTrue(new EmergencyStopCmd(driveSub, armSub, intakeShooterSub)); // E-stop
+    //commandDriver.x().onTrue(new EmergencyStopCmd(driveSub, armSub, intakeShooterSub)); // E-stop
 
     // Using triggers to control intake speed
     commandDriver.leftTrigger().whileTrue(
       new IntakeCmd(
-        intakeShooterSub, () -> MathUtil.applyDeadband(driver.getRawAxis(DriverConstants.leftTriggerAxis), DriverConstants.triggerDeadband)
-      )
+        intakeShooterSub, led, () -> MathUtil.applyDeadband(driver.getRawAxis(DriverConstants.leftTriggerAxis), DriverConstants.triggerDeadband)
+      ).alongWith(Commands.run(()->led.setPresetGold(), led))
     );
     commandDriver.rightTrigger().whileTrue(
       new IntakeCmd(
-        intakeShooterSub, () -> MathUtil.applyDeadband(-driver.getRawAxis(DriverConstants.rightTriggerAxis), DriverConstants.triggerDeadband)
+        intakeShooterSub, led, () -> MathUtil.applyDeadband(-driver.getRawAxis(DriverConstants.rightTriggerAxis), DriverConstants.triggerDeadband)
       )
     );
 
     // Run the climber motors using y and b
-    commandDriver.y().whileTrue(new ClimberCmd(climbSub, () -> ClimberConstants.climberSpeed)); // Extending Climber (This will depend on how arm works)
-    commandDriver.b().whileTrue(new ClimberCmd(climbSub, () -> ClimberConstants.climberSpeed * -1)); // Retracting climber
+    commandDriver.y().whileTrue(new ClimberCmd(climbSub, led, () -> ClimberConstants.climberSpeed)); // Extending Climber (This will depend on how arm works)
+    commandDriver.b().whileTrue(new ClimberCmd(climbSub, led, () -> ClimberConstants.climberSpeed * -1)); // Retracting climber
 
     // Using left/right bumpers to jump between setpoints for PID
     commandDriver.leftBumper().onTrue(new ArmCommandSelector(armPIDCommands, () -> -1, armIndexEntry));
     commandDriver.rightBumper().onTrue(new ArmCommandSelector(armPIDCommands, () -> 1, armIndexEntry));
 
-    commandDriver.a().onTrue(new resetCmd(driveSub));
     // //Intake: Drop into intake angle.//
     // commandDriver.povDown().whileTrue(new ArmIntake(armSub));
 
@@ -164,12 +166,12 @@ public class RobotContainer {
     // Use triggers to control intake speed
     commandOperator.leftTrigger().whileTrue(
       new IntakeCmd(
-        intakeShooterSub, () -> operator.getRawAxis(DriverConstants.leftTriggerAxis)
+        intakeShooterSub, led, () -> operator.getRawAxis(DriverConstants.leftTriggerAxis)
       )
     );
     commandOperator.rightTrigger().whileTrue(
       new IntakeCmd(
-        intakeShooterSub, () -> -operator.getRawAxis(DriverConstants.rightTriggerAxis)
+        intakeShooterSub, led, () -> -operator.getRawAxis(DriverConstants.rightTriggerAxis)
       )
     );
 
@@ -217,12 +219,13 @@ public class RobotContainer {
     // commandTester.povDown().whileTrue(driveSub.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
 
     //////////////////////////////////////// Tester /////////////////////////////////////////////////////////
-    commandTester.leftTrigger().whileTrue(
-      new intakeSeperateCmd(
-        intakeShooterSub, () -> MathUtil.applyDeadband(-tester.getRawAxis(DriverConstants.leftTriggerAxis), DriverConstants.triggerDeadband), 
-        () -> MathUtil.applyDeadband(-tester.getRawAxis(DriverConstants.rightTriggerAxis), DriverConstants.triggerDeadband)
-      )
-    );
+    // commandTester.leftTrigger().whileTrue(
+    //   new intakeSeperateCmd(
+    //     intakeShooterSub, () -> MathUtil.applyDeadband(-tester.getRawAxis(DriverConstants.leftTriggerAxis), DriverConstants.triggerDeadband), 
+    //     () -> MathUtil.applyDeadband(-tester.getRawAxis(DriverConstants.rightTriggerAxis), DriverConstants.triggerDeadband)
+    //   )
+    // );
+
   }
 
   public Command getAutonomousCommand() {

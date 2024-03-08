@@ -10,10 +10,10 @@ public class Constants {
         public class MoveToAmpTimedConstants {
             // 1 = first position, 2 = second position, 3 third position
             //all constant values are wrong, need testing
-            public static final double TIME_TURN_TO_AMP = 0.45; // In seconds
-            public static final double SPEED_TURN_TO_AMP = -0.55; // Motor speed
+            public static final double TIME_TURN_TO_AMP = 1; // In seconds
+            public static final double SPEED_TURN_TO_AMP = 0.6; // Motor speed
 
-            public static final double TIME_LEAVE_AMP = 1; // In seconds
+            public static final double TIME_LEAVE_AMP = 2; // In seconds
             public static final double SPEED_LEAVE_AMP = -0.55; // Motor speed
 
             public static final double TIME_MOVE_TO_AMP_FWD = 0.6;// In seconds. Move forward before turn and move sideways. 
@@ -21,8 +21,8 @@ public class Constants {
             public static final double TIME_MOVE_TO_AMP2 = 0.8; // In seconds
             public static final double TIME_MOVE_TO_AMP3= 1.4; // In seconds
 
-            public static final double TIME_SHOOT_IN_AMP = 1; // In seconds
-            public static final double SPEED_SHOOT_IN_AMP = -1; // Motor speed
+            public static final double TIME_SHOOT_IN_AMP = 1.5; // In seconds
+            public static final double SPEED_SHOOT_IN_AMP = 1; // Motor speed
 
             public static final double SPEED_MOVE_TO_AMP_FWD = -0.55; // Motor speed//was 0.4
             public static final double SPEED_MOVE_TO_AMP1 = -0.4; // Motor speed//was 0.4
@@ -71,12 +71,12 @@ public class Constants {
         public static final double minAngle = 0; // 
         public static final double maxAngle = 360; // 
 
-        public static final double turnP = 0.025; // P value for turning PID command
-        public static final double turnI = 0.001; // I value for turning PID command
+        public static final double turnP = 0.02; // P value for turning PID command
+        public static final double turnI = 0.005; // I value for turning PID command
         public static final double turnD = 0.00002; // D value for turning PID command
         public static final double gyroTolerance = 1; // Tolerance for turning PID command
-        public static final double kS = 0.8672; // 
-        public static final double kV = 0.0266; // 
+        public static final double kS = 1.4796; // 
+        public static final double kV = 0.6432; // 
     }
 
     public class ArmConstants {
@@ -106,7 +106,7 @@ public class Constants {
         public static final double tolerance = 1; // 
         public static final double setpointOffset = 0; // 
 
-        public static final double shootAngle = 110; // The angle of the arm in shooting position. Was 100.
+        public static final double shootAngle = 100; // The angle of the arm in shooting position. Was 100.
         public static final double sourceIntakeAngle = 95; //Intake from source angle
         public static final double intakeInsideAngle = 50; // The angle of the arm inside the perimeter preparing to intake.
         public static final double shootInsideAngle = 90; // The angle of the arm inside the perimeter preparing to move to shoot position.
@@ -120,7 +120,7 @@ public class Constants {
         public static final int upperWheelID  = 9; // The motor ID for the intake/shooter's upper wheels
         public static final int lowerWheelID = 8; // The motor ID for the intake/shooter's lower wheels
 
-        public static final double speed = 0.7; // The intake/shooter's motor speed.
+        public static final double speed = 0.85; // The intake/shooter's motor speed.
     }
     public class ClimberConstants{ //Need to change values based on testing
         public static final int leftClimberID = 8; // 
@@ -133,7 +133,7 @@ public class Constants {
     }
 
     public class LEDconstants {
-        public static final int LEDTalonPort = 0; // 
+        public static final int LEDTalonPort = 8; // 
     }
 
     public class DriverConstants {
