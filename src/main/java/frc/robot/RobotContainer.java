@@ -5,47 +5,80 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Commands.ClimberCmd;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Commands.EmergencyStopCmd;
-import frc.robot.Commands.Arm.ArmCmd;
-import frc.robot.Commands.Arm.ArmPIDCmd;
-import frc.robot.Commands.Autos.ExitZoneTimed;
-import frc.robot.Commands.Autos.AutoLog;
-import frc.robot.Commands.Autos.ScoreInAmpTimed;
+import frc.robot.Commands.Arm.ArmManualCmd;
+import frc.robot.Commands.Arm.ArmCommandSelector;
+import frc.robot.Commands.Arm.ArmSetpointOffset;
+import frc.robot.Commands.Arm.Autos.ArmIntake;
+import frc.robot.Commands.Arm.Autos.ArmIntakePerimeter;
+// import frc.robot.Commands.Arm.Autos.ArmIntakeSource;
+import frc.robot.Commands.Arm.Autos.ArmShoot;
+import frc.robot.Commands.Arm.Autos.ArmShootPerimeter;
+import frc.robot.Commands.Climber.ClimberCmd;
 // import frc.robot.Commands.Arm.LimitSwitchSimulation;
 import frc.robot.Commands.Drivetrain.TankDriveCmd;
+import frc.robot.Commands.Drivetrain.Autos.Sensor.MoveOutOfZoneSensor;
+import frc.robot.Commands.Drivetrain.Autos.Timed.MoveOutOfZoneTimed.MoveOutOfZoneTimed1;
 import frc.robot.Commands.IntakeShooter.IntakeCmd;
+import frc.robot.Commands.MainAutos.AutoLog;
+import frc.robot.Commands.MainAutos.Sensor.ScoreInAmpSensor1;
+import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedBlue1;
+import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedBlue2;
+import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedBlue3;
+import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedRed1;
+import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedRed2;
+import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedRed3;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Subsystems.ArmSubsystem;
 import frc.robot.Subsystems.DrivetrainSubsystem;
 import frc.robot.Subsystems.IntakeShooterSubsystem;
 import frc.robot.Subsystems.ClimberSubsystem;
+import frc.robot.Subsystems.LEDSubsystem;
 import frc.robot.Constants.ClimberConstants;
+// import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class RobotContainer {
   // Initiating a ordinary Xbox Controller. Nothing special.
   private final XboxController driver = new XboxController(DriverConstants.driverPort);
   private final XboxController operator = new XboxController(DriverConstants.operatorPort);
+  private final XboxController tester = new XboxController(DriverConstants.testerPort);
   // Initiating a command Xbox Controller. This will allow us to map commands onto specific buttons.
   private final CommandXboxController commandDriver = new CommandXboxController(DriverConstants.driverPort);
   private final CommandXboxController commandOperator = new CommandXboxController(DriverConstants.operatorPort);
+  private final CommandXboxController commandTester = new CommandXboxController(DriverConstants.testerPort);
 
   // Initiating all the subsystems. We will need these in order to properly run commands.
   private final DrivetrainSubsystem driveSub = new DrivetrainSubsystem();
+  public final LEDSubsystem led = new LEDSubsystem();
   private final ArmSubsystem armSub = new ArmSubsystem();
   private final IntakeShooterSubsystem intakeShooterSub = new IntakeShooterSubsystem();
   private final ClimberSubsystem climbSub = new ClimberSubsystem();
 
-  private final SendableChooser<String> autoChooser = new SendableChooser<>();
+  // Stuff for ArmPID
+  private final Command[] armPIDCommands = {
+    new ArmIntake(armSub, ()-> false),
+    new ArmIntakePerimeter(armSub, () -> false),
+    new ArmShootPerimeter(armSub, () -> false),
+    new ArmShoot(armSub, () -> false)
+  };
+  private final NetworkTableEntry armIndexEntry = NetworkTableInstance.getDefault().getEntry("ArmIndex");
+
+  private final SendableChooser<Command> autoChooser = new SendableChooser<>();
 
   public RobotContainer() {
+    armIndexEntry.setInteger(-1);
+
     // Telling the robot to run the TankDrive command when no other command is using the Drivetrain.
     driveSub.setDefaultCommand(
       new TankDriveCmd(
@@ -58,131 +91,152 @@ public class RobotContainer {
     );
 
     armSub.setDefaultCommand(
-      new ArmCmd(armSub,
+      new ArmManualCmd(armSub,
         () -> -MathUtil.applyDeadband(operator.getRawAxis(DriverConstants.rightJoystickAxis) * ArmConstants.armManualSpeed, DriverConstants.joystickDeadband)
       )
     );
 
-    SmartDashboard.putNumber("Arm P", ArmConstants.kP);
-    SmartDashboard.putNumber("Arm I", ArmConstants.kI);
-    SmartDashboard.putNumber("Arm D", ArmConstants.kD);
-    // SmartDashboard.putNumber("Arm Setpoint", ArmConstants.shootInsideAngle);
-    SmartDashboard.putNumber("Arm Clamp", ArmConstants.clamp);
-    SmartDashboard.putNumber("Arm Setpoint Offset", ArmConstants.setpointOffset);
+    // led.setDefaultCommand(
+    //   Commands.run(() -> led.setPresetGreen(), led)
+    // );
 
-    autoChooser.setDefaultOption("NONE", "NONE");
-    autoChooser.addOption("MOVE OUT OF ZONE", "MOVE_OUT_OF_ZONE");
-    autoChooser.addOption("SCORE IN AMP (SENSORS)", "SCORE_IN_AMP_SENSORS");
-    autoChooser.addOption("SCORE IN AMP (TIMED)", "SCORE_IN_AMP_TIMED");
+    // SmartDashboard.putNumber("P", DrivetrainConstants.turnP);
+    // SmartDashboard.putNumber("I",DrivetrainConstants.turnI);
+    // SmartDashboard.putNumber("D", DrivetrainConstants.turnD);
+
+    // SmartDashboard.putNumber("Arm Setpoint", ArmConstants.shootInsideAngle);
+    // SmartDashboard.putNumber("Arm Clamp", ArmConstants.clamp);
+    // SmartDashboard.putNumber("Arm Setpoint Offset", ArmConstants.setpointOffset);
+
+    autoChooser.setDefaultOption("NONE", new AutoLog("No auto selected."));
+    autoChooser.addOption("MOVE OUT OF ZONE", new MoveOutOfZoneTimed1(driveSub));
+    autoChooser.addOption("SCORE IN AMP (SENSORS)", new ScoreInAmpSensor1(driveSub, armSub, intakeShooterSub, led));
+    autoChooser.addOption("SCORE IN AMP 1 BLUE (TIMED)", new ScoreInAmpTimedBlue1(driveSub, intakeShooterSub, led, armSub));
+    autoChooser.addOption("SCORE IN AMP 2 BLUE (TIMED)", new ScoreInAmpTimedBlue2(driveSub, intakeShooterSub, led, armSub));
+    autoChooser.addOption("SCORE IN AMP 3 BLUE (TIMED)", new ScoreInAmpTimedBlue3(driveSub, intakeShooterSub, led, armSub));
+    autoChooser.addOption("SCORE IN AMP 1 RED (TIMED)", new ScoreInAmpTimedRed1(driveSub, intakeShooterSub, led, armSub));
+    autoChooser.addOption("SCORE IN AMP 2 RED (TIMED)", new ScoreInAmpTimedRed2(driveSub, intakeShooterSub, led, armSub));
+    autoChooser.addOption("SCORE IN AMP 3 RED (TIMED)", new ScoreInAmpTimedRed3(driveSub, intakeShooterSub, led, armSub));
+    // autoChooser.addOption("PATH TEST 0", driveSub.testPath0());
+    // autoChooser.addOption("PATH TEST 1", driveSub.testPath1());
+    // autoChooser.addOption("PATH TEST 2", driveSub.testPath2());
+    // autoChooser.addOption("AUTO 1", driveSub.testAuto1());
     SmartDashboard.putData("Autonomous Routines", autoChooser);
     configureBindings();
   }
 
-  // This is used to map commands to the Command Xbox driver.
   private void configureBindings() {
-    commandDriver.x().onTrue(new EmergencyStopCmd());
-    commandDriver.leftBumper().whileTrue(new IntakeCmd(intakeShooterSub, () -> 1));
-    commandDriver.rightBumper().whileTrue(new IntakeCmd(intakeShooterSub, () -> -1));
 
+    ////////////////////////////////////////// Driver Controls //////////////////////////////////////////
+
+    //commandDriver.x().onTrue(new EmergencyStopCmd(driveSub, armSub, intakeShooterSub)); // E-stop
+
+    // Using triggers to control intake speed
+    commandDriver.leftTrigger().whileTrue(
+      new IntakeCmd(
+        intakeShooterSub, () -> MathUtil.applyDeadband(driver.getRawAxis(DriverConstants.leftTriggerAxis), DriverConstants.triggerDeadband)
+      )
+      //.alongWith(Commands.run(()->led.setPresetGold(), led))
+    );
+    commandDriver.rightTrigger().whileTrue(
+      new IntakeCmd(
+        intakeShooterSub, () -> MathUtil.applyDeadband(-driver.getRawAxis(DriverConstants.rightTriggerAxis), DriverConstants.triggerDeadband)
+      )
+    );
+
+    // Run the climber motors using y and b
     commandDriver.y().whileTrue(new ClimberCmd(climbSub, () -> ClimberConstants.climberSpeed)); // Extending Climber (This will depend on how arm works)
     commandDriver.b().whileTrue(new ClimberCmd(climbSub, () -> ClimberConstants.climberSpeed * -1)); // Retracting climber
-    
-    //Intake: Drop into intake angle.//
-    commandDriver.povDown().whileTrue(new ArmPIDCmd(armSub, //
-        // () -> ArmConstants.kP,
-        // () -> ArmConstants.kI,
-        // () -> ArmConstants.kD,
-        () -> SmartDashboard.getNumber("Arm P", 0),
-        () -> SmartDashboard.getNumber("Arm I", 0),
-        () -> SmartDashboard.getNumber("Arm D", 0),
-        () -> ArmConstants.intakeAngle,
-        () -> ArmConstants.tolerance,
-        () -> ArmConstants.clamp,
-        () -> armSub.dropLimitSwitch()
-    ));
 
-    //Inside Angle for Intake: Raise into the perimeters of the robot, while ready for intake//
-    commandDriver.povRight().whileTrue(new ArmPIDCmd(armSub,
-        // () -> ArmConstants.kP,
-        // () -> ArmConstants.kI,
-        // () -> ArmConstants.kD,
-        () -> SmartDashboard.getNumber("Arm P", 0),
-        () -> SmartDashboard.getNumber("Arm I", 0),
-        () -> SmartDashboard.getNumber("Arm D", 0),
-        () -> ArmConstants.intakeInsideAngle,
-        () -> ArmConstants.tolerance,
-        () -> ArmConstants.clamp,
-        () -> false
-    ));
+    // Using left/right bumpers to jump between setpoints for PID
+    commandDriver.leftBumper().onTrue(new ArmCommandSelector(armPIDCommands, () -> -1, armIndexEntry));
+    commandDriver.rightBumper().onTrue(new ArmCommandSelector(armPIDCommands, () -> 1, armIndexEntry));
 
-    //Shooter: Raise into shooting position for amp.//
-    commandDriver.povUp().whileTrue(new ArmPIDCmd(armSub,
-        // () -> ArmConstants.kP,
-        // () -> ArmConstants.kI,
-        // () -> ArmConstants.kD,
-        () -> SmartDashboard.getNumber("Arm P", 0),
-        () -> SmartDashboard.getNumber("Arm I", 0),
-        () -> SmartDashboard.getNumber("Arm D", 0),
-        () -> ArmConstants.shootAngle,
-        () -> ArmConstants.tolerance,
-        () -> ArmConstants.clamp,
-        () -> armSub.raiseLimitSwitch()
-    ));
+    // //Intake: Drop into intake angle.//
+    // commandDriver.povDown().whileTrue(new ArmIntake(armSub));
 
-    //Inside angle for Shooter: Raise into the perimeters of robot, while ready to downshoot into amp.//
-    commandDriver.povLeft().whileTrue(new ArmPIDCmd(armSub,
-        // () -> ArmConstants.kP,
-        // () -> ArmConstants.kI,
-        // () -> ArmConstants.kD,
-        () -> SmartDashboard.getNumber("Arm P", 0),
-        () -> SmartDashboard.getNumber("Arm I", 0),
-        () -> SmartDashboard.getNumber("Arm D", 0),
-        () -> ArmConstants.shootInsideAngle,
-        () -> ArmConstants.clamp,  
-        () -> ArmConstants.tolerance,
-        () -> false
-    ));
+    // //Inside Angle for Intake: Raise into the perimeters of the robot, while ready for intake//
+    // commandDriver.povRight().whileTrue(new ArmIntakePerimeter(armSub));
 
-    //Source Intake: Intake from source.//
-    commandDriver.a().whileTrue(new ArmPIDCmd(armSub,
-        // () -> ArmConstants.kP,
-        // () -> ArmConstants.kI,
-        // () -> ArmConstants.kD,
-        () -> SmartDashboard.getNumber("Arm P", 0),
-        () -> SmartDashboard.getNumber("Arm I", 0),
-        () -> SmartDashboard.getNumber("Arm D", 0),
-        () -> ArmConstants.sourceIntakeAngle,
-        () -> ArmConstants.tolerance,        
-        () -> ArmConstants.clamp,
-        () -> false
-    ));
+    // //Shooter: Raise into shooting position for amp.//
+    // commandDriver.povUp().whileTrue(new ArmShoot(armSub));
 
-    // Operator commands
-    commandOperator.x().onTrue(new EmergencyStopCmd());
-    commandOperator.leftBumper().whileTrue(new IntakeCmd(intakeShooterSub, () -> 1));
-    commandOperator.rightBumper().whileTrue(new IntakeCmd(intakeShooterSub, () -> -1));
+    // //Inside angle for Shooter: Raise into the perimeters of robot, while ready to downshoot into amp.//
+    // commandDriver.povLeft().whileTrue(new ArmShootPerimeter(armSub));
 
-    commandOperator.povUp().whileTrue(
-      new RunCommand(
-        () -> SmartDashboard.putNumber("Arm Setpoint Offset", SmartDashboard.getNumber("Arm Setpoint Offset", 0) + 0.1)
+    // //Source Intake: Intake from source.//
+    // commandDriver.a().whileTrue(new ArmIntakeSource(armSub));
+
+    ////////////////////////////////////////// Operator Controls //////////////////////////////////////////
+
+    commandOperator.x().onTrue(new EmergencyStopCmd(driveSub, armSub, intakeShooterSub)); // E-stop
+
+    // Use triggers to control intake speed
+    commandOperator.leftTrigger().whileTrue(
+      new IntakeCmd(
+        intakeShooterSub, () -> operator.getRawAxis(DriverConstants.leftTriggerAxis)
       )
     );
-    commandOperator.povDown().whileTrue(
-      new RunCommand(
-        () -> SmartDashboard.putNumber("Arm Setpoint Offset", SmartDashboard.getNumber("Arm Setpoint Offset", 0) - 0.1)
+    commandOperator.rightTrigger().whileTrue(
+      new IntakeCmd(
+        intakeShooterSub, () -> -operator.getRawAxis(DriverConstants.rightTriggerAxis)
       )
     );
+
+    // Use bumpers to offset the arm setpoints by increments of 3°
+    commandOperator.rightBumper().onTrue(
+      new ArmSetpointOffset(
+        () -> 3
+      )
+    );
+    commandOperator.leftBumper().onTrue(
+      new ArmSetpointOffset(
+        () -> -3
+      )
+    );
+
+    commandOperator.a().and(commandOperator.b()).whileTrue(Commands.run(() -> driveSub.operatorReset(), driveSub));
+
+    ////////////////////////////////////////// Arm Limits //////////////////////////////////////////
+
+    // While the drop limit switch is pressed, reset arm position to intake angle, and reset setpoint offset to 0.
+    new Trigger(() -> armSub.dropLimitSwitch()).whileTrue(
+      new RunCommand(
+        () -> armSub.setSensorPosition(armSub.toPosition(ArmConstants.intakeAngle))
+      ).alongWith(
+        new RunCommand(
+          () -> SmartDashboard.putNumber("Arm Setpoint Offset", 0)
+        )
+      )
+    );
+    // While the raise limit switch is pressed, reset arm position to shoot angle, and reset setpoint offset to 0.
+    new Trigger(() -> armSub.raiseLimitSwitch()).whileTrue(
+      new RunCommand(
+        () -> armSub.setSensorPosition(armSub.toPosition(ArmConstants.shootAngle))
+      ).alongWith(
+        new RunCommand(
+          () -> SmartDashboard.putNumber("Arm Setpoint Offset", 0)
+        )
+      )
+    );
+
+    //////////////////////////////////////// Sys ID /////////////////////////////////////////////////////////
+    // commandTester.y().whileTrue(driveSub.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    // commandTester.a().whileTrue(driveSub.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    // commandTester.povUp().whileTrue(driveSub.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    // commandTester.povDown().whileTrue(driveSub.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+
+    //////////////////////////////////////// Tester /////////////////////////////////////////////////////////
+    // commandTester.leftTrigger().whileTrue(
+    //   new intakeSeperateCmd(
+    //     intakeShooterSub, () -> MathUtil.applyDeadband(-tester.getRawAxis(DriverConstants.leftTriggerAxis), DriverConstants.triggerDeadband), 
+    //     () -> MathUtil.applyDeadband(-tester.getRawAxis(DriverConstants.rightTriggerAxis), DriverConstants.triggerDeadband)
+    //   )
+    // );
+
   }
 
   public Command getAutonomousCommand() {
-    switch (autoChooser.getSelected()) {
-      case "MOVE_OUT_OF_ZONE": // Moves the robot out of the zone.
-        return new ExitZoneTimed(driveSub); // Return the auto command that moves out of the zone
-      case "SCORE_IN_AMP_SENSORS":
-        return new AutoLog("This routine has not been set up yet."); // Returns the auto command that moves robot to amp, and shoots loaded note, using sensors.
-      case "SCORE_IN_AMP_TIMED":
-        return new ScoreInAmpTimed(driveSub, intakeShooterSub); // Returns the auto command that moves robot to amp, and shoots loaded note, using timers.
-    }
-    return new AutoLog("No auto selected.");
+    return autoChooser.getSelected();
   }
 }

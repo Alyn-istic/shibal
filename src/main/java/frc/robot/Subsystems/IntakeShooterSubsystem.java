@@ -5,7 +5,7 @@
 package frc.robot.Subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -13,8 +13,8 @@ import frc.robot.Constants.IntakeShooterConstants;
 
 public class IntakeShooterSubsystem extends SubsystemBase {
   // Initiating TalonSRX motors.
-  private final WPI_TalonSRX upperWheel = new WPI_TalonSRX(IntakeShooterConstants.upperWheelID);
-  private final WPI_TalonSRX lowerWheel = new WPI_TalonSRX(IntakeShooterConstants.lowerWheelID);
+  private final WPI_VictorSPX upperWheel = new WPI_VictorSPX(IntakeShooterConstants.upperWheelID);
+  private final WPI_VictorSPX lowerWheel = new WPI_VictorSPX(IntakeShooterConstants.lowerWheelID);
 
   /** Creates a new IntakeShooterSubsystem. */
   public IntakeShooterSubsystem() {
@@ -37,6 +37,11 @@ public class IntakeShooterSubsystem extends SubsystemBase {
     lowerWheel.set(speed);
   }
 
+  public void setSeperateMotor(double upperSpeed, double lowerSpeed){
+    upperWheel.set(upperSpeed);
+    lowerWheel.set(lowerSpeed);
+  }
+  
   public boolean getIntakeLimit() { // Returns if the note has been detected by a intake sensor
     return true;
   }

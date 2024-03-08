@@ -5,10 +5,11 @@
 package frc.robot.Commands.IntakeShooter.Autos;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Commands.Autos.AutoLog;
 import frc.robot.Commands.IntakeShooter.IntakeCmd;
+import frc.robot.Commands.MainAutos.AutoLog;
 import frc.robot.Constants.AutonomousConstants.MoveToAmpTimedConstants;
 import frc.robot.Subsystems.IntakeShooterSubsystem;
+import frc.robot.Subsystems.LEDSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:

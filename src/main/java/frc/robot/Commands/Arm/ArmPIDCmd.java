@@ -4,10 +4,8 @@
 
 package frc.robot.Commands.Arm;
 
-import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -18,55 +16,94 @@ import frc.robot.Subsystems.ArmSubsystem;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ArmPIDCmd extends Command {
   private ArmSubsystem armSub;
-  private DoubleSupplier kP, kI, kD, setpoint, tolerance, clamp;
-  private BooleanSupplier limit;
+  private DoubleSupplier raiseP, raiseI, raiseD, dropP, dropI, dropD, setpoint, tolerance;
   private PIDController controller;
 
-  /** Creates a new ArmRaise. */
+  /**
+   * PID command that manages the arm
+   * @param armSub Arm Subsystem
+   * @param raiseP P gain used when working against gravity
+   * @param raiseI I gain used when working against gravity
+   * @param raiseD D gain used when working against gravity
+   * @param dropP P gain used when working with gravity
+   * @param dropI I gain used when working with gravity
+   * @param dropD D gain used when working with gravity
+   * @param setpoint The setpoint/angle that the arm should be at (degrees)
+   * @param tolerance The tolerance for the PID controller
+   * @param clamp The clamp for the output
+   */
   public ArmPIDCmd(
     ArmSubsystem armSub,
-    DoubleSupplier kP,
-    DoubleSupplier kI,
-    DoubleSupplier kD,
+    DoubleSupplier raiseP,
+    DoubleSupplier raiseI,
+    DoubleSupplier raiseD,
+    DoubleSupplier dropP,
+    DoubleSupplier dropI,
+    DoubleSupplier dropD,
     DoubleSupplier setpoint,
-    DoubleSupplier tolerance,
-    DoubleSupplier clamp,
-    BooleanSupplier limit
+    DoubleSupplier tolerance
   ) {
     // System.out.println(armSub.getAngle());
     this.armSub = armSub;
-    this.kP = kP;
-    this.kI = kI;
-    this.kD = kD;
+    this.raiseP = raiseP;
+    this.raiseI = raiseI;
+    this.raiseD = raiseD;
+    this.dropP = dropP;
+    this.dropI = dropI;
+    this.dropD = dropD;
     this.setpoint = setpoint;
     this.tolerance = tolerance;
-    this.clamp = clamp;
-    this.limit = limit;
     addRequirements(armSub);
   }
 
 
   @Override
   public void initialize() {
-    controller = new PIDController(kP.getAsDouble(), kI.getAsDouble(), kD.getAsDouble());
+    controller = armSub.getController();
     controller.setTolerance(tolerance.getAsDouble());
     controller.setSetpoint(setpoint.getAsDouble());
   }
 
   @Override
   public void execute() {
-    // Applying the output to the arm
-    armSub.setMotor(limit.getAsBoolean() ? 0 : -MathUtil.clamp(controller.calculate(armSub.getAngle() % 360), -clamp.getAsDouble(), clamp.getAsDouble())); // If limit = true, then speed is set to 0. Else, speed is set to clamped output.
+    double speed = -controller.calculate(armSub.getAngle() % 360);
+    /*If arm is raising, and raise limit switch isn't switched.
+     * or
+     * If arm is dropping, and drop limit switch isn't switched.
+    */
+    //System.out.println("Arm velocity recieved (experimenting, currently does nothing):" + armSub.getSensorVelocity());
+    if ((speed < 0)) { // Raising
+      if (!armSub.raiseLimitSwitch()) {
+        armSub.setMotor(speed);
+      } else {
+        armSub.setMotor(0);
+      }
+      controller.setP(raiseP.getAsDouble());
+      controller.setI(raiseI.getAsDouble());
+      controller.setD(raiseD.getAsDouble());
+      SmartDashboard.putNumber("Arm P", raiseP.getAsDouble());
+      SmartDashboard.putNumber("Arm I", raiseI.getAsDouble());
+      SmartDashboard.putNumber("Arm D", raiseD.getAsDouble());
+    } else if (speed > 0) { // Dropping
+      if (!armSub.dropLimitSwitch()) {
+        armSub.setMotor(speed);
+      } else {
+        armSub.setMotor(0);
+      }
+      controller.setP(dropP.getAsDouble());
+      controller.setI(dropI.getAsDouble());
+      controller.setD(dropD.getAsDouble());
+      SmartDashboard.putNumber("Arm P", dropP.getAsDouble());
+      SmartDashboard.putNumber("Arm I", dropI.getAsDouble());
+      SmartDashboard.putNumber("Arm D", dropD.getAsDouble());
+    }
 
-    // Updating the PID values
-    controller.setP(kP.getAsDouble());
-    controller.setI(kI.getAsDouble());
-    controller.setD(kD.getAsDouble());
     controller.setSetpoint(setpoint.getAsDouble() + SmartDashboard.getNumber("Arm Setpoint Offset", 0));
     controller.setTolerance(tolerance.getAsDouble());
 
     // Pushing number to SmartDashboard
     SmartDashboard.putNumber("Arm PID Output", controller.calculate(armSub.getAngle() % 360));
+    SmartDashboard.putNumber("Arm PID Setpoint", setpoint.getAsDouble());
   }
 
   @Override

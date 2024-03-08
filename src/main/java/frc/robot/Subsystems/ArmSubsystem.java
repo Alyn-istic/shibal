@@ -7,6 +7,8 @@ package frc.robot.Subsystems;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.units.Angle;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.MutableMeasure;
@@ -33,6 +35,9 @@ public class ArmSubsystem extends SubsystemBase {
   // Initializing the limit switches
   private final DigitalInput dropSwitch = new DigitalInput(ArmConstants.dropLimitSwitchChannel);
   private final DigitalInput raiseSwitch = new DigitalInput(ArmConstants.raiseLimitSwitchChannel);
+
+  // Controllers
+  private final PIDController pidcontroller = new PIDController(ArmConstants.raiseP, ArmConstants.raiseI, ArmConstants.raiseD);
 
   // Mutable holders
   private final MutableMeasure<Voltage> m_appliedVoltage = MutableMeasure.mutable(Volts.of(0));
@@ -81,6 +86,9 @@ public class ArmSubsystem extends SubsystemBase {
     // Resetting encoder positions
     leftMotor.setSelectedSensorPosition(toPosition(-ArmConstants.startingAngle));
     rightMotor.setSelectedSensorPosition(toPosition(ArmConstants.startingAngle));
+
+    // Controller configs
+    pidcontroller.enableContinuousInput(ArmConstants.minAngle, ArmConstants.maxAngle);
   }
 
   @Override
@@ -89,15 +97,18 @@ public class ArmSubsystem extends SubsystemBase {
 
     SmartDashboard.putBoolean("Arm raise limit", raiseLimitSwitch());
     SmartDashboard.putBoolean("Arm drop limit", dropLimitSwitch());
+    //System.out.println(dropLimitSwitch());
 
     SmartDashboard.putNumber("Arm Angle", getAngle());
     SmartDashboard.putNumber("Arm Position", getSensorPosition());
 
-    if (dropLimitSwitch()) {
+    if (dropLimitSwitch()) { // The following has been ported to RobotContainer
       leftMotor.setSelectedSensorPosition(toPosition(ArmConstants.intakeAngle));
+      SmartDashboard.putNumber("Arm Setpoint Offset", 0);
     }
     if (raiseLimitSwitch()) {
       leftMotor.setSelectedSensorPosition(toPosition(ArmConstants.shootAngle));
+      SmartDashboard.putNumber("Arm Setpoint Offset", 0);
     }
   }
   @Override
@@ -109,8 +120,16 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public void setMotor(double speed) {
-    leftMotor.set(speed); //defining public method to just the left motor, takes doubles, -> speed
-   }
+    double clampedSpeed;
+    if (speed < 0) {
+      clampedSpeed = MathUtil.clamp(speed, -ArmConstants.raiseMotorClamp, ArmConstants.raiseMotorClamp);
+    } else {
+      clampedSpeed = MathUtil.clamp(speed, -ArmConstants.dropMotorClamp, ArmConstants.dropMotorClamp);
+    }
+    leftMotor.set(
+      clampedSpeed
+    ); //defining public method to just the left motor, takes doubles, -> speed
+  }
 
   public double getAngle() {
     return (getSensorPosition()*(360.0/ArmConstants.countsPerRev))/ArmConstants.gearRatio;
@@ -128,6 +147,10 @@ public class ArmSubsystem extends SubsystemBase {
     return leftMotor.getSelectedSensorPosition();
   }
 
+  public void setSensorPosition(double pos) {
+    leftMotor.setSelectedSensorPosition(pos);
+  }
+
   public double getSensorVelocity() {
     return leftMotor.getSelectedSensorVelocity();
   }
@@ -143,5 +166,9 @@ public class ArmSubsystem extends SubsystemBase {
 
   public boolean dropLimitSwitch() { // True when clicked, false when not
     return !dropSwitch.get();
+  }
+
+  public PIDController getController() {
+    return pidcontroller;
   }
 } 
