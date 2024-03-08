@@ -109,6 +109,7 @@ public class Constants {
         public static final double intakeInsideAngle = 50; // The angle of the arm inside the perimeter preparing to intake.
         public static final double shootInsideAngle = 90; // The angle of the arm inside the perimeter preparing to move to shoot position.
         public static final double intakeAngle = 0; // The angle of the arm in intaking position
+        
         public static final double raiseMotorClamp = 0.68; // Should be between 0 and 1;
         public static final double dropMotorClamp = 0.6;
         // public static final double dropAngle = 0;  // This is relative to the starting position of the encoders.
