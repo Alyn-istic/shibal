@@ -26,10 +26,10 @@ import frc.robot.Subsystems.LEDSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
-// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-featurses.html
-public class ScoreInAmpTimed3 extends SequentialCommandGroup {
+// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
+public class ScoreInAmpTimedBlue1 extends SequentialCommandGroup {
   /** Creates a new AutonomousBackup. */
-  public ScoreInAmpTimed3(
+  public ScoreInAmpTimedBlue1(
     DrivetrainSubsystem driveSub,
     IntakeShooterSubsystem intakeShooterSub,
     LEDSubsystem led,
@@ -46,7 +46,7 @@ public class ScoreInAmpTimed3 extends SequentialCommandGroup {
       // new TurnToAmpTimed(driveSub, -1),
       // new WaitCommand(1),
 
-      new TankDriveCmd(driveSub, () -> 0.3, () -> 0.3).withTimeout(1),// move forward
+      new TankDriveCmd(driveSub, () -> 0.3, () -> 0.3).withTimeout(MoveToAmpTimedConstants.TIME_POS_1),// move forward
 
       new ArmShoot(armSub, () -> armSub.getController().atSetpoint()), // arm to shooting position
       new DownShootAmpTimed(intakeShooterSub, led), //shoot note

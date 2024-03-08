@@ -26,10 +26,10 @@ import frc.robot.Subsystems.LEDSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
-// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ScoreInAmpTimed2 extends SequentialCommandGroup {
+// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-featurses.html
+public class ScoreInAmpTimedRed2 extends SequentialCommandGroup {
   /** Creates a new AutonomousBackup. */
-  public ScoreInAmpTimed2(
+  public ScoreInAmpTimedRed2(
     DrivetrainSubsystem driveSub,
     IntakeShooterSubsystem intakeShooterSub,
     LEDSubsystem led,
@@ -46,23 +46,22 @@ public class ScoreInAmpTimed2 extends SequentialCommandGroup {
       // new TurnToAmpTimed(driveSub, -1),
       // new WaitCommand(1),
 
-      new TankDriveCmd(driveSub, () -> 0.3, () -> 0.3).withTimeout(1),// move forward
+      new TankDriveCmd(driveSub, () -> 0.3, () -> 0.3).withTimeout(MoveToAmpTimedConstants.TIME_POS_2),// move forward
 
       new ArmShoot(armSub, () -> armSub.getController().atSetpoint()), // arm to shooting position
       new DownShootAmpTimed(intakeShooterSub, led), //shoot note
 
       new TankDriveCmd(driveSub, () -> -0.3, () -> -0.3).withTimeout(1), //rotate
-      new WaitCommand(1),
 
-      new TurnToAmpTimed(driveSub, 1),
+      new TurnToAmpTimed(driveSub, -1),
       new ArmIntake(armSub, () -> armSub.getController().atSetpoint()),
       new ParallelCommandGroup(
         new LeaveAmpTimed(driveSub),
         new IntakeCmd(intakeShooterSub, led, () -> 1).withTimeout(1.5)
       ),
       new TankDriveAutoCmd(driveSub,
-        () -> MoveToAmpTimedConstants.SPEED_TURN_TO_AMP,
         () -> -MoveToAmpTimedConstants.SPEED_TURN_TO_AMP,
+        () -> MoveToAmpTimedConstants.SPEED_TURN_TO_AMP,
         ()-> 0.3
       ),
       new LeaveAmpTimed(driveSub).alongWith(new ArmIntakePerimeter(armSub, () -> armSub.getController().atSetpoint())
