@@ -1,5 +1,5 @@
-# ROBOTNAME-9127-2024
-Official command-based code for the 9127 Robot: [ROBOTNAME].
+# CIMCITY-9127-2024
+Official command-based code for the 9127-2024 Robot: CIM City!
 
 This branch will contain the code that the team should use.
 
