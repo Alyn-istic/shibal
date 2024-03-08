@@ -1,5 +1,5 @@
-# ROBOTNAME-9127-2024
-Official command-based code for the 9127 Robot: [ROBOTNAME].
+# CIMCITY-9127-2024
+Official command-based code for the 9127-2024 Robot: CIM City!
 
 This branch will contain the code that the team should use.
 
@@ -9,8 +9,9 @@ Using SmartDashboard or ShuffleBoard, the operator can access a sendable chooser
 The Shuffleboard layout can be found in the file called "ShuffleBoardLayout.json"
 
 # **Teleop Mode XBOX Controls**:
+(Any of the following is subject to change)
+
 ## **Driver Controls**:
-**Emergency stop:** X-button
 
 **Tank drive:** Left/Right Joysticks
 
@@ -20,10 +21,9 @@ The Shuffleboard layout can be found in the file called "ShuffleBoardLayout.json
 **Jump between positions using left/right bumpers (left makes it go towards intake, right makes it go towards shooting)**
 
 1. Intaking position (around 0°)
-2. Inside perimeters of robot, close to intake (around 40°)
-3. Down-shooting into Amp (around ?°)
-4. Inside perimeters of robot, close to down-shooting into Amp (around 90°)
-5. Intake from source (around ?°)
+2. Inside perimeters of robot, close to intake (around 50°)
+3. Inside perimeters of robot, close to down-shooting into Amp (around 90°)
+4. Down-shooting into Amp (around 100°)
 
 ## Operator Controls
 **Emergency stop:** X-button
@@ -34,8 +34,22 @@ The Shuffleboard layout can be found in the file called "ShuffleBoardLayout.json
 
 **Intake Speed:** Left/Right Triggers
 
+**Manually Reset Chassis Sensors:** A + B button (must be held at the same time)
+
 # **How To Set Up Robot**:
 *TBD*
+
+# Firmware Updating
+Using Phoenix Tuner, the user can update the firmware of the connected devices (motor controllers and PDP). The firmware files are located in a folder called "ctr-device-firmware" in this project.
+1. **TalonSRX (Arm):** Version 22.1
+2. **VictorSPX (Drivetrain):** Version 22.1
+3. **PDP:** Version 1.40
+
+
+
+If the installed version is outdated, the frame around the device in Phoenix Tuner will show up as yellow instead of green.
+
+If the installed version is incorrect, the frame around the device in Phoenix Tuner will show up as purple instead of green.
 
 # **SimGUI Mapping** *(Software Simulation)*:
 ## **Keyboard 0**:

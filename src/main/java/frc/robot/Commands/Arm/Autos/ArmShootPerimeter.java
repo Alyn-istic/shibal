@@ -4,7 +4,8 @@
 
 package frc.robot.Commands.Arm.Autos;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Commands.Arm.ArmPIDCmd;
@@ -14,24 +15,26 @@ import frc.robot.Subsystems.ArmSubsystem;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ArmShootPerimeter extends SequentialCommandGroup {
-  /** Creates a new ArmShootPerimeter. */
-  public ArmShootPerimeter(
-    ArmSubsystem armSub
+/**
+   * Move the arm into the perimeters of the bumpers, while close to the position for down-shooting into the amp.
+   * @param armSub Arm Subsystem
+   * @param end Supplier that returns true when the command should end
+   */  public ArmShootPerimeter(
+    ArmSubsystem armSub, BooleanSupplier end
   ) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new ArmPIDCmd(armSub,
-        // () -> ArmConstants.kP,
-        // () -> ArmConstants.kI,
-        // () -> ArmConstants.kD,
-        () -> SmartDashboard.getNumber("Arm P", 0),
-        () -> SmartDashboard.getNumber("Arm I", 0),
-        () -> SmartDashboard.getNumber("Arm D", 0),
+        () -> ArmConstants.raiseP,
+        () -> ArmConstants.raiseI,
+        () -> ArmConstants.raiseD,
+        () -> ArmConstants.dropP,
+        () -> ArmConstants.dropI,
+        () -> ArmConstants.dropD,
         () -> ArmConstants.shootInsideAngle,
-        () -> ArmConstants.clamp,  
         () -> ArmConstants.tolerance
-      )
+      ).until(end)
     );
   }
 }

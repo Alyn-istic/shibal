@@ -4,7 +4,8 @@
 
 package frc.robot.Commands.Arm.Autos;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Subsystems.ArmSubsystem;
@@ -14,24 +15,27 @@ import frc.robot.Commands.Arm.ArmPIDCmd;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ArmIntake extends SequentialCommandGroup {
-  /** Creates a new Intake. */
+  /**
+   * Move the arm into intaking position
+   * @param armSub Arm Subsystem
+   * @param end Supplier that returns true when the command should end
+   */
   public ArmIntake(
-    ArmSubsystem armSub
+    ArmSubsystem armSub, BooleanSupplier end
   ) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new ArmPIDCmd(armSub, //
-          // () -> ArmConstants.kP,
-          // () -> ArmConstants.kI,
-          // () -> ArmConstants.kD,
-          () -> SmartDashboard.getNumber("Arm P", 0),
-          () -> SmartDashboard.getNumber("Arm I", 0),
-          () -> SmartDashboard.getNumber("Arm D", 0),
+          () -> ArmConstants.raiseP,
+          () -> ArmConstants.raiseI,
+          () -> ArmConstants.raiseD,
+          () -> ArmConstants.dropP,
+          () -> ArmConstants.dropI,
+          () -> ArmConstants.dropD,
           () -> ArmConstants.intakeAngle,
-          () -> ArmConstants.tolerance,
-          () -> ArmConstants.clamp
-      )
+          () -> ArmConstants.tolerance
+      ).until(end)
     );
   }
 }

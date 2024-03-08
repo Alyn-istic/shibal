@@ -18,7 +18,12 @@ public class ArmCommandSelector extends InstantCommand {
 
   private NetworkTableEntry armIndexEntry;
 
-  /** Creates a new ArmPIDLoop. */
+  /**
+   * This is the command that the arm uses to "rotate" through different setpoints, by recieving different PID commands through a list, and running them one-by-one.
+   * @param commandList List containing the PID commands
+   * @param increment How much to go up or go down by in the list
+   * @param armIndexEntry Currenty running command's index in the list
+   */
   public ArmCommandSelector(
     Command[] commandList,
     IntSupplier increment,

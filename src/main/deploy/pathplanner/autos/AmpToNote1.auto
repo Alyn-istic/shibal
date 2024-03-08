@@ -1,0 +1,79 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.49426107411415826,
+      "y": 7.0
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "ArmZero"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "toAmp"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ArmShoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeCmd"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ArmIntake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "toNote1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeCmd"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "toAmp"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ArmShoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeCmd"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "TestAuto",
+  "choreoAuto": false
+}

@@ -6,6 +6,9 @@
       }
     },
     "RoboRIO": {
+      "6V Rail": {
+        "open": true
+      },
       "window": {
         "visible": true
       }
@@ -14,7 +17,9 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
-      "/SmartDashboard/Autonomous Routines": "String Chooser"
+      "/SmartDashboard/Autonomous Routines": "String Chooser",
+      "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/Field ": "Field2d"
     }
   },
   "NetworkTables": {
@@ -33,7 +38,9 @@
         },
         ".recording": {
           "open": true
-        },
+        }
+      },
+      "SmartDashboard": {
         "open": true
       }
     }

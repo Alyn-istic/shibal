@@ -5,13 +5,25 @@
 package frc.robot.Subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelPositions;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.Distance;
@@ -19,8 +31,10 @@ import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.MutableMeasure;
 import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -29,14 +43,15 @@ import frc.robot.Constants.DrivetrainConstants;
 
 // Static imports for units
 import static edu.wpi.first.units.Units.Volts;
+
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
 public class DrivetrainSubsystem extends SubsystemBase {
 
   // Initializing VictorSPX motors for the drivetrain.
-  private final WPI_VictorSPX frontLeft = new WPI_VictorSPX(DrivetrainConstants.frontLeftID);
-  private final WPI_VictorSPX frontRight = new WPI_VictorSPX(DrivetrainConstants.frontRightID);
+  private final WPI_TalonSRX frontLeft = new WPI_TalonSRX(DrivetrainConstants.frontLeftID);
+  private final WPI_TalonSRX frontRight = new WPI_TalonSRX(DrivetrainConstants.frontRightID);
   private final WPI_VictorSPX backLeft = new WPI_VictorSPX(DrivetrainConstants.backLeftID);
   private final WPI_VictorSPX backRight = new WPI_VictorSPX(DrivetrainConstants.backRightID);
 
@@ -46,8 +61,24 @@ public class DrivetrainSubsystem extends SubsystemBase {
   // Initiating the gyro.
   private final AHRS gyro = new AHRS(DrivetrainConstants.gyroPort);
 
+  //PID controller
+  // private final PIDController driveController = new PIDController(DrivetrainConstants.driveP, DrivetrainConstants.driveI, DrivetrainConstants.driveD);
+  private final SimpleMotorFeedforward leftFeedForward = new SimpleMotorFeedforward(DrivetrainConstants.kS, DrivetrainConstants.kV);
+  private final SimpleMotorFeedforward rightFeedForward = new SimpleMotorFeedforward(DrivetrainConstants.kS, DrivetrainConstants.kV);
+  private final PIDController leftDriveController = new PIDController(DrivetrainConstants.driveP, DrivetrainConstants.driveI, DrivetrainConstants.driveD);
+  private final PIDController rightDriveController = new PIDController(DrivetrainConstants.driveP, DrivetrainConstants.driveI, DrivetrainConstants.driveD);
+  private final PIDController turnController = new PIDController(DrivetrainConstants.turnP, DrivetrainConstants.turnI, DrivetrainConstants.turnD);  
+
+  // Slew rate limiters
+  private final SlewRateLimiter leftSlewRateLimiter = new SlewRateLimiter(DrivetrainConstants.autoSlewRate);
+  private final SlewRateLimiter rightSlewRateLimiter = new SlewRateLimiter(DrivetrainConstants.autoSlewRate);
+
+  // Path planner constraints
+  PathConstraints constraints = new PathConstraints(3.0, 2.0, Units.degreesToRadians(540), Units.degreesToRadians(720));
+
   // Kinematics
   private DifferentialDrivePoseEstimator poseEstimator;
+  private Field2d field = new Field2d();
   private DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(DrivetrainConstants.distLeftRight));
 
   /* Mutable holders
@@ -79,13 +110,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
        * The other calculations such as position and velocity can be found in their repspective functions
        */
       log -> {
-        // Create frame for left motors
-        log.motor("drive-left").voltage(m_appliedVoltage.mut_replace(frontLeft.get() * RobotController.getBatteryVoltage(), Volts))
+        // Create frame for left motors (negated speed)
+        log.motor("drive-left").voltage(m_appliedVoltage.mut_replace(-frontLeft.get() * RobotController.getBatteryVoltage(), Volts))
           .linearPosition(m_distance.mut_replace(getLeftDistance(), Meters))
           .linearVelocity(m_velocity.mut_replace(getLeftVelocity(), MetersPerSecond));
 
-        // Create frame for right motors
-        log.motor("drive-right").voltage(m_appliedVoltage.mut_replace(frontRight.get() * RobotController.getBatteryVoltage(), Volts))
+        // Create frame for right motors (negated speed)
+        log.motor("drive-right").voltage(m_appliedVoltage.mut_replace(-frontRight.get() * RobotController.getBatteryVoltage(), Volts))
           .linearPosition(m_distance.mut_replace(getRightDistance(), Meters))
           .linearVelocity(m_velocity.mut_replace(getRightVelocity(), MetersPerSecond)); 
       }, this
@@ -102,6 +133,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   /** Creates a new DrivetrainSubsystem. */
   public DrivetrainSubsystem() {
+    frontLeft.configFactoryDefault();
+    backLeft.configFactoryDefault();
+    frontRight.configFactoryDefault();
+    backRight.configFactoryDefault();
+
     // Inverting the left motors
     frontLeft.setInverted(true);
     backLeft.setInverted(true);
@@ -113,22 +149,41 @@ public class DrivetrainSubsystem extends SubsystemBase {
     backRight.follow(frontRight);
 
     // Setting the neutral mode of the motors to "Brake". This means that they will stop immediately when told to.
-    frontLeft.setNeutralMode(NeutralMode.Brake);
-    frontRight.setNeutralMode(NeutralMode.Brake);
-    backLeft.setNeutralMode(NeutralMode.Brake);
-    frontRight.setNeutralMode(NeutralMode.Brake);
+    //They are now in "Cost", no power will be passed in and the moters will continue going a while due to momentum. 
+    frontLeft.setNeutralMode(NeutralMode.Coast);//was brake
+    frontRight.setNeutralMode(NeutralMode.Coast);
+    backLeft.setNeutralMode(NeutralMode.Coast);
+    frontRight.setNeutralMode(NeutralMode.Coast);
 
     // Resetting probably non-existing encoders just for the sake of it.
+
     frontLeft.setSelectedSensorPosition(0);
     frontRight.setSelectedSensorPosition(0);
     backLeft.setSelectedSensorPosition(0);
     backRight.setSelectedSensorPosition(0);
-
+   
     // Resetting gyro
     gyro.reset();
 
     // Pose estimation
-    poseEstimator = new DifferentialDrivePoseEstimator(kinematics, gyro.getRotation2d(), getLeftDistance(), getRightDistance(), new Pose2d(0, 0, new Rotation2d(0)));
+    poseEstimator = new DifferentialDrivePoseEstimator(
+      kinematics,
+      gyro.getRotation2d(),
+      getLeftDistance(),
+      getRightDistance(),
+      new Pose2d(DrivetrainConstants.startPosX, DrivetrainConstants.startPosY, new Rotation2d(0))
+    );
+    SmartDashboard.putData("Field ", field);
+
+    AutoBuilder.configureRamsete(
+      this::getBotPose,
+      this::resetBotPose,
+      this::getChassisSpeeds,
+      this::setChassisSpeed,
+      new ReplanningConfig(),
+      () -> false,
+      this
+    );
   }
 
   @Override
@@ -138,26 +193,55 @@ public class DrivetrainSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Front Left Motor Speed", frontLeft.get());
     SmartDashboard.putNumber("Front Right Motor Speed", frontRight.get());
 
-    // SmartDashboard.putNumber("Bot X", getBotPose().getX());
-    // SmartDashboard.putNumber("Bot Y", getBotPose().getY());
-    // SmartDashboard.putNumber("Bot Rotation", getBotPose().getRotation().getDegrees());
+    SmartDashboard.putNumber("Bot X", getBotPose().getX());
+    SmartDashboard.putNumber("Bot Y", getBotPose().getY());
+    SmartDashboard.putNumber("Bot Rotation", getBotPose().getRotation().getDegrees());
 
-    // SmartDashboard.putNumber("Left Pos", frontLeft.getSelectedSensorPosition());
-    // SmartDashboard.putNumber("Right Pos", frontRight.getSelectedSensorPosition());
-    // SmartDashboard.putNumber("Left Distance", getLeftDistance());
-    // SmartDashboard.putNumber("Right Distance", getRightDistance());
+    SmartDashboard.putNumber("Left Pos", frontLeft.getSelectedSensorPosition());
+    SmartDashboard.putNumber("Right Pos", frontRight.getSelectedSensorPosition());
+    SmartDashboard.putNumber("Left Distance", getLeftDistance());
+    SmartDashboard.putNumber("Right Distance", getRightDistance());
+    SmartDashboard.putNumber("Left Velocity", getLeftVelocity());
+    SmartDashboard.putNumber("Right Velocity", getRightVelocity());
 
-    // SmartDashboard.putNumber("Gyro Angle", getGyroAngle() % 360);
+    SmartDashboard.putNumber("Gyro Angle", getGyroAngle() % 360);
+  }
 
+  public Boolean getPathInverted() {
+    if (DriverStation.getAlliance().isPresent()) {
+      return (DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red));
+    }
+    return false;
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    int left = (int)(MathUtil.clamp(frontLeft.get(), -1, 1) * 1101.0);
+    int right = (-(int)(MathUtil.clamp(frontRight.get(), -1, 1) * 1101.0));
+
+    frontLeft.getSimCollection().addQuadraturePosition(left);
+    frontRight.getSimCollection().addQuadraturePosition(right);
+
+    frontLeft.getSimCollection().setQuadratureVelocity(left);
+    frontRight.getSimCollection().setQuadratureVelocity(right);
+
+    gyro.setAngleAdjustment(Units.radiansToDegrees(kinematics.toTwist2d(-getLeftDistance(), -getRightDistance()).dtheta) * 0.75);
+
+    field.setRobotPose(getBotPose());
   }
 
   public void tankDriveSpeed(double leftSpeed, double rightSpeed) { // Tankdrive using speed.
-    drive.tankDrive(leftSpeed, rightSpeed);
+    drive.tankDrive(
+      MathUtil.clamp(leftSpeed, -DrivetrainConstants.motorClamp, DrivetrainConstants.motorClamp),
+      MathUtil.clamp(rightSpeed, -DrivetrainConstants.motorClamp, DrivetrainConstants.motorClamp)
+    );
   }
-  public void tankDriveVoltage(double leftVolts, double rightVolts) { // Tankdrive using voltage. The reason we have this is because "speed" is based on battery voltage (12V).
-    frontLeft.setVoltage(leftVolts);
-    frontRight.setVoltage(rightVolts);
-    drive.feed();
+
+  public void arcadeDriveSpeed(double forwardSpeed, double turnSpeed) {
+    drive.tankDrive(
+      MathUtil.clamp(forwardSpeed, -DrivetrainConstants.motorClamp, DrivetrainConstants.motorClamp),
+      MathUtil.clamp(turnSpeed, -DrivetrainConstants.motorClamp, DrivetrainConstants.motorClamp)
+    );
   }
 
   public double getGyroAngle() { // Function for getting the gyro's angle.
@@ -168,23 +252,101 @@ public class DrivetrainSubsystem extends SubsystemBase {
     return poseEstimator.getEstimatedPosition();
   }
 
-  /* Following math is copied from 7476:
-   * input / gearRatio * 2PI * wheelRadius
-   */
-  public double getLeftDistance() {
-    return Units.inchesToMeters(frontLeft.getSelectedSensorPosition() / DrivetrainConstants.gearRatio * (2*Math.PI) * DrivetrainConstants.wheelRadius);
-  }
-  public double getRightDistance() {
-    return Units.inchesToMeters(frontRight.getSelectedSensorPosition() / DrivetrainConstants.gearRatio * (2*Math.PI) * DrivetrainConstants.wheelRadius);
-  }
-  public double getLeftVelocity() {
-    return Units.inchesToMeters(frontLeft.getSelectedSensorVelocity() / DrivetrainConstants.gearRatio * (2*Math.PI) * DrivetrainConstants.wheelRadius);
-  }
-  public double getRightVelocity() {
-    return Units.inchesToMeters(frontRight.getSelectedSensorVelocity() / DrivetrainConstants.gearRatio * (2*Math.PI) * DrivetrainConstants.wheelRadius);
+  public void resetBotPose(Pose2d pose) {
+    poseEstimator.resetPosition(gyro.getRotation2d(), new DifferentialDriveWheelPositions(getLeftDistance(), getRightDistance()), pose);
   }
 
-  public DifferentialDriveWheelSpeeds wheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds(getLeftVelocity(), getRightDistance());
+  public ChassisSpeeds getChassisSpeeds() {
+    return kinematics.toChassisSpeeds(new DifferentialDriveWheelSpeeds(getLeftVelocity(), getRightVelocity()));
+  }
+
+  public void setChassisSpeed(ChassisSpeeds chassis) {
+    DifferentialDriveWheelSpeeds speeds = kinematics.toWheelSpeeds(chassis);
+
+    double leftFF = leftFeedForward.calculate(-speeds.leftMetersPerSecond);
+    double rightFF = rightFeedForward.calculate(-speeds.rightMetersPerSecond);
+
+    double leftVelocityCorrection = leftDriveController.calculate(getLeftVelocity(), -speeds.leftMetersPerSecond);
+    double rightVelocityCorrection = rightDriveController.calculate(getRightVelocity(), -speeds.rightMetersPerSecond);
+
+    frontLeft.setVoltage(leftVelocityCorrection + leftFF);
+    frontRight.setVoltage(rightVelocityCorrection + rightFF);
+    
+    drive.feed();
+  }
+
+  // Math: pos * ((2PI*radius)/CPR)/GearRatio -> convert from inches to meters
+  public double getLeftDistance(){
+    return Units.inchesToMeters(
+      frontLeft.getSelectedSensorPosition() * ((2 * Math.PI * DrivetrainConstants.wheelRadius)/DrivetrainConstants.countsPerRev) / DrivetrainConstants.gearRatio
+    );
+  }
+  public double getRightDistance(){
+    return Units.inchesToMeters(
+      frontRight.getSelectedSensorPosition() * ((2 * Math.PI * DrivetrainConstants.wheelRadius)/DrivetrainConstants.countsPerRev) / DrivetrainConstants.gearRatio
+    );
+  }
+  public double getLeftVelocity(){
+    return frontLeft.getSelectedSensorVelocity() * ((2 * Math.PI * DrivetrainConstants.wheelRadius)/DrivetrainConstants.countsPerRev) / DrivetrainConstants.gearRatio;
+  }
+
+  public double getRightVelocity(){
+    return frontRight.getSelectedSensorVelocity() * ((2 * Math.PI * DrivetrainConstants.wheelRadius)/DrivetrainConstants.countsPerRev) / DrivetrainConstants.gearRatio;
+
+  }
+  public PIDController getLeftDriveController() {
+    return leftDriveController;
+  }
+
+  public PIDController getRightDriveController() {
+    return rightDriveController;
+  }
+
+  public boolean isDriveControllersAtSetpoint() {
+    return (getLeftDriveController().atSetpoint() && getRightDriveController().atSetpoint());
+  }
+
+  public PIDController getTurnController() {
+    return turnController;
+  }
+
+  public SlewRateLimiter getLeftSlewRateLimiter() {
+    return leftSlewRateLimiter;
+  }
+
+  public SlewRateLimiter getRightSlewRateLimiter() {
+    return rightSlewRateLimiter;
+  }
+
+  public Command testPath0() {
+    PathPlannerPath path = PathPlannerPath.fromPathFile("TestPath1");
+    return AutoBuilder.pathfindThenFollowPath(path, constraints); 
+  }
+
+  public Command testPath1() {
+    PathPlannerPath path = PathPlannerPath.fromPathFile("toNote1");
+    return AutoBuilder.pathfindThenFollowPath(path, constraints);
+  }
+
+  public Command testPath2() {
+    PathPlannerPath path = PathPlannerPath.fromPathFile("toAmp");
+    return AutoBuilder.pathfindThenFollowPath(path, constraints);
+  }
+
+  public Command testAuto1() {
+    return new PathPlannerAuto("AmpToNote1");
+  }
+
+  public void operatorReset() {
+
+    // Resetting probably non-existing encoders just for the sake of it.
+
+    frontLeft.setSelectedSensorPosition(0);
+    frontRight.setSelectedSensorPosition(0);
+    backLeft.setSelectedSensorPosition(0);
+    backRight.setSelectedSensorPosition(0);
+   
+    // Resetting gyro
+    gyro.reset();
   }
 }
