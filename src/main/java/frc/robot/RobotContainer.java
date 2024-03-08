@@ -32,6 +32,7 @@ import frc.robot.Commands.Drivetrain.Autos.Timed.MoveOutOfZoneTimed.MoveOutOfZon
 import frc.robot.Commands.IntakeShooter.IntakeCmd;
 import frc.robot.Commands.MainAutos.AutoLog;
 import frc.robot.Commands.MainAutos.Sensor.ScoreInAmpSensor1;
+import frc.robot.Commands.MainAutos.Timed.ExitZoneTimed;
 import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedBlue1;
 import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedBlue2;
 import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedBlue3;
@@ -109,8 +110,8 @@ public class RobotContainer {
     // SmartDashboard.putNumber("Arm Setpoint Offset", ArmConstants.setpointOffset);
 
     autoChooser.setDefaultOption("NONE", new AutoLog("No auto selected."));
-    autoChooser.addOption("MOVE OUT OF ZONE", new MoveOutOfZoneTimed1(driveSub));
-    autoChooser.addOption("SCORE IN AMP (SENSORS)", new ScoreInAmpSensor1(driveSub, armSub, intakeShooterSub, led));
+    autoChooser.addOption("MOVE OUT OF ZONE", new ExitZoneTimed(driveSub, armSub));
+    //autoChooser.addOption("SCORE IN AMP (SENSORS)", new ScoreInAmpSensor1(driveSub, armSub, intakeShooterSub, led));
     autoChooser.addOption("SCORE IN AMP 1 BLUE (TIMED)", new ScoreInAmpTimedBlue1(driveSub, intakeShooterSub, led, armSub));
     autoChooser.addOption("SCORE IN AMP 2 BLUE (TIMED)", new ScoreInAmpTimedBlue2(driveSub, intakeShooterSub, led, armSub));
     autoChooser.addOption("SCORE IN AMP 3 BLUE (TIMED)", new ScoreInAmpTimedBlue3(driveSub, intakeShooterSub, led, armSub));

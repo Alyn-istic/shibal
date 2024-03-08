@@ -4,8 +4,12 @@
 
 package frc.robot.Commands.MainAutos.Timed;
 
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Commands.Arm.Autos.ArmIntakePerimeter;
+import frc.robot.Commands.Arm.Autos.ArmZero;
 import frc.robot.Commands.Drivetrain.Autos.Timed.MoveOutOfZoneTimed.MoveOutOfZoneTimed1;
+import frc.robot.Subsystems.ArmSubsystem;
 import frc.robot.Subsystems.DrivetrainSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -14,12 +18,16 @@ import frc.robot.Subsystems.DrivetrainSubsystem;
 public class ExitZoneTimed extends SequentialCommandGroup {
   /** Creates a new ExitZoneTimed. */
   public ExitZoneTimed(
-    DrivetrainSubsystem driveSub
+    DrivetrainSubsystem driveSub,
+    ArmSubsystem armSub
   ) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new MoveOutOfZoneTimed1(driveSub)
+      new ParallelCommandGroup(
+        new MoveOutOfZoneTimed1(driveSub),
+        new ArmZero(armSub).andThen(new ArmIntakePerimeter(armSub, () -> armSub.getController().atSetpoint()))
+      )
     );
   }
 }
