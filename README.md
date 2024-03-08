@@ -12,7 +12,6 @@ The Shuffleboard layout can be found in the file called "ShuffleBoardLayout.json
 (Any of the following is subject to change)
 
 ## **Driver Controls**:
-**Emergency stop:** X-button
 
 **Tank drive:** Left/Right Joysticks
 
