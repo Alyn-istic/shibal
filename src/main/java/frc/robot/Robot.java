@@ -66,10 +66,10 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
-    // if (m_autonomousCommand != null) {
-    //   CommandScheduler.getInstance().schedule(
-    //       new WaitCommand(AutonomousConstants.waitBeforeExecRoutine).andThen(m_autonomousCommand)
-    //   );
+    if (m_autonomousCommand != null) {
+      CommandScheduler.getInstance().schedule(
+          m_autonomousCommand
+      );
     //  for (var i = 0; i < m_ledBuffer.getLength(); i++) {
     //   // Sets the specified LED to the RGB values for gold
     //   m_ledBuffer.setRGB(i, 255, 215, 0);
@@ -85,7 +85,7 @@ public class Robot extends TimedRobot {
       //   }
       // }
     //  }
-    // }
+    }
   }
 
   @Override
