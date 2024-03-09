@@ -198,6 +198,10 @@ public class RobotContainer {
 
     commandOperator.a().and(commandOperator.b()).whileTrue(Commands.run(() -> driveSub.operatorReset(), driveSub));
 
+    commandOperator.povUp().whileTrue(new ClimberCmd(climbSub, () -> ClimberConstants.climberSpeed));
+    commandOperator.povDown().whileTrue(new ClimberCmd(climbSub, () -> -ClimberConstants.climberSpeed));
+
+
     ////////////////////////////////////////// Arm Limits //////////////////////////////////////////
 
     // While the drop limit switch is pressed, reset arm position to intake angle, and reset setpoint offset to 0.
