@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Commands.EmergencyStopCmd;
@@ -40,6 +41,7 @@ import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedRed1;
 import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedRed2;
 import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedRed3;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Subsystems.ArmSubsystem;
 import frc.robot.Subsystems.DrivetrainSubsystem;
@@ -238,6 +240,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
+    return new WaitCommand(AutonomousConstants.waitBeforeExecRoutine).andThen(autoChooser.getSelected());
   }
 }

@@ -68,7 +68,7 @@ public class Robot extends TimedRobot {
 
     if (m_autonomousCommand != null) {
       CommandScheduler.getInstance().schedule(
-          new WaitCommand(AutonomousConstants.waitBeforeExecRoutine).andThen(m_autonomousCommand)
+          m_autonomousCommand
       );
     //  for (var i = 0; i < m_ledBuffer.getLength(); i++) {
     //   // Sets the specified LED to the RGB values for gold
