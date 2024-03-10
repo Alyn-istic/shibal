@@ -6,11 +6,11 @@ import edu.wpi.first.wpilibj.I2C.Port;
 
 public class Constants {
     public class AutonomousConstants {
-        public static final double waitBeforeExecRoutine = 0; // The amount of seconds to wait before executing routines
+        public static final double waitBeforeExecRoutine = 2; // The amount of seconds to wait before executing routines
         public class MoveToAmpTimedConstants {
-            public static final double TIME_POS_1 = 1;
-            public static final double TIME_POS_2 = 1;
-            public static final double TIME_POS_3 = 1;           
+            public static final double TIME_POS_1 = 2.5;
+            public static final double TIME_POS_2 = 2;
+            public static final double TIME_POS_3 = 2;           
 
             // 1 = first position, 2 = second position, 3 third position
             //all constant values are wrong, need testing
@@ -21,11 +21,11 @@ public class Constants {
             public static final double SPEED_LEAVE_AMP = -0.55; // Motor speed
 
             public static final double TIME_MOVE_TO_AMP_FWD = 0.6;// In seconds. Move forward before turn and move sideways. 
-            public static final double TIME_MOVE_TO_AMP1 = 0.2; // In seconds. Was 4.5
+            public static final double TIME_MOVE_TO_AMP1 = 0.5; // In seconds. Was 4.5
             public static final double TIME_MOVE_TO_AMP2 = 0.8; // In seconds
             public static final double TIME_MOVE_TO_AMP3= 1.4; // In seconds
 
-            public static final double TIME_SHOOT_IN_AMP = 1.5; // In seconds
+            public static final double TIME_SHOOT_IN_AMP = 2; // In seconds
             public static final double SPEED_SHOOT_IN_AMP = 1; // Motor speed
 
             public static final double SPEED_MOVE_TO_AMP_FWD = -0.55; // Motor speed//was 0.4
@@ -34,7 +34,7 @@ public class Constants {
             public static final double SPEED_MOVE_TO_AMP3 = -0.4; // Motor speed
         }
         public class MoveOutOfZoneConstants {
-            public static final double TIME_MOVE_OUT_OF_ZONE1 = 2; // In seconds. Was 1.4s
+            public static final double TIME_MOVE_OUT_OF_ZONE1 = 3; // In seconds. Was 1.4s
             public static final double SPEED_MOVE_OUT_OF_ZONE1 = -0.5; // Motor speed. Was -0.4
         }
     }
@@ -104,8 +104,8 @@ public class Constants {
         public static final double tolerance = 1; // 
         public static final double setpointOffset = 0; // 
 
-        public static final double shootAngle = 100; // The angle of the arm in shooting position. Was 100.
-        public static final double sourceIntakeAngle = 95; //Intake from source angle
+        public static final double shootAngle = 111; // The angle of the arm in shooting position. Was 100.
+        public static final double sourceIntakeAngle = 95; //Intake from source angle. Not using
         public static final double intakeInsideAngle = 50; // The angle of the arm inside the perimeter preparing to intake.
         public static final double shootInsideAngle = 90; // The angle of the arm inside the perimeter preparing to move to shoot position.
         public static final double intakeAngle = 0; // The angle of the arm in intaking position
@@ -122,8 +122,8 @@ public class Constants {
         public static final double speed = 0.85; // The intake/shooter's motor speed.
     }
     public class ClimberConstants{ //Need to change values based on testing
-        public static final int climberID = 8; // 
-        public static final double climberSpeed = 0.2; // 
+        public static final int climberID = 10; // 
+        public static final double climberSpeed = 1; // 
     }
 
     public class VisionConstants {

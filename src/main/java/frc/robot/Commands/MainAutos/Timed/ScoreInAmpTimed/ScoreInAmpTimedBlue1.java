@@ -51,8 +51,9 @@ public class ScoreInAmpTimedBlue1 extends SequentialCommandGroup {
       new ArmShoot(armSub, () -> armSub.getController().atSetpoint()), // arm to shooting position
       new DownShootAmpTimed(intakeShooterSub), //shoot note
 
+      
       new TankDriveCmd(driveSub, () -> -0.3, () -> -0.3).withTimeout(1), //rotate
-      new WaitCommand(1),
+      new WaitCommand(0.5),
 
       new TurnToAmpTimed(driveSub, 1),
       new ArmIntake(armSub, () -> armSub.getController().atSetpoint()),
@@ -67,6 +68,7 @@ public class ScoreInAmpTimedBlue1 extends SequentialCommandGroup {
       ),
       new LeaveAmpTimed(driveSub).alongWith(new ArmIntakePerimeter(armSub, () -> armSub.getController().atSetpoint())
 )
+
 
       // new ArmShoot(armSub, () -> armSub.getController().atSetpoint()),
       // new TankDriveCmd(driveSub, () -> 0.3, () -> 0.3).withTimeout(1.5),

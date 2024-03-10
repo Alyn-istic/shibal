@@ -5,6 +5,13 @@
         "visible": true
       }
     },
+    "Other Devices": {
+      "navX-Sensor[0]": {
+        "header": {
+          "open": true
+        }
+      }
+    },
     "RoboRIO": {
       "6V Rail": {
         "open": true

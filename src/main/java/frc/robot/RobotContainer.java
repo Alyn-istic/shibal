@@ -22,6 +22,7 @@ import frc.robot.Commands.Arm.ArmCommandSelector;
 import frc.robot.Commands.Arm.ArmSetpointOffset;
 import frc.robot.Commands.Arm.Autos.ArmIntake;
 import frc.robot.Commands.Arm.Autos.ArmIntakePerimeter;
+import frc.robot.Commands.Arm.Autos.ArmIntakeSource;
 // import frc.robot.Commands.Arm.Autos.ArmIntakeSource;
 import frc.robot.Commands.Arm.Autos.ArmShoot;
 import frc.robot.Commands.Arm.Autos.ArmShootPerimeter;
@@ -37,13 +38,17 @@ import frc.robot.Commands.MainAutos.Timed.ExitZoneTimed;
 import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedBlue1;
 import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedBlue2;
 import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedBlue3;
+import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedOnly;
 import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedRed1;
 import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedRed2;
 import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedRed3;
+import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedWallBlue;
+import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedWallRed;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Subsystems.ArmSubsystem;
+import frc.robot.Subsystems.CameraSubsystem;
 import frc.robot.Subsystems.DrivetrainSubsystem;
 import frc.robot.Subsystems.IntakeShooterSubsystem;
 import frc.robot.Subsystems.ClimberSubsystem;
@@ -67,11 +72,13 @@ public class RobotContainer {
   private final ArmSubsystem armSub = new ArmSubsystem();
   private final IntakeShooterSubsystem intakeShooterSub = new IntakeShooterSubsystem();
   private final ClimberSubsystem climbSub = new ClimberSubsystem();
+  //private final CameraSubsystem camSub = new CameraSubsystem();
 
   // Stuff for ArmPID
   private final Command[] armPIDCommands = {
     new ArmIntake(armSub, ()-> false),
     new ArmIntakePerimeter(armSub, () -> false),
+    //new ArmIntakeSource(armSub, () -> false),
     new ArmShootPerimeter(armSub, () -> false),
     new ArmShoot(armSub, () -> false)
   };
@@ -98,9 +105,8 @@ public class RobotContainer {
         () -> -MathUtil.applyDeadband(operator.getRawAxis(DriverConstants.rightJoystickAxis) * ArmConstants.armManualSpeed, DriverConstants.joystickDeadband)
       )
     );
-
     // led.setDefaultCommand(
-    //   Commands.run(() -> led.setPresetGreen(), led)
+    //   Commands.run(() -> led.setPresetGreen(), led)se
     // );
 
     // SmartDashboard.putNumber("P", DrivetrainConstants.turnP);
@@ -114,17 +120,22 @@ public class RobotContainer {
     autoChooser.setDefaultOption("NONE", new AutoLog("No auto selected."));
     autoChooser.addOption("MOVE OUT OF ZONE", new ExitZoneTimed(driveSub, armSub));
     //autoChooser.addOption("SCORE IN AMP (SENSORS)", new ScoreInAmpSensor1(driveSub, armSub, intakeShooterSub, led));
+    autoChooser.addOption("SCORE IN AMP ONLY (TIMED)", new ScoreInAmpTimedOnly(driveSub, intakeShooterSub, led, armSub));
     autoChooser.addOption("SCORE IN AMP 1 BLUE (TIMED)", new ScoreInAmpTimedBlue1(driveSub, intakeShooterSub, led, armSub));
     autoChooser.addOption("SCORE IN AMP 2 BLUE (TIMED)", new ScoreInAmpTimedBlue2(driveSub, intakeShooterSub, led, armSub));
     autoChooser.addOption("SCORE IN AMP 3 BLUE (TIMED)", new ScoreInAmpTimedBlue3(driveSub, intakeShooterSub, led, armSub));
     autoChooser.addOption("SCORE IN AMP 1 RED (TIMED)", new ScoreInAmpTimedRed1(driveSub, intakeShooterSub, led, armSub));
     autoChooser.addOption("SCORE IN AMP 2 RED (TIMED)", new ScoreInAmpTimedRed2(driveSub, intakeShooterSub, led, armSub));
     autoChooser.addOption("SCORE IN AMP 3 RED (TIMED)", new ScoreInAmpTimedRed3(driveSub, intakeShooterSub, led, armSub));
+    autoChooser.addOption("SCORE IN AMP 3 Blue (TIMED)-new", new ScoreInAmpTimedWallBlue(driveSub, intakeShooterSub, led, armSub));
+    autoChooser.addOption("SCORE IN AMP 3 RED (TIMED)", new ScoreInAmpTimedWallRed(driveSub, intakeShooterSub, led, armSub));
+
     // autoChooser.addOption("PATH TEST 0", driveSub.testPath0());
     // autoChooser.addOption("PATH TEST 1", driveSub.testPath1());
     // autoChooser.addOption("PATH TEST 2", driveSub.testPath2());
     // autoChooser.addOption("AUTO 1", driveSub.testAuto1());
     SmartDashboard.putData("Autonomous Routines", autoChooser);
+    //SmartDashboard.put("Camera stream", camSub.getOutputStream());
     configureBindings();
   }
 
@@ -200,8 +211,10 @@ public class RobotContainer {
 
     commandOperator.a().and(commandOperator.b()).whileTrue(Commands.run(() -> driveSub.operatorReset(), driveSub));
 
-    commandOperator.povUp().whileTrue(new ClimberCmd(climbSub, () -> ClimberConstants.climberSpeed));
-    commandOperator.povDown().whileTrue(new ClimberCmd(climbSub, () -> -ClimberConstants.climberSpeed));
+    commandOperator.povUp().or(commandOperator.povUpLeft()).or(commandOperator.povUpRight()).whileTrue(
+      new ClimberCmd(climbSub, () -> ClimberConstants.climberSpeed));
+    commandOperator.povDown().or(commandOperator.povDownLeft()).or(commandOperator.povDownRight()).whileTrue(
+      new ClimberCmd(climbSub, () -> -ClimberConstants.climberSpeed));
 
 
     ////////////////////////////////////////// Arm Limits //////////////////////////////////////////

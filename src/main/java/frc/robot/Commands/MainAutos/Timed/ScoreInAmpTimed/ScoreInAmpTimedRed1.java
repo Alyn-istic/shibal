@@ -49,7 +49,8 @@ public class ScoreInAmpTimedRed1 extends SequentialCommandGroup {
       new TankDriveCmd(driveSub, () -> 0.3, () -> 0.3).withTimeout(MoveToAmpTimedConstants.TIME_POS_1),// move forward
 
       new ArmShoot(armSub, () -> armSub.getController().atSetpoint()), // arm to shooting position
-      new DownShootAmpTimed(intakeShooterSub), //shoot note
+      new DownShootAmpTimed(intakeShooterSub),//shoot note
+
 
       new TankDriveCmd(driveSub, () -> -0.3, () -> -0.3).withTimeout(1), //rotate
 
@@ -58,7 +59,7 @@ public class ScoreInAmpTimedRed1 extends SequentialCommandGroup {
       new ParallelCommandGroup(
         new LeaveAmpTimed(driveSub),
         new IntakeCmd(intakeShooterSub, () -> 1).withTimeout(1.5)
-      ),
+      ),   
       new TankDriveAutoCmd(driveSub,
         () -> -MoveToAmpTimedConstants.SPEED_TURN_TO_AMP,
         () -> MoveToAmpTimedConstants.SPEED_TURN_TO_AMP,
@@ -69,7 +70,7 @@ public class ScoreInAmpTimedRed1 extends SequentialCommandGroup {
 
       // new ArmShoot(armSub, () -> armSub.getController().atSetpoint()),
       // new TankDriveCmd(driveSub, () -> 0.3, () -> 0.3).withTimeout(1.5),
-      // new WaitCommand(1),
+      // new WaitCommand(1o6 6),
       // new TankDriveAutoCmd(driveSub,
       //   () -> -MoveToAmpTimedConstants.SPEED_TURN_TO_AMP,
       //   () -> MoveToAmpTimedConstants.SPEED_TURN_TO_AMP,
