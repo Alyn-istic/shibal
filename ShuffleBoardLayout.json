@@ -350,22 +350,6 @@
               ]
             }
           },
-          "8,3": {
-            "size": [
-              8,
-              4
-            ],
-            "content": {
-              "_type": "Field",
-              "_source0": "network_table:///SmartDashboard/Field ",
-              "_title": "Field ",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Game/Game": "k2024Crescendo",
-              "Visuals/Robot Icon Size": 50.0,
-              "Visuals/Show Outside Circles": false
-            }
-          },
           "15,0": {
             "size": [
               1,
@@ -377,6 +361,22 @@
               "_title": "Climber motor speed",
               "_glyph": 148,
               "_showGlyph": false
+            }
+          },
+          "8,3": {
+            "size": [
+              7,
+              4
+            ],
+            "content": {
+              "_type": "Field",
+              "_source0": "network_table:///SmartDashboard/Field ",
+              "_title": "Field ",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Game/Game": "k2024Crescendo",
+              "Visuals/Robot Icon Size": 50.0,
+              "Visuals/Show Outside Circles": false
             }
           }
         }
@@ -418,9 +418,9 @@
     }
   ],
   "windowGeometry": {
-    "x": 876.7999877929688,
-    "y": 0.0,
-    "width": 665.5999755859375,
-    "height": 918.4000244140625
+    "x": -7.199999809265137,
+    "y": -7.199999809265137,
+    "width": 1550.4000244140625,
+    "height": 926.4000244140625
   }
 }

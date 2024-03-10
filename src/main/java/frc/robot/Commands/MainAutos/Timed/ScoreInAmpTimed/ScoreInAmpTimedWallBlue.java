@@ -5,12 +5,14 @@
 package frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.AutonomousConstants.MoveToAmpTimedConstants;
 import frc.robot.Commands.Arm.Autos.ArmIntakePerimeter;
 import frc.robot.Commands.Arm.Autos.ArmShoot;
 import frc.robot.Commands.Arm.Autos.ArmZero;
 import frc.robot.Commands.Drivetrain.TankDriveCmd;
 import frc.robot.Commands.Drivetrain.Autos.Timed.TurnToAmpTimed;
+import frc.robot.Commands.Drivetrain.Autos.Timed.MoveToAmpTimed.MoveToAmpTimedForward;
 import frc.robot.Commands.IntakeShooter.Autos.DownShootAmpTimed;
 import frc.robot.Subsystems.ArmSubsystem;
 import frc.robot.Subsystems.DrivetrainSubsystem;
@@ -38,14 +40,15 @@ public class ScoreInAmpTimedWallBlue extends SequentialCommandGroup {
       // new TurnToAmpTimed(driveSub, -1),
       // new WaitCommand(1),
 
-      new TankDriveCmd(driveSub, () -> 0.4, () -> 0.4).withTimeout(MoveToAmpTimedConstants.TIME_POS_1),// move forward
+      new TankDriveCmd(driveSub, () -> 0.55, () -> 0.55).withTimeout(MoveToAmpTimedConstants.TIME_POS_1),// move forward
 
       new ArmShoot(armSub, () -> armSub.getController().atSetpoint()), // arm to shooting position
       new DownShootAmpTimed(intakeShooterSub), //shoot note
-      new TankDriveCmd(driveSub, () -> -0.3, () -> -0.3).withTimeout(0.2),//move back
+      new TankDriveCmd(driveSub, () -> -0.45, () -> -0.45).withTimeout(0.2),//move back
       new TurnToAmpTimed(driveSub, -1),
       new ArmIntakePerimeter(armSub, () -> armSub.getController().atSetpoint()),
-      new TankDriveCmd(driveSub,() -> 0.3, () -> 0.3).withTimeout(3)
+
+      new TankDriveCmd(driveSub,() -> 0.45, () -> 0.45).withTimeout(3)
     );
   }
 }
