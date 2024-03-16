@@ -4,6 +4,7 @@
 
 package frc.robot.CommandGroups.MainAutos.Sensor;
 
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.CommandGroups.ArmAutos.ArmIntake;
 import frc.robot.CommandGroups.ArmAutos.ArmShoot;
@@ -33,16 +34,18 @@ public class ScoreInAmpSensor1 extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new ArmZero(armSub),
-      // new MoveOutOfZoneSensor(driveSub),
-      new AutoLog("Driving backwards towards amp..."),
-      new TankDrivePIDCmd(driveSub, // Moves towards the amp
-        () -> driveSub.getLeftDistance() - 0.58,
-        () -> driveSub.getRightDistance() - 0.58,
-        () -> 0.1,
-        () -> false,
-        () -> driveSub.isDriveControllersAtSetpoint()
+      new ParallelCommandGroup(
+        new ArmZero(armSub),
+        new AutoLog("Driving backwards towards amp..."),
+        new TankDrivePIDCmd(driveSub, // Moves towards the amp
+          () -> driveSub.getLeftDistance() - 0.58,
+          () -> driveSub.getRightDistance() - 0.58,
+          () -> 0.1,
+          () -> false,
+          () -> driveSub.isDriveControllersAtSetpoint()
+        )
       ),
+      
       new AutoLog("Moving arm into shooting position..."),
       new ArmShoot(armSub, () -> armSub.getController().atSetpoint()),
       new AutoLog("Down-shooting into amp..."),

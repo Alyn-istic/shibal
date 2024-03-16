@@ -23,11 +23,11 @@ public class ArmZero extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new AutoLog("Slowly lowering the arm back down to into intake position (zeroing the encoders)"),
+      // new AutoLog("Slowly lowering the arm back down to into intake position (zeroing the encoders)"),
       new ArmManualCmd(armSub,
         () -> 0.2
       ).until(
-        () -> armSub.dropLimitSwitch()
+        () -> armSub.dropLimitSwitchHit()
       )
     );
   }

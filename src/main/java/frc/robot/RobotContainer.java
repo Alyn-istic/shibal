@@ -24,6 +24,7 @@ import frc.robot.CommandGroups.ArmAutos.ArmShootPerimeter;
 import frc.robot.CommandGroups.DrivetrainAutos.Sensor.MoveOutOfZoneSensor;
 import frc.robot.CommandGroups.DrivetrainAutos.Timed.MoveOutOfZoneTimed.MoveOutOfZoneTimed1;
 import frc.robot.CommandGroups.MainAutos.AutoLog;
+import frc.robot.CommandGroups.MainAutos.Sensor.ExitZoneSensor;
 import frc.robot.CommandGroups.MainAutos.Sensor.ScoreInAmpSensor1;
 import frc.robot.CommandGroups.MainAutos.Timed.ExitZoneTimed;
 import frc.robot.CommandGroups.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedBlue1;
@@ -59,11 +60,12 @@ public class RobotContainer {
   // Initiating a ordinary Xbox Controller. Nothing special.
   private final XboxController driver = new XboxController(DriverConstants.driverPort);
   private final XboxController operator = new XboxController(DriverConstants.operatorPort);
-  private final XboxController tester = new XboxController(DriverConstants.testerPort);
+  //private final XboxController tester = new XboxController(DriverConstants.testerPort);
+  
   // Initiating a command Xbox Controller. This will allow us to map commands onto specific buttons.
   private final CommandXboxController commandDriver = new CommandXboxController(DriverConstants.driverPort);
   private final CommandXboxController commandOperator = new CommandXboxController(DriverConstants.operatorPort);
-  private final CommandXboxController commandTester = new CommandXboxController(DriverConstants.testerPort);
+  //private final CommandXboxController commandTester = new CommandXboxController(DriverConstants.testerPort);
 
   // Initiating all the subsystems. We will need these in order to properly run commands.
   private final DrivetrainSubsystem driveSub = new DrivetrainSubsystem();
@@ -117,7 +119,8 @@ public class RobotContainer {
     // SmartDashboard.putNumber("Arm Setpoint Offset", ArmConstants.setpointOffset);
 
     autoChooser.setDefaultOption("NONE", new AutoLog("No auto selected."));
-    autoChooser.addOption("MOVE OUT OF ZONE", new ExitZoneTimed(driveSub, armSub));
+    autoChooser.addOption("MOVE OUT OF ZONE (TIMED)", new ExitZoneTimed(driveSub, armSub));
+    autoChooser.addOption("MOVE OUT OF ZONE (SENSOR)", new ExitZoneSensor(driveSub, armSub));
     //autoChooser.addOption("SCORE IN AMP (SENSORS)", new ScoreInAmpSensor1(driveSub, armSub, intakeShooterSub, led));
     autoChooser.addOption("SCORE IN AMP ONLY (TIMED)", new ScoreInAmpTimedOnly(driveSub, intakeShooterSub, led, armSub));
     autoChooser.addOption("SCORE IN AMP 1 BLUE (TIMED)", new ScoreInAmpTimedBlue1(driveSub, intakeShooterSub, led, armSub));
@@ -219,7 +222,7 @@ public class RobotContainer {
     ////////////////////////////////////////// Arm Limits //////////////////////////////////////////
 
     // While the drop limit switch is pressed, reset arm position to intake angle, and reset setpoint offset to 0.
-    new Trigger(() -> armSub.dropLimitSwitch()).whileTrue(
+    new Trigger(() -> armSub.dropLimitSwitchHit()).whileTrue(
       new RunCommand(
         () -> armSub.setSensorPosition(armSub.toPosition(ArmConstants.intakeAngle))
       ).alongWith(
@@ -229,7 +232,7 @@ public class RobotContainer {
       )
     );
     // While the raise limit switch is pressed, reset arm position to shoot angle, and reset setpoint offset to 0.
-    new Trigger(() -> armSub.raiseLimitSwitch()).whileTrue(
+    new Trigger(() -> armSub.raiseLimitSwitchHit()).whileTrue(
       new RunCommand(
         () -> armSub.setSensorPosition(armSub.toPosition(ArmConstants.shootAngle))
       ).alongWith(

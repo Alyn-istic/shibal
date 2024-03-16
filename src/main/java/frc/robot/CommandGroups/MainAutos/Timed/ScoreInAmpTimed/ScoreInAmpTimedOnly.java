@@ -30,7 +30,7 @@ public class ScoreInAmpTimedOnly extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new ArmZero(armSub).until(() -> armSub.dropLimitSwitch()),
+      new ArmZero(armSub),
       
       // new MoveToAmpTimedForward(driveSub),
       // new WaitCommand(1),
