@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.I2C.Port;
 
 // Feel free to add more constants to the list.
@@ -49,7 +50,9 @@ public class Constants {
         public static final double wheelRadius = 3; // The radius of the wheels (in inches)
         public static final double gearRatio = 8.46; // Gear ratio
 
-        public static final int countsPerRev = 1024; // The amount of encoder counts in a full rotation
+        public static final int countsPerRev = 42; //1024; // The amount of encoder counts in a full rotation
+
+        public static final double encoderCountsToMeters = Units.inchesToMeters(((2 * Math.PI * wheelRadius)/countsPerRev) / gearRatio);
 
         public static final Port gyroPort = Port.kOnboard; // The port that the gyro is connected to.
 

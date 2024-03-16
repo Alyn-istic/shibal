@@ -13,6 +13,10 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.ReplanningConfig;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -50,10 +54,14 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 public class DrivetrainSubsystem extends SubsystemBase {
 
   // Initializing VictorSPX motors for the drivetrain.
-  private final WPI_TalonSRX frontLeft = new WPI_TalonSRX(DrivetrainConstants.frontLeftID);
-  private final WPI_TalonSRX frontRight = new WPI_TalonSRX(DrivetrainConstants.frontRightID);
-  private final WPI_VictorSPX backLeft = new WPI_VictorSPX(DrivetrainConstants.backLeftID);
-  private final WPI_VictorSPX backRight = new WPI_VictorSPX(DrivetrainConstants.backRightID);
+  private final CANSparkMax frontLeft = new CANSparkMax(DrivetrainConstants.frontLeftID, MotorType.kBrushless);
+  private final CANSparkMax frontRight = new CANSparkMax(DrivetrainConstants.frontRightID, MotorType.kBrushless);
+  private final CANSparkMax backLeft = new CANSparkMax(DrivetrainConstants.backLeftID, MotorType.kBrushless);
+  private final CANSparkMax backRight = new CANSparkMax(DrivetrainConstants.backRightID, MotorType.kBrushless);
+
+  // Getting encoders
+  private final RelativeEncoder leftEncoder;
+  private final RelativeEncoder rightEncoder;
 
   // Creating a Differential Drive using the front motors. This is like grouping all the motors together.
   private final DifferentialDrive drive = new DifferentialDrive(frontLeft, frontRight); //new object, using two parameteres for both sides
@@ -133,34 +141,68 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   /** Creates a new DrivetrainSubsystem. */
   public DrivetrainSubsystem() {
-    frontLeft.configFactoryDefault();
-    backLeft.configFactoryDefault();
-    frontRight.configFactoryDefault();
-    backRight.configFactoryDefault();
+    // frontLeft.configFactoryDefault();
+    // backLeft.configFactoryDefault();
+    // frontRight.configFactoryDefault();
+    // backRight.configFactoryDefault();
 
-    // Inverting the left motors
+    // // Inverting the left motors
+    // frontLeft.setInverted(true);
+    // backLeft.setInverted(true);
+    // frontRight.setInverted(false);
+    // backRight.setInverted(false);
+
+    // //Telling back-motors to follow the front-motors because FIRST decided to remove MotorControllerGroups.
+    // backLeft.follow(frontLeft);
+    // backRight.follow(frontRight);
+
+    // // Setting the neutral mode of the motors to "Brake". This means that they will stop immediately when told to.
+    // //They are now in "Cost", no power will be passed in and the moters will continue going a while due to momentum. 
+    // frontLeft.setNeutralMode(NeutralMode.Coast);//was brake
+    // frontRight.setNeutralMode(NeutralMode.Coast);
+    // backLeft.setNeutralMode(NeutralMode.Coast);
+    // frontRight.setNeutralMode(NeutralMode.Coast);
+
+    // // Resetting probably non-existing encoders just for the sake of it.
+
+    // frontLeft.setSelectedSensorPosition(0);
+    // frontRight.setSelectedSensorPosition(0);
+    // backLeft.setSelectedSensorPosition(0);
+    // backRight.setSelectedSensorPosition(0);
+    frontLeft.restoreFactoryDefaults();
+    backLeft.restoreFactoryDefaults();
+    frontRight.restoreFactoryDefaults();
+    backRight.restoreFactoryDefaults();
+
     frontLeft.setInverted(true);
     backLeft.setInverted(true);
     frontRight.setInverted(false);
     backRight.setInverted(false);
 
-    //Telling back-motors to follow the front-motors because FIRST decided to remove MotorControllerGroups.
+    frontLeft.setIdleMode(IdleMode.kCoast);
+    backLeft.setIdleMode(IdleMode.kCoast);
+    frontRight.setIdleMode(IdleMode.kCoast);
+    backRight.setIdleMode(IdleMode.kCoast);
+
     backLeft.follow(frontLeft);
     backRight.follow(frontRight);
 
-    // Setting the neutral mode of the motors to "Brake". This means that they will stop immediately when told to.
-    //They are now in "Cost", no power will be passed in and the moters will continue going a while due to momentum. 
-    frontLeft.setNeutralMode(NeutralMode.Coast);//was brake
-    frontRight.setNeutralMode(NeutralMode.Coast);
-    backLeft.setNeutralMode(NeutralMode.Coast);
-    frontRight.setNeutralMode(NeutralMode.Coast);
+    leftEncoder = frontLeft.getEncoder();
+    leftEncoder.setPosition(0);
+    leftEncoder.setPositionConversionFactor(DrivetrainConstants.encoderCountsToMeters);
+    leftEncoder.setVelocityConversionFactor(DrivetrainConstants.encoderCountsToMeters);
 
-    // Resetting probably non-existing encoders just for the sake of it.
+    rightEncoder = frontRight.getEncoder();
+    rightEncoder.setPosition(0);
+    rightEncoder.setPositionConversionFactor(DrivetrainConstants.encoderCountsToMeters);
+    rightEncoder.setVelocityConversionFactor(DrivetrainConstants.encoderCountsToMeters);
 
-    frontLeft.setSelectedSensorPosition(0);
-    frontRight.setSelectedSensorPosition(0);
-    backLeft.setSelectedSensorPosition(0);
-    backRight.setSelectedSensorPosition(0);
+
+
+    frontLeft.burnFlash();
+    backLeft.burnFlash();
+    frontRight.burnFlash();
+    backRight.burnFlash();
    
     // Resetting gyro
     gyro.reset();
@@ -197,10 +239,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Bot Y", getBotPose().getY());
     SmartDashboard.putNumber("Bot Rotation", getBotPose().getRotation().getDegrees());
 
-    SmartDashboard.putNumber("Left Pos", frontLeft.getSelectedSensorPosition());
-    SmartDashboard.putNumber("Right Pos", frontRight.getSelectedSensorPosition());
-    SmartDashboard.putNumber("Left Distance", getLeftDistance());
-    SmartDashboard.putNumber("Right Distance", getRightDistance());
+    SmartDashboard.putNumber("Left Pos", leftEncoder.getPosition());
+    SmartDashboard.putNumber("Right Pos", rightEncoder.getPosition());
+    // SmartDashboard.putNumber("Left Distance", getLeftDistance());
+    // SmartDashboard.putNumber("Right Distance", getRightDistance());
     SmartDashboard.putNumber("Left Velocity", getLeftVelocity());
     SmartDashboard.putNumber("Right Velocity", getRightVelocity());
 
@@ -216,14 +258,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   @Override
   public void simulationPeriodic() {
-    int left = (int)(MathUtil.clamp(frontLeft.get(), -1, 1) * 1101.0);
-    int right = (-(int)(MathUtil.clamp(frontRight.get(), -1, 1) * 1101.0));
+    // int left = (int)(MathUtil.clamp(frontLeft.get(), -1, 1) * 1101.0);
+    // int right = (-(int)(MathUtil.clamp(frontRight.get(), -1, 1) * 1101.0));
 
-    frontLeft.getSimCollection().addQuadraturePosition(left);
-    frontRight.getSimCollection().addQuadraturePosition(right);
+    // frontLeft.getSimCollection().addQuadraturePosition(left);
+    // frontRight.getSimCollection().addQuadraturePosition(right);
 
-    frontLeft.getSimCollection().setQuadratureVelocity(left);
-    frontRight.getSimCollection().setQuadratureVelocity(right);
+    // frontLeft.getSimCollection().setQuadratureVelocity(left);
+    // frontRight.getSimCollection().setQuadratureVelocity(right);
 
     gyro.setAngleAdjustment(Units.radiansToDegrees(kinematics.toTwist2d(-getLeftDistance(), -getRightDistance()).dtheta) * 0.75);
 
@@ -277,21 +319,17 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   // Math: pos * ((2PI*radius)/CPR)/GearRatio -> convert from inches to meters
   public double getLeftDistance(){
-    return Units.inchesToMeters(
-      frontLeft.getSelectedSensorPosition() * ((2 * Math.PI * DrivetrainConstants.wheelRadius)/DrivetrainConstants.countsPerRev) / DrivetrainConstants.gearRatio
-    );
+    return leftEncoder.getPosition();
   }
   public double getRightDistance(){
-    return Units.inchesToMeters(
-      frontRight.getSelectedSensorPosition() * ((2 * Math.PI * DrivetrainConstants.wheelRadius)/DrivetrainConstants.countsPerRev) / DrivetrainConstants.gearRatio
-    );
+    return rightEncoder.getPosition();
   }
   public double getLeftVelocity(){
-    return frontLeft.getSelectedSensorVelocity() * ((2 * Math.PI * DrivetrainConstants.wheelRadius)/DrivetrainConstants.countsPerRev) / DrivetrainConstants.gearRatio;
+    return leftEncoder.getVelocity();
   }
 
   public double getRightVelocity(){
-    return frontRight.getSelectedSensorVelocity() * ((2 * Math.PI * DrivetrainConstants.wheelRadius)/DrivetrainConstants.countsPerRev) / DrivetrainConstants.gearRatio;
+    return rightEncoder.getVelocity();
 
   }
   public PIDController getLeftDriveController() {
@@ -341,10 +379,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     // Resetting probably non-existing encoders just for the sake of it.
 
-    frontLeft.setSelectedSensorPosition(0);
-    frontRight.setSelectedSensorPosition(0);
-    backLeft.setSelectedSensorPosition(0);
-    backRight.setSelectedSensorPosition(0);
+    leftEncoder.setPosition(0);
+    rightEncoder.setPosition(0);
    
     // Resetting gyro
     gyro.reset();
