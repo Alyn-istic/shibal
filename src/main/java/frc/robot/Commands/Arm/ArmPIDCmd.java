@@ -67,14 +67,14 @@ public class ArmPIDCmd extends Command {
   @Override
   public void execute() {
     double speed = -controller.calculate(armSub.getAngle() % 360);
-    armSub.setMotor(speed);
+    // armSub.setMotor(speed);
     //System.out.println("Arm velocity recieved (experimenting, currently does nothing):" + armSub.getSensorVelocity());
     if ((speed < 0)) { // Raising
-      // if (!armSub.raiseLimitSwitchHit()) {
-      //   armSub.setMotor(speed);
-      // } else {
-      //   armSub.setMotor(0);
-      // }
+      if (!armSub.raiseLimitSwitchHit()) {
+        armSub.setMotor(speed);
+      } else {
+        armSub.setMotor(0);
+      }
       controller.setP(raiseP.getAsDouble());
       controller.setI(raiseI.getAsDouble());
       controller.setD(raiseD.getAsDouble());
@@ -82,11 +82,11 @@ public class ArmPIDCmd extends Command {
       SmartDashboard.putNumber("Arm I", raiseI.getAsDouble());
       SmartDashboard.putNumber("Arm D", raiseD.getAsDouble());
     } else if (speed > 0) { // Dropping
-      // if (!armSub.dropLimitSwitchHit()) {
-      //   armSub.setMotor(speed);
-      // } else {
-      //   armSub.setMotor(0);
-      // }
+      if (!armSub.dropLimitSwitchHit()) {
+        armSub.setMotor(speed);
+      } else {
+        armSub.setMotor(0);
+      }
       controller.setP(dropP.getAsDouble());
       controller.setI(dropI.getAsDouble());
       controller.setD(dropD.getAsDouble());
