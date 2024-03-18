@@ -153,7 +153,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     frontLeft.setNeutralMode(NeutralMode.Coast);//was brake
     frontRight.setNeutralMode(NeutralMode.Coast);
     backLeft.setNeutralMode(NeutralMode.Coast);
-    frontRight.setNeutralMode(NeutralMode.Coast);
+    backRight.setNeutralMode(NeutralMode.Coast);
 
     // Resetting probably non-existing encoders just for the sake of it.
 
