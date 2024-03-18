@@ -5,8 +5,6 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import edu.wpi.first.cscore.UsbCamera;
-import edu.wpi.first.cameraserver.CameraServer;
 
 public class VisionSubsystem extends SubsystemBase {
     private final NetworkTableInstance inst;
@@ -21,9 +19,6 @@ public class VisionSubsystem extends SubsystemBase {
         inst.setServerTeam(9127, 0); // Set the team number
 
         table = inst.getTable("vision"); // Updated table name
-
-        UsbCamera camera = CameraServer.startAutomaticCapture(0);
-
         distanceEntry = table.getEntry("distance");
         angleEntry = table.getEntry("angle");
 

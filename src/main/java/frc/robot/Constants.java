@@ -7,16 +7,18 @@ import edu.wpi.first.wpilibj.I2C.Port;
 
 public class Constants {
     public class AutonomousConstants {
-        public static final double waitBeforeExecRoutine = 2; // The amount of seconds to wait before executing routines
+        public static final double waitBeforeExecRoutine = 0; // The amount of seconds to wait before executing routines
         public class MoveToAmpTimedConstants {
             public static final double TIME_POS_1 = 2.5;
             public static final double TIME_POS_2 = 2;
             public static final double TIME_POS_3 = 2;           
 
+            public static final double SPEED_POS_1 = 0.4; //speed to the amp from pos1
+
             // 1 = first position, 2 = second position, 3 third position
             //all constant values are wrong, need testing
             public static final double TIME_TURN_TO_AMP = 1; // In seconds
-            public static final double SPEED_TURN_TO_AMP = 0.6; // Motor speed
+            public static final double SPEED_TURN_TO_AMP = 0.65; // Motor speed. Was 0.6
 
             public static final double TIME_LEAVE_AMP = 2; // In seconds
             public static final double SPEED_LEAVE_AMP = -0.55; // Motor speed

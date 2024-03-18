@@ -48,7 +48,6 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Subsystems.ArmSubsystem;
-import frc.robot.Subsystems.CameraSubsystem;
 import frc.robot.Subsystems.DrivetrainSubsystem;
 import frc.robot.Subsystems.IntakeShooterSubsystem;
 import frc.robot.Subsystems.ClimberSubsystem;
@@ -129,8 +128,8 @@ public class RobotContainer {
     autoChooser.addOption("SCORE IN AMP 1 RED (TIMED)", new ScoreInAmpTimedRed1(driveSub, intakeShooterSub, led, armSub));
     autoChooser.addOption("SCORE IN AMP 2 RED (TIMED)", new ScoreInAmpTimedRed2(driveSub, intakeShooterSub, led, armSub));
     autoChooser.addOption("SCORE IN AMP 3 RED (TIMED)", new ScoreInAmpTimedRed3(driveSub, intakeShooterSub, led, armSub));
-    autoChooser.addOption("SCORE IN AMP 3 Blue (TIMED)-new", new ScoreInAmpTimedWallBlue(driveSub, intakeShooterSub, led, armSub));
-    autoChooser.addOption("SCORE IN AMP 3 RED (TIMED)", new ScoreInAmpTimedWallRed(driveSub, intakeShooterSub, led, armSub));
+    autoChooser.addOption("SCORE IN AMP 3 BLUE (TIMED)-new", new ScoreInAmpTimedWallBlue(driveSub, intakeShooterSub, led, armSub));
+    autoChooser.addOption("SCORE IN AMP 3 RED (TIMED)-new", new ScoreInAmpTimedWallRed(driveSub, intakeShooterSub, led, armSub));
 
     // autoChooser.addOption("PATH TEST 0", driveSub.testPath0());
     // autoChooser.addOption("PATH TEST 1", driveSub.testPath1());
