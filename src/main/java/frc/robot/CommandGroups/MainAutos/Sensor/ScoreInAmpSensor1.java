@@ -34,67 +34,27 @@ public class ScoreInAmpSensor1 extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new ParallelCommandGroup(
-        new ArmZero(armSub),
-        new AutoLog("Driving backwards towards amp..."),
-        new TankDrivePIDCmd(driveSub, // Moves towards the amp
-          () -> driveSub.getLeftDistance() - 0.58,
-          () -> driveSub.getRightDistance() - 0.58,
-          () -> 0.1,
-          () -> false,
-          () -> driveSub.isDriveControllersAtSetpoint()
-        )
-      ),
-      
-      new AutoLog("Moving arm into shooting position..."),
-      new ArmShoot(armSub, () -> armSub.getController().atSetpoint()),
-      new AutoLog("Down-shooting into amp..."),
-      new IntakeCmd(intakeSub, () -> 1).withTimeout(1),
-      new ArmIntake(armSub,  () -> armSub.getController().atSetpoint()),
-      new TankDrivePIDCmd(driveSub, // Moves towards the amp
-        () -> driveSub.getLeftDistance() + 0.58,
-        () -> driveSub.getRightDistance() + 0.58,
-        () -> 0.1,
+    new ParallelCommandGroup(
+      new ArmZero(armSub).andThen(new ArmShoot(armSub, () -> armSub.atSetpoint())),
+      new TankDrivePIDCmd( // Drive to Amp
+        driveSub,
+        () ->driveSub.getLeftDistance() - 0.58,
+        () ->driveSub.getRightDistance() - 0.58,
+        () -> 0.05,
         () -> false,
         () -> driveSub.isDriveControllersAtSetpoint()
       ),
-      new ChassisTurn270(driveSub),
-      new TankDrivePIDCmd(driveSub, // Moves towards the amp
-        () -> driveSub.getLeftDistance() + 1,
-        () -> driveSub.getRightDistance() + 1,
-        () -> 0.1,
+      new IntakeCmd(intakeSub, () ->-1),
+      new TankDrivePIDCmd( // Drive away from Amp
+        driveSub,
+        () ->driveSub.getLeftDistance() + 0.2,
+        () ->driveSub.getRightDistance() + 0.2,
+        () -> 0.05,
         () -> false,
         () -> driveSub.isDriveControllersAtSetpoint()
-      ).raceWith(new IntakeCmd(intakeSub, () -> 1)),
+      ).alongWith(new ArmIntake(armSub, () -> armSub.atSetpoint()))
 
-      new TankDrivePIDCmd(driveSub, // Moves towards the amp
-        () -> driveSub.getLeftDistance() - 1,
-        () -> driveSub.getRightDistance() - 1,
-        () -> 0.1,
-        () -> false,
-        () -> driveSub.isDriveControllersAtSetpoint()
-      ),
-
-      new ChassisTurn0(driveSub),
-      new TankDrivePIDCmd(driveSub, // Moves towards the amp
-        () -> driveSub.getLeftDistance() - 0.58,
-        () -> driveSub.getRightDistance() - 0.58,
-        () -> 0.1,
-        () -> false,
-        () -> driveSub.isDriveControllersAtSetpoint()
-      ).alongWith(new ArmShoot(armSub,  () -> armSub.getController().atSetpoint())),
-      new IntakeCmd(intakeSub, () -> 1).withTimeout(1),
-      
-      new TankDrivePIDCmd(driveSub, // Moves towards the amp
-        () -> driveSub.getLeftDistance() + 0.58,
-        () -> driveSub.getRightDistance() + 0.58,
-        () -> 0.1,
-        () -> false,
-        () -> driveSub.isDriveControllersAtSetpoint()
-      ),
-      new ChassisTurn315(driveSub).alongWith(new ArmIntake(armSub,  () -> armSub.getController().atSetpoint())),
-
-      new AutoLog("Done")
+      )
     );
   }
 }

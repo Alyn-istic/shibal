@@ -171,4 +171,8 @@ public class ArmSubsystem extends SubsystemBase {
   public PIDController getController() {
     return pidcontroller;
   }
+
+  public boolean atSetpoint() {
+    return getController().atSetpoint();
+  }
 } 
