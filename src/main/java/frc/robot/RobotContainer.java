@@ -16,34 +16,34 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.CommandGroups.ArmAutos.ArmIntake;
+import frc.robot.CommandGroups.ArmAutos.ArmIntakePerimeter;
+import frc.robot.CommandGroups.ArmAutos.ArmIntakeSource;
+import frc.robot.CommandGroups.ArmAutos.ArmShoot;
+import frc.robot.CommandGroups.ArmAutos.ArmShootPerimeter;
+import frc.robot.CommandGroups.DrivetrainAutos.Sensor.MoveOutOfZoneSensor;
+import frc.robot.CommandGroups.DrivetrainAutos.Timed.MoveOutOfZoneTimed.MoveOutOfZoneTimed1;
+import frc.robot.CommandGroups.MainAutos.AutoLog;
+import frc.robot.CommandGroups.MainAutos.Sensor.ExitZoneSensor;
+import frc.robot.CommandGroups.MainAutos.Sensor.ScoreInAmpSensor1;
+import frc.robot.CommandGroups.MainAutos.Timed.ExitZoneTimed;
+import frc.robot.CommandGroups.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedBlue1;
+import frc.robot.CommandGroups.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedBlue2;
+import frc.robot.CommandGroups.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedBlue3;
+import frc.robot.CommandGroups.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedOnly;
+import frc.robot.CommandGroups.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedRed1;
+import frc.robot.CommandGroups.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedRed2;
+import frc.robot.CommandGroups.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedRed3;
+import frc.robot.CommandGroups.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedWallBlue;
+import frc.robot.CommandGroups.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedWallRed;
 import frc.robot.Commands.EmergencyStopCmd;
 import frc.robot.Commands.Arm.ArmManualCmd;
 import frc.robot.Commands.Arm.ArmCommandSelector;
 import frc.robot.Commands.Arm.ArmSetpointOffset;
-import frc.robot.Commands.Arm.Autos.ArmIntake;
-import frc.robot.Commands.Arm.Autos.ArmIntakePerimeter;
-import frc.robot.Commands.Arm.Autos.ArmIntakeSource;
-// import frc.robot.Commands.Arm.Autos.ArmIntakeSource;
-import frc.robot.Commands.Arm.Autos.ArmShoot;
-import frc.robot.Commands.Arm.Autos.ArmShootPerimeter;
 import frc.robot.Commands.Climber.ClimberCmd;
 // import frc.robot.Commands.Arm.LimitSwitchSimulation;
 import frc.robot.Commands.Drivetrain.TankDriveCmd;
-import frc.robot.Commands.Drivetrain.Autos.Sensor.MoveOutOfZoneSensor;
-import frc.robot.Commands.Drivetrain.Autos.Timed.MoveOutOfZoneTimed.MoveOutOfZoneTimed1;
 import frc.robot.Commands.IntakeShooter.IntakeCmd;
-import frc.robot.Commands.MainAutos.AutoLog;
-import frc.robot.Commands.MainAutos.Sensor.ScoreInAmpSensor1;
-import frc.robot.Commands.MainAutos.Timed.ExitZoneTimed;
-import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedBlue1;
-import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedBlue2;
-import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedBlue3;
-import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedOnly;
-import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedRed1;
-import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedRed2;
-import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedRed3;
-import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedWallBlue;
-import frc.robot.Commands.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedWallRed;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.DriverConstants;
@@ -59,11 +59,12 @@ public class RobotContainer {
   // Initiating a ordinary Xbox Controller. Nothing special.
   private final XboxController driver = new XboxController(DriverConstants.driverPort);
   private final XboxController operator = new XboxController(DriverConstants.operatorPort);
-  private final XboxController tester = new XboxController(DriverConstants.testerPort);
+  //private final XboxController tester = new XboxController(DriverConstants.testerPort);
+  
   // Initiating a command Xbox Controller. This will allow us to map commands onto specific buttons.
   private final CommandXboxController commandDriver = new CommandXboxController(DriverConstants.driverPort);
   private final CommandXboxController commandOperator = new CommandXboxController(DriverConstants.operatorPort);
-  private final CommandXboxController commandTester = new CommandXboxController(DriverConstants.testerPort);
+  //private final CommandXboxController commandTester = new CommandXboxController(DriverConstants.testerPort);
 
   // Initiating all the subsystems. We will need these in order to properly run commands.
   private final DrivetrainSubsystem driveSub = new DrivetrainSubsystem();
@@ -117,7 +118,8 @@ public class RobotContainer {
     // SmartDashboard.putNumber("Arm Setpoint Offset", ArmConstants.setpointOffset);
 
     autoChooser.setDefaultOption("NONE", new AutoLog("No auto selected."));
-    autoChooser.addOption("MOVE OUT OF ZONE", new ExitZoneTimed(driveSub, armSub));
+    autoChooser.addOption("MOVE OUT OF ZONE (TIMED)", new ExitZoneTimed(driveSub, armSub));
+    autoChooser.addOption("MOVE OUT OF ZONE (SENSOR)", new ExitZoneSensor(driveSub, armSub));
     //autoChooser.addOption("SCORE IN AMP (SENSORS)", new ScoreInAmpSensor1(driveSub, armSub, intakeShooterSub, led));
     autoChooser.addOption("SCORE IN AMP ONLY (TIMED)", new ScoreInAmpTimedOnly(driveSub, intakeShooterSub, led, armSub));
     autoChooser.addOption("SCORE IN AMP 1 BLUE (TIMED)", new ScoreInAmpTimedBlue1(driveSub, intakeShooterSub, led, armSub));
@@ -219,7 +221,7 @@ public class RobotContainer {
     ////////////////////////////////////////// Arm Limits //////////////////////////////////////////
 
     // While the drop limit switch is pressed, reset arm position to intake angle, and reset setpoint offset to 0.
-    new Trigger(() -> armSub.dropLimitSwitch()).whileTrue(
+    new Trigger(() -> armSub.dropLimitSwitchHit()).whileTrue(
       new RunCommand(
         () -> armSub.setSensorPosition(armSub.toPosition(ArmConstants.intakeAngle))
       ).alongWith(
@@ -229,7 +231,7 @@ public class RobotContainer {
       )
     );
     // While the raise limit switch is pressed, reset arm position to shoot angle, and reset setpoint offset to 0.
-    new Trigger(() -> armSub.raiseLimitSwitch()).whileTrue(
+    new Trigger(() -> armSub.raiseLimitSwitchHit()).whileTrue(
       new RunCommand(
         () -> armSub.setSensorPosition(armSub.toPosition(ArmConstants.shootAngle))
       ).alongWith(

@@ -33,8 +33,10 @@ public class ArmSubsystem extends SubsystemBase {
   private final WPI_TalonSRX rightMotor = new WPI_TalonSRX(ArmConstants.rightID);
 
   // Initializing the limit switches
-  private final DigitalInput dropSwitch = new DigitalInput(ArmConstants.dropLimitSwitchChannel);
-  private final DigitalInput raiseSwitch = new DigitalInput(ArmConstants.raiseLimitSwitchChannel);
+  private final DigitalInput dropSwitch1 = new DigitalInput(ArmConstants.dropLimitSwitchChannel1);
+  private final DigitalInput dropSwitch2 = new DigitalInput(ArmConstants.dropLimitSwitchChannel2);
+  private final DigitalInput raiseSwitch1 = new DigitalInput(ArmConstants.raiseLimitSwitchChannel1);
+  private final DigitalInput raiseSwitch2 = new DigitalInput(ArmConstants.raiseLimitSwitchChannel2);
 
   // Controllers
   private final PIDController pidcontroller = new PIDController(ArmConstants.raiseP, ArmConstants.raiseI, ArmConstants.raiseD);
@@ -95,28 +97,26 @@ public class ArmSubsystem extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("Arm Motor Speed", leftMotor.get());
 
-    SmartDashboard.putBoolean("Arm raise limit", raiseLimitSwitch());
-    SmartDashboard.putBoolean("Arm drop limit", dropLimitSwitch());
+    SmartDashboard.putBoolean("Arm raise limit", raiseLimitSwitchHit());
+    SmartDashboard.putBoolean("Arm drop limit", dropLimitSwitchHit());
     //System.out.println(dropLimitSwitch());
 
     SmartDashboard.putNumber("Arm Angle", getAngle());
     SmartDashboard.putNumber("Arm Position", getSensorPosition());
 
-    if (dropLimitSwitch()) { // The following has been ported to RobotContainer
+    if (dropLimitSwitchHit()) { // The following has been ported to RobotContainer
       leftMotor.setSelectedSensorPosition(toPosition(ArmConstants.intakeAngle));
       SmartDashboard.putNumber("Arm Setpoint Offset", 0);
     }
-    if (raiseLimitSwitch()) {
+    if (raiseLimitSwitchHit()) {
       leftMotor.setSelectedSensorPosition(toPosition(ArmConstants.shootAngle));
       SmartDashboard.putNumber("Arm Setpoint Offset", 0);
     }
   }
   @Override
   public void simulationPeriodic() {
-    /* The thing below is what we are using to "simulate" the encoder... Not reliable, only use to test commands. DO NOT use to tune PID values.
-     * There's probably a better way of doing this, but I'm too lazy. - Wilson
-    */
-    leftMotor.getSimCollection().addQuadraturePosition((int)(leftMotor.get() * 200.0)); // Random multiplier... THe point is that the simulated encoder works, not for it to be accurate.
+    // The thing below is what we are using to "simulate" the encoder... Not reliable, only use to test commands. DO NOT expect accurate values.
+    leftMotor.getSimCollection().addQuadraturePosition((int)(leftMotor.get() * 200.0)); // Random multiplier... The point is that the simulated encoder works, not for it to be accurate.
   }
 
   public void setMotor(double speed) {
@@ -160,12 +160,12 @@ public class ArmSubsystem extends SubsystemBase {
     rightMotor.stopMotor();
   }
 
-  public boolean raiseLimitSwitch() { // True when clicked, false when not
-    return !raiseSwitch.get();
+  public boolean raiseLimitSwitchHit() { // True when one or both are clicked, false when not
+    return (!raiseSwitch1.get() || !raiseSwitch2.get());
   }
 
-  public boolean dropLimitSwitch() { // True when clicked, false when not
-    return !dropSwitch.get();
+  public boolean dropLimitSwitchHit() { // True when one or both are clicked, false when not
+    return (!dropSwitch1.get() || !dropSwitch2.get());
   }
 
   public PIDController getController() {
