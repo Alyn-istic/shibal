@@ -4,17 +4,17 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.AddressableLED;
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
+// import edu.wpi.first.wpilibj.AddressableLED;
+// import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+// import edu.wpi.first.wpilibj.DriverStation;
+// import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Constants.AutonomousConstants;
-import frc.robot.Constants.LEDconstants;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+// import edu.wpi.first.wpilibj2.command.WaitCommand;
+// import frc.robot.Constants.AutonomousConstants;
+// import frc.robot.Constants.LEDconstants;
+// import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -67,9 +67,7 @@ public class Robot extends TimedRobot {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     if (m_autonomousCommand != null) {
-      CommandScheduler.getInstance().schedule(
-          m_autonomousCommand
-      );
+      CommandScheduler.getInstance().schedule(m_autonomousCommand);
     //  for (var i = 0; i < m_ledBuffer.getLength(); i++) {
     //   // Sets the specified LED to the RGB values for gold
     //   m_ledBuffer.setRGB(i, 255, 215, 0);

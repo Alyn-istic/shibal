@@ -17,7 +17,6 @@ public class LEDSubsystem extends SubsystemBase {
   
   public void setPresetGold(){
     LEDController.set(0.33);
-
   }
 
   public void setPresetGreen(){

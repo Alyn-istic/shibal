@@ -27,12 +27,6 @@ public class ArmIntakePerimeter extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new ArmPIDCmd(armSub,
-        () -> ArmConstants.raiseP,
-        () -> ArmConstants.raiseI,
-        () -> ArmConstants.raiseD,
-        () -> ArmConstants.dropP,
-        () -> ArmConstants.dropI,
-        () -> ArmConstants.dropD,
         () -> ArmConstants.intakeInsideAngle,
         () -> ArmConstants.tolerance
       ).until(end)
