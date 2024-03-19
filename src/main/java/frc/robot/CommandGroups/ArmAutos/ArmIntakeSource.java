@@ -25,12 +25,6 @@ public class ArmIntakeSource extends SequentialCommandGroup {
   ) {
     addCommands(
       new ArmPIDCmd(armSub,
-        () -> ArmConstants.raiseP,
-        () -> ArmConstants.raiseI,
-        () -> ArmConstants.raiseD,
-        () -> ArmConstants.dropP,
-        () -> ArmConstants.dropI,
-        () -> ArmConstants.dropD,
         () -> ArmConstants.sourceIntakeAngle,
         () -> ArmConstants.tolerance
       ).until(end)

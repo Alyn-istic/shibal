@@ -9,6 +9,7 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Subsystems.ArmSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -16,41 +17,34 @@ import frc.robot.Subsystems.ArmSubsystem;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ArmPIDCmd extends Command {
   private ArmSubsystem armSub;
-  private DoubleSupplier raiseP, raiseI, raiseD, dropP, dropI, dropD, setpoint, tolerance;
+  private DoubleSupplier setpoint, tolerance;
   private PIDController controller;
 
   /**
    * PID command that manages the arm
    * @param armSub Arm Subsystem
-   * @param raiseP P gain used when working against gravity
-   * @param raiseI I gain used when working against gravity
-   * @param raiseD D gain used when working against gravity
-   * @param dropP P gain used when working with gravity
-   * @param dropI I gain used when working with gravity
-   * @param dropD D gain used when working with gravity
    * @param setpoint The setpoint/angle that the arm should be at (degrees)
    * @param tolerance The tolerance for the PID controller
-   * @param clamp The clamp for the output
    */
   public ArmPIDCmd(
     ArmSubsystem armSub,
-    DoubleSupplier raiseP,
-    DoubleSupplier raiseI,
-    DoubleSupplier raiseD,
-    DoubleSupplier dropP,
-    DoubleSupplier dropI,
-    DoubleSupplier dropD,
+    // DoubleSupplier raiseP,
+    // DoubleSupplier raiseI,
+    // DoubleSupplier raiseD,
+    // DoubleSupplier dropP,
+    // DoubleSupplier dropI,
+    // DoubleSupplier dropD,
     DoubleSupplier setpoint,
     DoubleSupplier tolerance
   ) {
     // System.out.println(armSub.getAngle());
     this.armSub = armSub;
-    this.raiseP = raiseP;
-    this.raiseI = raiseI;
-    this.raiseD = raiseD;
-    this.dropP = dropP;
-    this.dropI = dropI;
-    this.dropD = dropD;
+    // this.raiseP = raiseP;
+    // this.raiseI = raiseI;
+    // this.raiseD = raiseD;
+    // this.dropP = dropP;
+    // this.dropI = dropI;
+    // this.dropD = dropD;
     this.setpoint = setpoint;
     this.tolerance = tolerance;
     addRequirements(armSub);
@@ -75,30 +69,29 @@ public class ArmPIDCmd extends Command {
       } else {
         armSub.setMotor(0);
       }
-      controller.setP(raiseP.getAsDouble());
-      controller.setI(raiseI.getAsDouble());
-      controller.setD(raiseD.getAsDouble());
-      SmartDashboard.putNumber("Arm P", raiseP.getAsDouble());
-      SmartDashboard.putNumber("Arm I", raiseI.getAsDouble());
-      SmartDashboard.putNumber("Arm D", raiseD.getAsDouble());
+      controller.setP(ArmConstants.raiseP);
+      controller.setI(ArmConstants.raiseI);
+      controller.setD(ArmConstants.raiseD);
     } else if (speed > 0) { // Dropping
       if (!armSub.dropLimitSwitchHit()) {
         armSub.setMotor(speed);
       } else {
         armSub.setMotor(0);
       }
-      controller.setP(dropP.getAsDouble());
-      controller.setI(dropI.getAsDouble());
-      controller.setD(dropD.getAsDouble());
-      SmartDashboard.putNumber("Arm P", dropP.getAsDouble());
-      SmartDashboard.putNumber("Arm I", dropI.getAsDouble());
-      SmartDashboard.putNumber("Arm D", dropD.getAsDouble());
+      controller.setP(ArmConstants.dropP);
+      controller.setI(ArmConstants.dropI);
+      controller.setD(ArmConstants.dropD);
     }
 
     controller.setSetpoint(setpoint.getAsDouble() + SmartDashboard.getNumber("Arm Setpoint Offset", 0));
     controller.setTolerance(tolerance.getAsDouble());
 
+    armSub.updatePositionIndex(controller.getSetpoint());
+
     // Pushing number to SmartDashboard
+    SmartDashboard.putNumber("Arm P", controller.getP());
+    SmartDashboard.putNumber("Arm I", controller.getI());
+    SmartDashboard.putNumber("Arm D", controller.getD());
     SmartDashboard.putNumber("Arm PID Output", controller.calculate(armSub.getAngle() % 360));
     SmartDashboard.putNumber("Arm PID Setpoint", setpoint.getAsDouble());
   }
