@@ -119,7 +119,7 @@ public class Constants {
         public static final double intakeAngle = 0; // The angle of the arm in intaking position
         public static final double[] angles = {
             intakeAngle,
-            intakeInsideAngle,
+            drivingUnderStage,
             shootInsideAngle,
             shootAngle
         };

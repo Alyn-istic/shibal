@@ -75,13 +75,6 @@ public class RobotContainer {
   //private final CameraSubsystem camSub = new CameraSubsystem();
 
   // Stuff for ArmPID
-  // private final Command[] armPIDCommands = {
-  //   new ArmIntake(armSub, ()-> false),
-  //   new ArmIntakePerimeter(armSub, () -> false),
-  //   //new ArmIntakeSource(armSub, () -> false),
-  //   new ArmShootPerimeter(armSub, () -> false),
-  //   new ArmShoot(armSub, () -> false)
-  // };
   private final NetworkTableEntry armIndexEntry = NetworkTableInstance.getDefault().getEntry("ArmIndex");
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<>();
