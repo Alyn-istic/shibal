@@ -13,15 +13,18 @@ public class Constants {
             public static final double TIME_POS_2 = 2;
             public static final double TIME_POS_3 = 2;           
 
-            public static final double SPEED_POS_1 = 0.4; //speed to the amp from pos1
+            public static final double SPEED_TO_AMP = 0.55; //speed to the amp from pos1
+            public static final double SPEED_LEAVE_AMP = 0.45;//Speed to leave the amp
+            public static final double TIME_TURN_TO_AMP = 0.2;//in second. Time to leave the amp to turn
+            public static final double TIME_HUG_WALL = 3;//in second. Time to move out the zone by the wall.
 
             // 1 = first position, 2 = second position, 3 third position
             //all constant values are wrong, need testing
-            public static final double TIME_TURN_TO_AMP = 1; // In seconds
+            //public static final double TIME_TURN_TO_AMP = 1; // In seconds
             public static final double SPEED_TURN_TO_AMP = 0.65; // Motor speed. Was 0.6
 
-            public static final double TIME_LEAVE_AMP = 2; // In seconds
-            public static final double SPEED_LEAVE_AMP = -0.55; // Motor speed
+            //public static final double TIME_LEAVE_AMP = 2; // In seconds
+            //public static final double SPEED_LEAVE_AMP = -0.55; // Motor speed
 
             public static final double TIME_MOVE_TO_AMP_FWD = 0.6;// In seconds. Move forward before turn and move sideways. 
             public static final double TIME_MOVE_TO_AMP1 = 0.5; // In seconds. Was 4.5
