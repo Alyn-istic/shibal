@@ -24,6 +24,7 @@ import frc.robot.Constants.ArmConstants;
 
 // Static imports for units
 import static edu.wpi.first.units.Units.Volts;
+
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 
@@ -45,6 +46,8 @@ public class ArmSubsystem extends SubsystemBase {
   private final MutableMeasure<Voltage> m_appliedVoltage = MutableMeasure.mutable(Volts.of(0));
   private final MutableMeasure<Angle> m_angle = MutableMeasure.mutable(Degrees.of(0));
   private final MutableMeasure<Velocity<Angle>> m_anglePerSecond = MutableMeasure.mutable(DegreesPerSecond.of(0));
+
+  private int currentPositionindex = 0;
 
   // System Identification
   private final SysIdRoutine m_SysIdRoutine = new SysIdRoutine(new SysIdRoutine.Config(), new SysIdRoutine.Mechanism(
@@ -112,6 +115,8 @@ public class ArmSubsystem extends SubsystemBase {
       leftMotor.setSelectedSensorPosition(toPosition(ArmConstants.shootAngle));
       SmartDashboard.putNumber("Arm Setpoint Offset", 0);
     }
+
+    
   }
   @Override
   public void simulationPeriodic() {
@@ -172,7 +177,17 @@ public class ArmSubsystem extends SubsystemBase {
     return pidcontroller;
   }
 
-  public boolean atSetpoint() {
-    return getController().atSetpoint();
+  public int getCurrentPositionIndex() {
+    return currentPositionindex;
+  }
+
+  public void updatePositionIndex(double angle) {
+    angle = angle % 360;
+    int closestIndex = 0;
+    for (int i = 0; i < ArmConstants.angles.length; i++) {
+      closestIndex = Math.abs(ArmConstants.angles[i] - angle) <= Math.abs(ArmConstants.angles[closestIndex] - angle) ? i : closestIndex;
+    }
+    currentPositionindex = closestIndex;
+    System.out.println(currentPositionindex);
   }
 } 

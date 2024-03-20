@@ -41,6 +41,8 @@ public class ArmManualCmd extends Command {
       speed = 0;
     }
     armSub.setMotor(speed);
+
+    armSub.updatePositionIndex(armSub.getAngle());
   }
 
   // Called once the command ends or is interrupted.

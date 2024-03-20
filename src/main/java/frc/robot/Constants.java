@@ -60,7 +60,7 @@ public class Constants {
 
         public static final double speed = 1; // hello world
 
-        public static final double startPosX = 2; // 
+        public static final double startPosX = 2; //
         public static final double startPosY = 7; //
 
         public static final double driveP = 1.9; // 
@@ -114,8 +114,15 @@ public class Constants {
         public static final double shootAngle = 111; // The angle of the arm in shooting position. Was 100.
         public static final double sourceIntakeAngle = 95; //Intake from source angle. Not using
         public static final double intakeInsideAngle = 50; // The angle of the arm inside the perimeter preparing to intake.
+        public static final double drivingUnderStage = 25; // The angle of the position of the arm while the robot is driving under stage
         public static final double shootInsideAngle = 90; // The angle of the arm inside the perimeter preparing to move to shoot position.
         public static final double intakeAngle = 0; // The angle of the arm in intaking position
+        public static final double[] angles = {
+            intakeAngle,
+            drivingUnderStage,
+            shootInsideAngle,
+            shootAngle
+        };
         
         public static final double raiseMotorClamp = 0.68; // Should be between 0 and 1;
         public static final double dropMotorClamp = 0.6;
