@@ -6,7 +6,7 @@ package frc.robot.CommandGroups.DrivetrainAutos.Sensor;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.CommandGroups.MainAutos.AutoLog;
-import frc.robot.Commands.Drivetrain.TankDrivePIDCmd;
+import frc.robot.Commands.Drivetrain.TankDriveVisionPIDCmd;
 import frc.robot.Subsystems.DrivetrainSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -21,7 +21,7 @@ public class MoveOutOfZoneSensor extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new AutoLog("Driving out of zone"),
-      new TankDrivePIDCmd(driveSub,
+      new TankDriveVisionPIDCmd(driveSub,
         () -> driveSub.getLeftDistance() + 0.87,
         () -> driveSub.getRightDistance() + 0.87,
         () -> 0.05,

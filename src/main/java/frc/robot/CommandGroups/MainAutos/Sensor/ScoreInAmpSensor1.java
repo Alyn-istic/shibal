@@ -13,7 +13,7 @@ import frc.robot.CommandGroups.DrivetrainAutos.Sensor.ChassisTurn0;
 import frc.robot.CommandGroups.DrivetrainAutos.Sensor.ChassisTurn270;
 import frc.robot.CommandGroups.DrivetrainAutos.Sensor.ChassisTurn315;
 import frc.robot.CommandGroups.MainAutos.AutoLog;
-import frc.robot.Commands.Drivetrain.TankDrivePIDCmd;
+import frc.robot.Commands.Drivetrain.TankDriveVisionPIDCmd;
 import frc.robot.Commands.IntakeShooter.IntakeCmd;
 import frc.robot.Subsystems.ArmSubsystem;
 import frc.robot.Subsystems.DrivetrainSubsystem;
@@ -36,7 +36,7 @@ public class ScoreInAmpSensor1 extends SequentialCommandGroup {
     addCommands(
     new ParallelCommandGroup(
       new ArmZero(armSub).andThen(new ArmShoot(armSub, () -> armSub.atSetpoint())),
-      new TankDrivePIDCmd( // Drive to Amp
+      new TankDriveVisionPIDCmd( // Drive to Amp
         driveSub,
         () ->driveSub.getLeftDistance() - 0.58,
         () ->driveSub.getRightDistance() - 0.58,
@@ -45,7 +45,7 @@ public class ScoreInAmpSensor1 extends SequentialCommandGroup {
         () -> driveSub.isDriveControllersAtSetpoint()
       ),
       new IntakeCmd(intakeSub, () ->-1),
-      new TankDrivePIDCmd( // Drive away from Amp
+      new TankDriveVisionPIDCmd( // Drive away from Amp
         driveSub,
         () ->driveSub.getLeftDistance() + 0.2,
         () ->driveSub.getRightDistance() + 0.2,

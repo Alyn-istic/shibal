@@ -135,6 +135,7 @@ public class Constants {
 
     public class VisionConstants {
         public static final double cameraAngle = 1; // Camera angle offset in degrees
+        public static final double cameraDistanceFromNote = 0; // Distance between the camera and the note in an intaking position
     }
 
     public class LEDconstants {
