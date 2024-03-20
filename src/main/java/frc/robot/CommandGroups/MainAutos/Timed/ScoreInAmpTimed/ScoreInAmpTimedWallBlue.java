@@ -38,14 +38,14 @@ public class ScoreInAmpTimedWallBlue extends SequentialCommandGroup {
       // new TurnToAmpTimed(driveSub, -1),
       // new WaitCommand(1),
 
-      new TankDriveCmd(driveSub, () -> 0.4, () -> 0.4).withTimeout(MoveToAmpTimedConstants.TIME_POS_1),// move forward
+      new TankDriveCmd(driveSub, () -> MoveToAmpTimedConstants.SPEED_TO_AMP, () -> MoveToAmpTimedConstants.SPEED_TO_AMP).withTimeout(MoveToAmpTimedConstants.TIME_POS_1),// move forward
 
       new ArmShoot(armSub, () -> armSub.getController().atSetpoint()), // arm to shooting position
       new DownShootAmpTimed(intakeShooterSub), //shoot note
-      new TankDriveCmd(driveSub, () -> -0.3, () -> -0.3).withTimeout(0.2),//move back
+      new TankDriveCmd(driveSub, () -> -MoveToAmpTimedConstants.SPEED_LEAVE_AMP, () -> -MoveToAmpTimedConstants.SPEED_LEAVE_AMP).withTimeout(MoveToAmpTimedConstants.TIME_TURN_TO_AMP),//move back
       new TurnToAmpTimed(driveSub, -1),
       new ArmIntakePerimeter(armSub, () -> armSub.getController().atSetpoint()),
-      new TankDriveCmd(driveSub,() -> 0.3, () -> 0.3).withTimeout(3)
+      new TankDriveCmd(driveSub,() -> MoveToAmpTimedConstants.SPEED_LEAVE_AMP, () -> MoveToAmpTimedConstants.SPEED_LEAVE_AMP).withTimeout(MoveToAmpTimedConstants.TIME_HUG_WALL)
     );
   }
 }

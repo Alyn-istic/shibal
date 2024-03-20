@@ -46,7 +46,7 @@ public class ScoreInAmpTimedRed2 extends SequentialCommandGroup {
       // new TurnToAmpTimed(driveSub, -1),
       // new WaitCommand(1),
 
-      new TankDriveCmd(driveSub, () -> 0.3, () -> 0.3).withTimeout(MoveToAmpTimedConstants.TIME_POS_2),// move forward
+      new TankDriveCmd(driveSub, () -> MoveToAmpTimedConstants.SPEED_TO_AMP, () -> 0.3).withTimeout(MoveToAmpTimedConstants.TIME_POS_2),// move forward
 
       new ArmShoot(armSub, () -> armSub.getController().atSetpoint()), // arm to shooting position
       new DownShootAmpTimed(intakeShooterSub), //shoot note

@@ -23,12 +23,6 @@ public class ArmMobile extends SequentialCommandGroup {
   ) {
     addCommands(
       new ArmPIDCmd(armSub,
-        () -> ArmConstants.raiseP,
-        () -> ArmConstants.raiseI,
-        () -> ArmConstants.raiseD,
-        () -> ArmConstants.dropP,
-        () -> ArmConstants.dropI,
-        () -> ArmConstants.dropD,
         () -> ArmConstants.drivingUnderStage,
         () -> ArmConstants.tolerance
       ).until(end)

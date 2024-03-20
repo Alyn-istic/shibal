@@ -16,16 +16,16 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.CommandGroups.ArmAutos.ArmIntake;
-import frc.robot.CommandGroups.ArmAutos.ArmIntakePerimeter;
-import frc.robot.CommandGroups.ArmAutos.ArmIntakeSource;
-import frc.robot.CommandGroups.ArmAutos.ArmShoot;
-import frc.robot.CommandGroups.ArmAutos.ArmShootPerimeter;
-import frc.robot.CommandGroups.DrivetrainAutos.Sensor.MoveOutOfZoneSensor;
-import frc.robot.CommandGroups.DrivetrainAutos.Timed.MoveOutOfZoneTimed.MoveOutOfZoneTimed1;
+// import frc.robot.CommandGroups.ArmAutos.ArmIntake;
+// import frc.robot.CommandGroups.ArmAutos.ArmIntakePerimeter;
+// import frc.robot.CommandGroups.ArmAutos.ArmIntakeSource;
+// import frc.robot.CommandGroups.ArmAutos.ArmShoot;
+// import frc.robot.CommandGroups.ArmAutos.ArmShootPerimeter;
+// import frc.robot.CommandGroups.DrivetrainAutos.Sensor.MoveOutOfZoneSensor;
+// import frc.robot.CommandGroups.DrivetrainAutos.Timed.MoveOutOfZoneTimed.MoveOutOfZoneTimed1;
 import frc.robot.CommandGroups.MainAutos.AutoLog;
 import frc.robot.CommandGroups.MainAutos.Sensor.ExitZoneSensor;
-import frc.robot.CommandGroups.MainAutos.Sensor.ScoreInAmpSensor1;
+// import frc.robot.CommandGroups.MainAutos.Sensor.ScoreInAmpSensor1;
 import frc.robot.CommandGroups.MainAutos.Timed.ExitZoneTimed;
 import frc.robot.CommandGroups.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedBlue1;
 import frc.robot.CommandGroups.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedBlue2;
@@ -75,13 +75,6 @@ public class RobotContainer {
   //private final CameraSubsystem camSub = new CameraSubsystem();
 
   // Stuff for ArmPID
-  private final Command[] armPIDCommands = {
-    new ArmIntake(armSub, ()-> false),
-    new ArmIntakePerimeter(armSub, () -> false),
-    //new ArmIntakeSource(armSub, () -> false),
-    new ArmShootPerimeter(armSub, () -> false),
-    new ArmShoot(armSub, () -> false)
-  };
   private final NetworkTableEntry armIndexEntry = NetworkTableInstance.getDefault().getEntry("ArmIndex");
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<>();
@@ -118,19 +111,20 @@ public class RobotContainer {
     // SmartDashboard.putNumber("Arm Setpoint Offset", ArmConstants.setpointOffset);
 
     autoChooser.setDefaultOption("NONE", new AutoLog("No auto selected."));
-    autoChooser.addOption("MOVE OUT OF ZONE (TIMED)", new ExitZoneTimed(driveSub, armSub));
-    autoChooser.addOption("MOVE OUT OF ZONE (SENSOR)", new ExitZoneSensor(driveSub, armSub));
-    //autoChooser.addOption("SCORE IN AMP (SENSORS)", new ScoreInAmpSensor1(driveSub, armSub, intakeShooterSub, led));
-    autoChooser.addOption("SCORE IN AMP ONLY (TIMED)", new ScoreInAmpTimedOnly(driveSub, intakeShooterSub, led, armSub));
-    autoChooser.addOption("SCORE IN AMP 1 BLUE (TIMED)", new ScoreInAmpTimedBlue1(driveSub, intakeShooterSub, led, armSub));
-    autoChooser.addOption("SCORE IN AMP 2 BLUE (TIMED)", new ScoreInAmpTimedBlue2(driveSub, intakeShooterSub, led, armSub));
-    autoChooser.addOption("SCORE IN AMP 3 BLUE (TIMED)", new ScoreInAmpTimedBlue3(driveSub, intakeShooterSub, led, armSub));
-    autoChooser.addOption("SCORE IN AMP 1 RED (TIMED)", new ScoreInAmpTimedRed1(driveSub, intakeShooterSub, led, armSub));
-    autoChooser.addOption("SCORE IN AMP 2 RED (TIMED)", new ScoreInAmpTimedRed2(driveSub, intakeShooterSub, led, armSub));
-    autoChooser.addOption("SCORE IN AMP 3 RED (TIMED)", new ScoreInAmpTimedRed3(driveSub, intakeShooterSub, led, armSub));
-    autoChooser.addOption("SCORE IN AMP 3 BLUE (TIMED)-new", new ScoreInAmpTimedWallBlue(driveSub, intakeShooterSub, led, armSub));
-    autoChooser.addOption("SCORE IN AMP 3 RED (TIMED)-new", new ScoreInAmpTimedWallRed(driveSub, intakeShooterSub, led, armSub));
+    autoChooser.addOption("SCORE IN AMP HUG WALL BLUE (TIMED)", new ScoreInAmpTimedWallBlue(driveSub, intakeShooterSub, led, armSub));
+    autoChooser.addOption("SCORE IN AMP HUG WALL RED (TIMED)", new ScoreInAmpTimedWallRed(driveSub, intakeShooterSub, led, armSub));
 
+    //autoChooser.addOption("MOVE OUT OF ZONE (TIMED)", new ExitZoneTimed(driveSub, armSub));
+    //autoChooser.addOption("MOVE OUT OF ZONE (SENSOR)", new ExitZoneSensor(driveSub, armSub));
+    //autoChooser.addOption("SCORE IN AMP (SENSORS)", new ScoreInAmpSensor1(driveSub, armSub, intakeShooterSub, led));
+    // autoChooser.addOption("SCORE IN AMP ONLY (TIMED)", new ScoreInAmpTimedOnly(driveSub, intakeShooterSub, led, armSub));
+    // autoChooser.addOption("SCORE IN AMP 1 BLUE (TIMED)", new ScoreInAmpTimedBlue1(driveSub, intakeShooterSub, led, armSub));
+    // autoChooser.addOption("SCORE IN AMP 2 BLUE (TIMED)", new ScoreInAmpTimedBlue2(driveSub, intakeShooterSub, led, armSub));
+    // autoChooser.addOption("SCORE IN AMP 3 BLUE (TIMED)", new ScoreInAmpTimedBlue3(driveSub, intakeShooterSub, led, armSub));
+    // autoChooser.addOption("SCORE IN AMP 1 RED (TIMED)", new ScoreInAmpTimedRed1(driveSub, intakeShooterSub, led, armSub));
+    // autoChooser.addOption("SCORE IN AMP 2 RED (TIMED)", new ScoreInAmpTimedRed2(driveSub, intakeShooterSub, led, armSub));
+    // autoChooser.addOption("SCORE IN AMP 3 RED (TIMED)", new ScoreInAmpTimedRed3(driveSub, intakeShooterSub, led, armSub));
+    
     // autoChooser.addOption("PATH TEST 0", driveSub.testPath0());
     // autoChooser.addOption("PATH TEST 1", driveSub.testPath1());
     // autoChooser.addOption("PATH TEST 2", driveSub.testPath2());
@@ -164,8 +158,8 @@ public class RobotContainer {
     commandDriver.b().whileTrue(new ClimberCmd(climbSub, () -> ClimberConstants.climberSpeed * -1)); // Retracting climber
 
     // Using left/right bumpers to jump between setpoints for PID
-    commandDriver.leftBumper().onTrue(new ArmCommandSelector(armPIDCommands, () -> -1, armIndexEntry));
-    commandDriver.rightBumper().onTrue(new ArmCommandSelector(armPIDCommands, () -> 1, armIndexEntry));
+    commandDriver.leftBumper().onTrue(new ArmCommandSelector(armSub, -1));
+    commandDriver.rightBumper().onTrue(new ArmCommandSelector(armSub, 1));
 
     // //Intake: Drop into intake angle.//
     // commandDriver.povDown().whileTrue(new ArmIntake(armSub));
