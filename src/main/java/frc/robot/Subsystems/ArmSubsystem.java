@@ -165,7 +165,7 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public boolean dropLimitSwitchHit() { // True when one or both are clicked, false when not
-    return (!dropSwitch1.get() || !dropSwitch2.get());
+    return (dropSwitch1.get() || dropSwitch2.get());
   }
 
   public PIDController getController() {

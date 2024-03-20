@@ -43,7 +43,7 @@ public class Constants {
     }
 
     public class DrivetrainConstants {
-        public static final int frontLeftID = 0; // Chassis's front-left motor ID
+        public static final int frontLeftID = 4; // Chassis's front-left motor ID
         public static final int frontRightID = 2; // Chassis's front-right motor ID
         public static final int backLeftID = 1; // Chassis's back-left motor ID
         public static final int backRightID = 3; // Chassis's back-right motor ID
@@ -92,7 +92,7 @@ public class Constants {
         public static final double gearRatio = 4; // The gear ratio of the arm
         public static final double startingAngle = 90; // 
 
-        public static final int raiseLimitSwitchChannel1 = 1; // 
+        public static final int raiseLimitSwitchChannel1 = 7; // 
         public static final int raiseLimitSwitchChannel2 = 2; //
         public static final int dropLimitSwitchChannel1 = 9; // 
         public static final int dropLimitSwitchChannel2 = 8; // 
@@ -156,7 +156,7 @@ public class Constants {
         public static final int leftTriggerAxis = 2; // Left trigger axis
         public static final int rightTriggerAxis = 3; // Right trigger axis
 
-        public static final int leftBumperButton = 5; // 
-        public static final int rightBumperButton = 6; // 
+        public static final int leftBumperButton = 6; // 
+        public static final int rightBumperButton = 5; // 
     }
 }
