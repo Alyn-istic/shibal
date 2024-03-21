@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 // import frc.robot.CommandGroups.DrivetrainAutos.Timed.MoveOutOfZoneTimed.MoveOutOfZoneTimed1;
 import frc.robot.CommandGroups.MainAutos.AutoLog;
 import frc.robot.CommandGroups.MainAutos.Sensor.ExitZoneSensor;
+import frc.robot.CommandGroups.MainAutos.Sensor.ScoreInAmpSensor1;
 // import frc.robot.CommandGroups.MainAutos.Sensor.ScoreInAmpSensor1;
 import frc.robot.CommandGroups.MainAutos.Timed.ExitZoneTimed;
 import frc.robot.CommandGroups.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedBlue1;
@@ -43,10 +44,12 @@ import frc.robot.Commands.Arm.ArmSetpointOffset;
 import frc.robot.Commands.Climber.ClimberCmd;
 // import frc.robot.Commands.Arm.LimitSwitchSimulation;
 import frc.robot.Commands.Drivetrain.TankDriveCmd;
+import frc.robot.Commands.Drivetrain.TankDrivePIDCmd;
 import frc.robot.Commands.IntakeShooter.IntakeCmd;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.DriverConstants;
+import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Subsystems.ArmSubsystem;
 import frc.robot.Subsystems.DrivetrainSubsystem;
 import frc.robot.Subsystems.IntakeShooterSubsystem;
@@ -102,15 +105,16 @@ public class RobotContainer {
     //   Commands.run(() -> led.setPresetGreen(), led)se
     // );
 
-    // SmartDashboard.putNumber("P", DrivetrainConstants.turnP);
-    // SmartDashboard.putNumber("I",DrivetrainConstants.turnI);
-    // SmartDashboard.putNumber("D", DrivetrainConstants.turnD);
+    SmartDashboard.putNumber("P", DrivetrainConstants.driveP);
+    SmartDashboard.putNumber("I",DrivetrainConstants.driveI);
+    SmartDashboard.putNumber("D", DrivetrainConstants.driveD);
 
     // SmartDashboard.putNumber("Arm Setpoint", ArmConstants.shootInsideAngle);
     // SmartDashboard.putNumber("Arm Clamp", ArmConstants.clamp);
     // SmartDashboard.putNumber("Arm Setpoint Offset", ArmConstants.setpointOffset);
 
     autoChooser.setDefaultOption("NONE", new AutoLog("No auto selected."));
+    autoChooser.addOption("SCORE IN AMP TEST SENSOR", new ScoreInAmpSensor1(driveSub, armSub, intakeShooterSub, led));
     autoChooser.addOption("SCORE IN AMP HUG WALL BLUE (TIMED)", new ScoreInAmpTimedWallBlue(driveSub, intakeShooterSub, led, armSub));
     autoChooser.addOption("SCORE IN AMP HUG WALL RED (TIMED)", new ScoreInAmpTimedWallRed(driveSub, intakeShooterSub, led, armSub));
 
@@ -160,6 +164,14 @@ public class RobotContainer {
     // Using left/right bumpers to jump between setpoints for PID
     commandDriver.leftBumper().onTrue(new ArmCommandSelector(armSub, -1));
     commandDriver.rightBumper().onTrue(new ArmCommandSelector(armSub, 1));
+
+    commandDriver.a().whileTrue(new TankDrivePIDCmd(driveSub,
+      () -> 1,
+      () -> 1,
+      () -> 0,
+      () -> false,
+      () -> false
+    ));
 
     // //Intake: Drop into intake angle.//
     // commandDriver.povDown().whileTrue(new ArmIntake(armSub));

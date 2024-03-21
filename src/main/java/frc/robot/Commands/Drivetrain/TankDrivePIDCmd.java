@@ -7,6 +7,7 @@ package frc.robot.Commands.Drivetrain;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Subsystems.DrivetrainSubsystem;
@@ -70,8 +71,8 @@ public class TankDrivePIDCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double leftSpeed = -leftDriveController.calculate(driveSub.getLeftDistance()) * DrivetrainConstants.speed;
-    double rightSpeed = -rightDriveController.calculate(driveSub.getRightDistance()) * DrivetrainConstants.speed;
+    double leftSpeed = leftDriveController.calculate(driveSub.getLeftDistance()) * DrivetrainConstants.speed;
+    double rightSpeed = rightDriveController.calculate(driveSub.getRightDistance()) * DrivetrainConstants.speed;
   
     driveSub.tankDriveSpeed(
       (leftSpeed),
@@ -86,17 +87,17 @@ public class TankDrivePIDCmd extends Command {
       rightDriveController.setSetpoint(rightDriveSetpoint.getAsDouble());
     }
 
-    // leftDriveController.setP(SmartDashboard.getNumber("P", 0));
-    // leftDriveController.setI(SmartDashboard.getNumber("I", 0));
-    // leftDriveController.setD(SmartDashboard.getNumber("D", 0));
+    leftDriveController.setP(SmartDashboard.getNumber("P", 0));
+    leftDriveController.setI(SmartDashboard.getNumber("I", 0));
+    leftDriveController.setD(SmartDashboard.getNumber("D", 0));
 
-    // rightDriveController.setP(SmartDashboard.getNumber("P", 0));
-    // rightDriveController.setI(SmartDashboard.getNumber("I", 0));
-    // rightDriveController.setD(SmartDashboard.getNumber("D", 0));
+    rightDriveController.setP(SmartDashboard.getNumber("P", 0));
+    rightDriveController.setI(SmartDashboard.getNumber("I", 0));
+    rightDriveController.setD(SmartDashboard.getNumber("D", 0));
 
     // Pushing numbers onto SmartDashboard for debugging purposes.
-    // SmartDashboard.putNumber("Drivetrain Left PID Output", leftSpeed);
-    // SmartDashboard.putNumber("Drivetrain Right PID Output", rightSpeed);
+    SmartDashboard.putNumber("Drivetrain Left PID Output", leftSpeed);
+    SmartDashboard.putNumber("Drivetrain Right PID Output", rightSpeed);
     
   }
 

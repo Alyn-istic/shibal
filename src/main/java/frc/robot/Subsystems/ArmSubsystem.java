@@ -116,7 +116,7 @@ public class ArmSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("Arm Setpoint Offset", 0);
     }
 
-    
+    // System.out.println("Arm angle: " + getAngle() + "Drop lim: " + dropLimitSwitchHit() + "Raise lim: " + raiseLimitSwitchHit());
   }
   @Override
   public void simulationPeriodic() {

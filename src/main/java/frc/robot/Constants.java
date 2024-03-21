@@ -57,7 +57,7 @@ public class Constants {
 
         public static final int countsPerRev = 42; //1024; // The amount of encoder counts in a full rotation
 
-        public static final double encoderCountsToMeters = Units.inchesToMeters(((2 * Math.PI * wheelRadius)/countsPerRev) / gearRatio);
+        public static final double encoderCountsToMeters = ((2 * Math.PI * wheelRadius)/countsPerRev) / gearRatio;
 
         public static final Port gyroPort = Port.kOnboard; // The port that the gyro is connected to.
 
@@ -66,9 +66,9 @@ public class Constants {
         public static final double startPosX = 2; //
         public static final double startPosY = 7; //
 
-        public static final double driveP = 1.9; // 
+        public static final double driveP = 1; // 
         public static final double driveI = 0.0; // 
-        public static final double driveD = 0.2; // 
+        public static final double driveD = 0.02; // 
         public static final double driveTolerance = 0; // 
 
         public static final double motorClamp = 1; //

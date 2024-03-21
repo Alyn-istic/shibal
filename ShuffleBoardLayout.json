@@ -42,10 +42,10 @@
               }
             }
           },
-          "6,0": {
+          "3,6": {
             "size": [
-              3,
-              3
+              2,
+              2
             ],
             "content": {
               "_type": "List Layout",
@@ -350,33 +350,25 @@
               ]
             }
           },
-          "15,0": {
+          "6,0": {
             "size": [
-              1,
-              1
+              10,
+              8
             ],
             "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Climber motor speed",
-              "_title": "Climber motor speed",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "8,3": {
-            "size": [
-              7,
-              4
-            ],
-            "content": {
-              "_type": "Field",
-              "_source0": "network_table:///SmartDashboard/Field ",
-              "_title": "Field ",
+              "_type": "Camera Stream",
+              "_source0": "camera_server://USB Camera 0",
+              "_title": "USB Camera 0",
               "_glyph": 148,
               "_showGlyph": false,
-              "Game/Game": "k2024Crescendo",
-              "Visuals/Robot Icon Size": 50.0,
-              "Visuals/Show Outside Circles": false
+              "Crosshair/Show crosshair": true,
+              "Crosshair/Crosshair color": "#FFFFFFFF",
+              "Controls/Show controls": true,
+              "Controls/Rotation": "NONE",
+              "compression": -1.0,
+              "fps": 30,
+              "imageWidth": 160,
+              "imageHeight": 120
             }
           }
         }

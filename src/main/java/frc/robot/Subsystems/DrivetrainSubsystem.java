@@ -179,10 +179,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
     frontRight.setInverted(false);
     backRight.setInverted(false);
 
-    frontLeft.setIdleMode(IdleMode.kCoast);
-    backLeft.setIdleMode(IdleMode.kCoast);
-    frontRight.setIdleMode(IdleMode.kCoast);
-    backRight.setIdleMode(IdleMode.kCoast);
+    // frontLeft.setIdleMode(IdleMode.kCoast);
+    // backLeft.setIdleMode(IdleMode.kCoast);
+    // frontRight.setIdleMode(IdleMode.kCoast);
+    // backRight.setIdleMode(IdleMode.kCoast);
+    frontLeft.setIdleMode(IdleMode.kBrake);
+    backLeft.setIdleMode(IdleMode.kBrake);
+    frontRight.setIdleMode(IdleMode.kBrake);
+    backRight.setIdleMode(IdleMode.kBrake);
 
     backLeft.follow(frontLeft);
     backRight.follow(frontRight);
@@ -196,8 +200,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
     rightEncoder.setPosition(0);
     rightEncoder.setPositionConversionFactor(DrivetrainConstants.encoderCountsToMeters);
     rightEncoder.setVelocityConversionFactor(DrivetrainConstants.encoderCountsToMeters);
-
-
 
     frontLeft.burnFlash();
     backLeft.burnFlash();
@@ -319,17 +321,17 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   // Math: pos * ((2PI*radius)/CPR)/GearRatio -> convert from inches to meters
   public double getLeftDistance(){
-    return leftEncoder.getPosition();
+    return Units.inchesToMeters(leftEncoder.getPosition());
   }
   public double getRightDistance(){
-    return rightEncoder.getPosition();
+    return Units.inchesToMeters(rightEncoder.getPosition());
   }
   public double getLeftVelocity(){
-    return leftEncoder.getVelocity();
+    return Units.inchesToMeters(leftEncoder.getVelocity());
   }
 
   public double getRightVelocity(){
-    return rightEncoder.getVelocity();
+    return Units.inchesToMeters(rightEncoder.getVelocity());
 
   }
   public PIDController getLeftDriveController() {
