@@ -4,30 +4,31 @@
 
 package frc.robot.CommandGroups.DrivetrainAutos.Sensor;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.CommandGroups.MainAutos.AutoLog;
-import frc.robot.Commands.Drivetrain.TankDrivePIDCmd;
-import frc.robot.Commands.Drivetrain.TankDriveVisionPIDCmd;
+import frc.robot.Commands.Drivetrain.TurnPIDCmd;
 import frc.robot.Subsystems.DrivetrainSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class MoveOutOfZoneSensor extends SequentialCommandGroup {
-  /** Creates a new MoveOutofZoneSensor. */
-  public MoveOutOfZoneSensor(
-    DrivetrainSubsystem driveSub
+public class ChassisTurnVariable extends SequentialCommandGroup {
+  /** Creates a new ChassisTurnVariable. */
+  public ChassisTurnVariable(
+    DrivetrainSubsystem driveSub,
+    DoubleSupplier turnAngle
   ) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new AutoLog("Driving out of zone"),
-      new TankDrivePIDCmd(driveSub,
-        () -> driveSub.getLeftDistance() + 0.87,
-        () -> driveSub.getRightDistance() + 0.87,
-        () -> 0.05,
+      new AutoLog("Turning" + turnAngle + "degrees"),
+      new TurnPIDCmd(driveSub,
+        () -> driveSub.getGyroAngle() + turnAngle.getAsDouble(),
+        () -> 1,
         () -> false,
-        () -> driveSub.isDriveControllersAtSetpoint()
+        () -> driveSub.getTurnController().atSetpoint()
       )
     );
   }
