@@ -4,9 +4,6 @@
 
 package frc.robot.Subsystems;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -193,13 +190,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     leftEncoder = frontLeft.getEncoder();
     leftEncoder.setPosition(0);
-    leftEncoder.setPositionConversionFactor(DrivetrainConstants.encoderCountsToMeters);
-    leftEncoder.setVelocityConversionFactor(DrivetrainConstants.encoderCountsToMeters);
+    //leftEncoder.setPositionConversionFactor(DrivetrainConstants.encoderCountsToMeters);
+    //leftEncoder.setVelocityConversionFactor(DrivetrainConstants.encoderCountsToMeters);
 
     rightEncoder = frontRight.getEncoder();
     rightEncoder.setPosition(0);
-    rightEncoder.setPositionConversionFactor(DrivetrainConstants.encoderCountsToMeters);
-    rightEncoder.setVelocityConversionFactor(DrivetrainConstants.encoderCountsToMeters);
+    //rightEncoder.setPositionConversionFactor(DrivetrainConstants.encoderCountsToMeters);
+    //rightEncoder.setVelocityConversionFactor(DrivetrainConstants.encoderCountsToMeters);
 
     frontLeft.burnFlash();
     backLeft.burnFlash();
@@ -241,14 +238,16 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // SmartDashboard.putNumber("Bot Y", getBotPose().getY());
     // SmartDashboard.putNumber("Bot Rotation", getBotPose().getRotation().getDegrees());
 
-    SmartDashboard.putNumber("Left Pos", leftEncoder.getPosition());
-    SmartDashboard.putNumber("Right Pos", rightEncoder.getPosition());
+    SmartDashboard.putNumber("Left Pos", getLeftDistance());
+    SmartDashboard.putNumber("Right Pos", getRightDistance());
     // SmartDashboard.putNumber("Left Distance", getLeftDistance());
     // SmartDashboard.putNumber("Right Distance", getRightDistance());
     SmartDashboard.putNumber("Left Velocity", getLeftVelocity());
     SmartDashboard.putNumber("Right Velocity", getRightVelocity());
 
     SmartDashboard.putNumber("Gyro Angle", getGyroAngle() % 360);
+
+    System.out.println(leftEncoder.getCountsPerRevolution());
   }
 
   public Boolean getPathInverted() {
@@ -321,17 +320,17 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   // Math: pos * ((2PI*radius)/CPR)/GearRatio -> convert from inches to meters
   public double getLeftDistance(){
-    return Units.inchesToMeters(leftEncoder.getPosition());
+    return leftEncoder.getPosition() * DrivetrainConstants.encoderCountsToMeters;
   }
   public double getRightDistance(){
-    return Units.inchesToMeters(rightEncoder.getPosition());
+    return rightEncoder.getPosition() * DrivetrainConstants.encoderCountsToMeters;
   }
   public double getLeftVelocity(){
-    return Units.inchesToMeters(leftEncoder.getVelocity());
+    return leftEncoder.getVelocity() * DrivetrainConstants.encoderCountsToMeters;
   }
 
   public double getRightVelocity(){
-    return Units.inchesToMeters(rightEncoder.getVelocity());
+    return rightEncoder.getVelocity() * DrivetrainConstants.encoderCountsToMeters;
   }
   public PIDController getLeftDriveController() {
     return leftDriveController;

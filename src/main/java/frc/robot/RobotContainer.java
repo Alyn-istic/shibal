@@ -164,8 +164,8 @@ public class RobotContainer {
     commandDriver.rightBumper().onTrue(new ArmCommandSelector(armSub, 1));
 
     commandDriver.a().whileTrue(new TankDrivePIDCmd(driveSub,
-      () -> 1,
-      () -> 1,
+      () -> driveSub.getLeftDistance() + 2.5,
+      () -> driveSub.getRightDistance() + 2.5,
       () -> 0,
       () -> false,
       () -> false
