@@ -29,8 +29,8 @@ public class IntakeShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // Pushing stuff to SmartDashboard for debugging purposes.
-    SmartDashboard.putNumber("Intake/Shooter Motor 1 Speed", upperWheel.get());
-    SmartDashboard.putNumber("Intake/Shooter Motor 2 Speed", lowerWheel.get());
+    // SmartDashboard.putNumber("Intake/Shooter Motor 1 Speed", upperWheel.get());
+    // SmartDashboard.putNumber("Intake/Shooter Motor 2 Speed", lowerWheel.get());
   }
 
   public void setMotors(double speed) { // This will set the intake motors' speed.

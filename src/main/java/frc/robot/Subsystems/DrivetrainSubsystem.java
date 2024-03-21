@@ -217,7 +217,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
       getRightDistance(),
       new Pose2d(DrivetrainConstants.startPosX, DrivetrainConstants.startPosY, new Rotation2d(0))
     );
-    SmartDashboard.putData("Field ", field);
+    // SmartDashboard.putData("Field ", field);
 
     AutoBuilder.configureRamsete(
       this::getBotPose,
@@ -237,9 +237,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Front Left Motor Speed", frontLeft.get());
     SmartDashboard.putNumber("Front Right Motor Speed", frontRight.get());
 
-    SmartDashboard.putNumber("Bot X", getBotPose().getX());
-    SmartDashboard.putNumber("Bot Y", getBotPose().getY());
-    SmartDashboard.putNumber("Bot Rotation", getBotPose().getRotation().getDegrees());
+    // SmartDashboard.putNumber("Bot X", getBotPose().getX());
+    // SmartDashboard.putNumber("Bot Y", getBotPose().getY());
+    // SmartDashboard.putNumber("Bot Rotation", getBotPose().getRotation().getDegrees());
 
     SmartDashboard.putNumber("Left Pos", leftEncoder.getPosition());
     SmartDashboard.putNumber("Right Pos", rightEncoder.getPosition());
@@ -332,7 +332,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public double getRightVelocity(){
     return Units.inchesToMeters(rightEncoder.getVelocity());
-
   }
   public PIDController getLeftDriveController() {
     return leftDriveController;

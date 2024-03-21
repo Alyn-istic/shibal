@@ -98,7 +98,7 @@ public class ArmSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Arm Motor Speed", leftMotor.get());
+    // SmartDashboard.putNumber("Arm Motor Speed", leftMotor.get());
 
     SmartDashboard.putBoolean("Arm raise limit", raiseLimitSwitchHit());
     SmartDashboard.putBoolean("Arm drop limit", dropLimitSwitchHit());

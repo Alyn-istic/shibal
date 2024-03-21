@@ -22,7 +22,7 @@ public class RamIntoAmpSensor extends SequentialCommandGroup {
       new TankDrivePIDCmd(driveSub,
         () -> driveSub.getLeftDistance() - 0.65,
         () -> driveSub.getRightDistance() - 0.65,
-        () -> 0.05,
+        () -> 0.5,
         () -> false,
         () -> driveSub.isDriveControllersAtSetpoint()
       )
