@@ -5,6 +5,7 @@
 package frc.robot.CommandGroups.DrivetrainAutos.Sensor;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.CommandGroups.MainAutos.AutoLog;
 import frc.robot.Commands.Drivetrain.TankDrivePIDCmd;
 import frc.robot.Subsystems.DrivetrainSubsystem;
 
@@ -19,10 +20,12 @@ public class RamIntoAmpSensor extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
+      new AutoLog("Ramming into amp"),
       new TankDrivePIDCmd(driveSub,
-        () -> driveSub.getLeftDistance() - 0.65,
-        () -> driveSub.getRightDistance() - 0.65,
-        () -> 0.5,
+        () -> driveSub.getLeftDistance() + 0.65,
+        () -> driveSub.getRightDistance() + 1,
+        () -> 0.2,
+        () -> false,
         () -> false,
         () -> driveSub.isDriveControllersAtSetpoint()
       )

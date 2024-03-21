@@ -246,8 +246,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Right Velocity", getRightVelocity());
 
     SmartDashboard.putNumber("Gyro Angle", getGyroAngle() % 360);
-
-    System.out.println(leftEncoder.getCountsPerRevolution());
   }
 
   public Boolean getPathInverted() {

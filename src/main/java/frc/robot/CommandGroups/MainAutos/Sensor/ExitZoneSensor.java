@@ -29,6 +29,7 @@ public class ExitZoneSensor extends ParallelCommandGroup {
         () -> driveSub.getRightDistance() + 7,
         () -> 0.1,
         () -> false,
+        () -> true,
         () -> false
       ),
       new ArmZero(armSub).andThen(new ArmIntakePerimeter(armSub, () -> armSub.getController().atSetpoint()))

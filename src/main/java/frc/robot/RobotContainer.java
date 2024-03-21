@@ -105,6 +105,7 @@ public class RobotContainer {
     SmartDashboard.putNumber("P", DrivetrainConstants.driveP);
     SmartDashboard.putNumber("I",DrivetrainConstants.driveI);
     SmartDashboard.putNumber("D", DrivetrainConstants.driveD);
+    SmartDashboard.putNumber("Gyro P", DrivetrainConstants.gyroErrorCorrectionFactor);
 
     // SmartDashboard.putNumber("Arm Setpoint", ArmConstants.shootInsideAngle);
     // SmartDashboard.putNumber("Arm Clamp", ArmConstants.clamp);
@@ -163,13 +164,13 @@ public class RobotContainer {
     commandDriver.leftBumper().onTrue(new ArmCommandSelector(armSub, -1));
     commandDriver.rightBumper().onTrue(new ArmCommandSelector(armSub, 1));
 
-    commandDriver.a().whileTrue(new TankDrivePIDCmd(driveSub,
-      () -> driveSub.getLeftDistance() + 2.5,
-      () -> driveSub.getRightDistance() + 2.5,
-      () -> 0,
-      () -> false,
-      () -> false
-    ));
+    // commandDriver.a().whileTrue(new TankDrivePIDCmd(driveSub,
+    //   () -> driveSub.getLeftDistance() + 2.5,
+    //   () -> driveSub.getRightDistance() + 2.5,
+    //   () -> 0,
+    //   () -> false,
+    //   () -> false
+    // ));
 
     // //Intake: Drop into intake angle.//
     // commandDriver.povDown().whileTrue(new ArmIntake(armSub));

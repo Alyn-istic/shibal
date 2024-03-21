@@ -98,7 +98,7 @@ public class ArmSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // SmartDashboard.putNumber("Arm Motor Speed", leftMotor.get());
+    SmartDashboard.putNumber("Arm Motor Speed", leftMotor.get());
 
     SmartDashboard.putBoolean("Arm raise limit", raiseLimitSwitchHit());
     SmartDashboard.putBoolean("Arm drop limit", dropLimitSwitchHit());
@@ -107,11 +107,11 @@ public class ArmSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Arm Angle", getAngle());
     SmartDashboard.putNumber("Arm Position", getSensorPosition());
 
-    if (dropLimitSwitchHit()) { // The following has been ported to RobotContainer
+    if ((dropLimitSwitchHit() && (Math.abs(leftMotor.get()) >= 0.3)) || (dropLimitSwitchHit() && currentPositionindex == 0)) { // The following has been ported to RobotContainer
       leftMotor.setSelectedSensorPosition(toPosition(ArmConstants.intakeAngle));
       SmartDashboard.putNumber("Arm Setpoint Offset", 0);
     }
-    if (raiseLimitSwitchHit()) {
+    if ((raiseLimitSwitchHit() && (Math.abs(leftMotor.get()) >= 0.3)) || (raiseLimitSwitchHit() && currentPositionindex == ArmConstants.angles.length-1)) {
       leftMotor.setSelectedSensorPosition(toPosition(ArmConstants.shootAngle));
       SmartDashboard.putNumber("Arm Setpoint Offset", 0);
     }
@@ -188,6 +188,6 @@ public class ArmSubsystem extends SubsystemBase {
       closestIndex = Math.abs(ArmConstants.angles[i] - angle) <= Math.abs(ArmConstants.angles[closestIndex] - angle) ? i : closestIndex;
     }
     currentPositionindex = closestIndex;
-    System.out.println(currentPositionindex);
+    // System.out.println(currentPositionindex);
   }
 } 

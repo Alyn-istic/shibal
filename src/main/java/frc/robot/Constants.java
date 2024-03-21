@@ -66,7 +66,7 @@ public class Constants {
         public static final double startPosX = 2; //
         public static final double startPosY = 7; //
 
-        public static final double driveP = 0.38; // 
+        public static final double driveP = 0.55; // 
         public static final double driveI = 0.024; // 
         public static final double driveD = 0; // 
         public static final double driveTolerance = 0; // 
@@ -77,9 +77,11 @@ public class Constants {
         public static final double minAngle = 0; // 
         public static final double maxAngle = 360; // 
 
-        public static final double turnP = 0.02; // P value for turning PID command
-        public static final double turnI = 0.005; // I value for turning PID command
-        public static final double turnD = 0.00002; // D value for turning PID command
+        public static final double gyroErrorCorrectionFactor = 0.0021;
+
+        public static final double turnP = 0.5; // P value for turning PID command
+        public static final double turnI = 0; // I value for turning PID command
+        public static final double turnD = 0; // D value for turning PID command
         public static final double gyroTolerance = 1; // Tolerance for turning PID command
         public static final double kS = 1.4796; // 
         public static final double kV = 0.6432; // 
@@ -114,10 +116,10 @@ public class Constants {
         public static final double tolerance = 1; // 
         public static final double setpointOffset = 0; // 
 
-        public static final double shootAngle = 111; // The angle of the arm in shooting position. Was 100.
+        public static final double shootAngle = 105; // The angle of the arm in shooting position. Was 100.
         public static final double sourceIntakeAngle = 95; //Intake from source angle. Not using
         public static final double intakeInsideAngle = 50; // The angle of the arm inside the perimeter preparing to intake.
-        public static final double drivingUnderStage = 25; // The angle of the position of the arm while the robot is driving under stage
+        public static final double drivingUnderStage = 30; // The angle of the position of the arm while the robot is driving under stage
         public static final double shootInsideAngle = 90; // The angle of the arm inside the perimeter preparing to move to shoot position.
         public static final double intakeAngle = 0; // The angle of the arm in intaking position
         public static final double[] angles = {

@@ -17,7 +17,9 @@ public class TankDrivePIDCmd extends Command {
   private DrivetrainSubsystem driveSub;
   private DoubleSupplier leftDriveSetpoint, rightDriveSetpoint, driveTolerance; //driveP, driveI, driveD, turnP, turnI, turnD;
   private PIDController leftDriveController, rightDriveController;
-  private BooleanSupplier periodicalUpdate, endSupplier;
+  private BooleanSupplier periodicalUpdate, correctGyroError, endSupplier;
+
+  private double initialGyroAngle;
 
   /**
    * Applies speed to the left and right motors using PID controllers based on left and right distances
@@ -35,6 +37,7 @@ public class TankDrivePIDCmd extends Command {
     DoubleSupplier rightDriveSetpoint,
     DoubleSupplier driveTolerance, //supplied from robotcontainer
     BooleanSupplier periodicalUpdate,
+    BooleanSupplier correctGyroError,
     BooleanSupplier end
   ) {
     this.driveSub = driveSub;
@@ -43,7 +46,11 @@ public class TankDrivePIDCmd extends Command {
     this.leftDriveSetpoint = leftDriveSetpoint;
     this.rightDriveSetpoint = rightDriveSetpoint;
     this.driveTolerance = driveTolerance;
+    this.correctGyroError = correctGyroError;
     this.endSupplier = end;
+
+    this.initialGyroAngle = driveSub.getGyroAngle();
+
     addRequirements(driveSub);
   }
 
@@ -71,8 +78,18 @@ public class TankDrivePIDCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double leftSpeed = leftDriveController.calculate(driveSub.getLeftDistance()) * DrivetrainConstants.speed;
-    double rightSpeed = rightDriveController.calculate(driveSub.getRightDistance()) * DrivetrainConstants.speed;
+    double gyroError = (driveSub.getGyroAngle() - initialGyroAngle);
+    gyroError = Math.signum(gyroError) * (Math.abs(gyroError) % 360);
+
+    double gyroErrorCorrection = gyroError * SmartDashboard.getNumber("Gyro P", DrivetrainConstants.gyroErrorCorrectionFactor);
+
+    double leftSpeed = leftDriveController.calculate(driveSub.getLeftDistance()) + (gyroErrorCorrection);
+    double rightSpeed = rightDriveController.calculate(driveSub.getRightDistance()) + (-gyroErrorCorrection);
+
+    if (correctGyroError.getAsBoolean()) {
+      leftSpeed += (gyroErrorCorrection);
+      rightSpeed += (-gyroErrorCorrection);
+    }
   
     driveSub.tankDriveSpeed(
       (leftSpeed),
@@ -100,6 +117,8 @@ public class TankDrivePIDCmd extends Command {
     SmartDashboard.putNumber("Drivetrain Right PID Output", rightSpeed);
     SmartDashboard.putNumber("Drivetrain Left PID Setpoint", leftDriveController.getSetpoint());
     SmartDashboard.putNumber("Drivetrain Right PID Setpoint", rightDriveController.getSetpoint());
+    SmartDashboard.putNumber("Drivetrain Gyro Error", gyroError);
+    SmartDashboard.putNumber("Drivetrain Gyro Error Correction", gyroErrorCorrection);
   }
 
   // Called once the command ends or is interrupted.

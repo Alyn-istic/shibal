@@ -9,10 +9,9 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.CommandGroups.ArmAutos.ArmIntake;
 import frc.robot.CommandGroups.ArmAutos.ArmShoot;
 import frc.robot.CommandGroups.ArmAutos.ArmZero;
-import frc.robot.CommandGroups.DrivetrainAutos.Sensor.ChassisTurn0;
-import frc.robot.CommandGroups.DrivetrainAutos.Sensor.ChassisTurn270;
-import frc.robot.CommandGroups.DrivetrainAutos.Sensor.ChassisTurn315;
+import frc.robot.CommandGroups.DrivetrainAutos.Sensor.LeaveAmpSensor;
 import frc.robot.CommandGroups.DrivetrainAutos.Sensor.RamIntoAmpSensor;
+import frc.robot.CommandGroups.IntakeShooterAutos.DownShootAmpTimed;
 import frc.robot.CommandGroups.MainAutos.AutoLog;
 import frc.robot.Commands.Drivetrain.TankDrivePIDCmd;
 import frc.robot.Commands.Drivetrain.TankDriveVisionPIDCmd;
@@ -42,6 +41,8 @@ public class ScoreInAmpSensor1 extends SequentialCommandGroup {
         new RamIntoAmpSensor(driveSub)
       ),
       new ArmShoot(armSub, () -> armSub.getController().atSetpoint()),
+      new DownShootAmpTimed(intakeSub),
+      new LeaveAmpSensor(driveSub),
       new AutoLog("Done")
     );
   }
