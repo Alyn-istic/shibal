@@ -66,9 +66,9 @@ public class Constants {
         public static final double startPosX = 2; //
         public static final double startPosY = 7; //
 
-        public static final double driveP = 1; // 
+        public static final double driveP = 0.1; // 
         public static final double driveI = 0.0; // 
-        public static final double driveD = 0.02; // 
+        public static final double driveD = 0; // 
         public static final double driveTolerance = 0; // 
 
         public static final double motorClamp = 1; //

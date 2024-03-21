@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.CommandGroups.ArmAutos.ArmZero;
 // import frc.robot.CommandGroups.ArmAutos.ArmIntake;
 // import frc.robot.CommandGroups.ArmAutos.ArmIntakePerimeter;
 // import frc.robot.CommandGroups.ArmAutos.ArmIntakeSource;
@@ -78,13 +79,9 @@ public class RobotContainer {
   //private final CameraSubsystem camSub = new CameraSubsystem();
 
   // Stuff for ArmPID
-  private final NetworkTableEntry armIndexEntry = NetworkTableInstance.getDefault().getEntry("ArmIndex");
-
   private final SendableChooser<Command> autoChooser = new SendableChooser<>();
 
   public RobotContainer() {
-    armIndexEntry.setInteger(-1);
-
     // Telling the robot to run the TankDrive command when no other command is using the Drivetrain.
     driveSub.setDefaultCommand(
       new TankDriveCmd(
@@ -114,6 +111,7 @@ public class RobotContainer {
     // SmartDashboard.putNumber("Arm Setpoint Offset", ArmConstants.setpointOffset);
 
     autoChooser.setDefaultOption("NONE", new AutoLog("No auto selected."));
+    autoChooser.addOption("CALIBRATE ARM", new ArmZero(armSub));
     autoChooser.addOption("SCORE IN AMP TEST SENSOR", new ScoreInAmpSensor1(driveSub, armSub, intakeShooterSub, led));
     autoChooser.addOption("SCORE IN AMP HUG WALL BLUE (TIMED)", new ScoreInAmpTimedWallBlue(driveSub, intakeShooterSub, led, armSub));
     autoChooser.addOption("SCORE IN AMP HUG WALL RED (TIMED)", new ScoreInAmpTimedWallRed(driveSub, intakeShooterSub, led, armSub));

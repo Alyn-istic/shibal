@@ -98,7 +98,8 @@ public class TankDrivePIDCmd extends Command {
     // Pushing numbers onto SmartDashboard for debugging purposes.
     SmartDashboard.putNumber("Drivetrain Left PID Output", leftSpeed);
     SmartDashboard.putNumber("Drivetrain Right PID Output", rightSpeed);
-    
+    SmartDashboard.putNumber("Drivetrain Left PID Setpoint", leftDriveController.getSetpoint());
+    SmartDashboard.putNumber("Drivetrain Right PID Setpoint", rightDriveController.getSetpoint());
   }
 
   // Called once the command ends or is interrupted.
