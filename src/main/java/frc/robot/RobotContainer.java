@@ -237,6 +237,7 @@ public class RobotContainer {
     new Trigger(() -> (armSub.raiseLimitSwitchHit() && armSub.getmotorSpeed() < 0)).onTrue(
       new RunCommand(
         () -> {
+          System.out.println("Upper limit switch detected at angle " + armSub.getAngle());
           armSub.setSensorPosition(armSub.toPosition(ArmConstants.limitSwitchAngle));
         }
       ).alongWith(

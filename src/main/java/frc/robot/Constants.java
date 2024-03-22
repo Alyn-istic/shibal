@@ -124,7 +124,7 @@ public class Constants {
         public static final double drivingUnderStage = 30; // The angle of the position of the arm while the robot is driving under stage
         public static final double shootInsideAngle = 90; // The angle of the arm inside the perimeter preparing to move to shoot position.
         public static final double intakeAngle = 0; // The angle of the arm in intaking position
-        public static final double limitSwitchAngle = 110;
+        public static final double limitSwitchAngle = 90;
         public static final double[] angles = {
             intakeAngle,
             drivingUnderStage,

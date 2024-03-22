@@ -89,7 +89,7 @@ public class ArmSubsystem extends SubsystemBase {
     // rightMotor.setNeutralMode(NeutralMode.Coast);
 
     // Resetting encoder positions
-    leftMotor.setSelectedSensorPosition(toPosition(-ArmConstants.startingAngle));
+    leftMotor.setSelectedSensorPosition(toPosition(ArmConstants.startingAngle));
     rightMotor.setSelectedSensorPosition(toPosition(ArmConstants.startingAngle));
 
     // Controller configs
