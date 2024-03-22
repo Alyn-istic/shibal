@@ -116,7 +116,7 @@ public class Constants {
         public static final double tolerance = 1; // 
         public static final double setpointOffset = 0; // 
 
-        public static final double shootAngle = 105; // The angle of the arm in shooting position. Was 100.
+        public static final double shootAngle = 109; // The angle of the arm in shooting position. Was 100.
         public static final double sourceIntakeAngle = 95; //Intake from source angle. Not using
         public static final double intakeInsideAngle = 50; // The angle of the arm inside the perimeter preparing to intake.
         public static final double drivingUnderStage = 30; // The angle of the position of the arm while the robot is driving under stage

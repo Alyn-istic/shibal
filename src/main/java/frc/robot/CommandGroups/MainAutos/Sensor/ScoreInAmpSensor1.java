@@ -7,6 +7,7 @@ package frc.robot.CommandGroups.MainAutos.Sensor;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.CommandGroups.ArmAutos.ArmIntake;
+import frc.robot.CommandGroups.ArmAutos.ArmMobile;
 import frc.robot.CommandGroups.ArmAutos.ArmShoot;
 import frc.robot.CommandGroups.ArmAutos.ArmZero;
 import frc.robot.CommandGroups.DrivetrainAutos.Sensor.LeaveAmpSensor;
@@ -37,13 +38,14 @@ public class ScoreInAmpSensor1 extends SequentialCommandGroup {
     addCommands(
       new ParallelCommandGroup(
         new ArmZero(armSub),
-        new AutoLog("Driving backwards towards amp...").withTimeout(2.5),
-        new RamIntoAmpSensor(driveSub)
+        new RamIntoAmpSensor(driveSub).withTimeout(1)
       ),
       new ArmShoot(armSub, () -> armSub.getController().atSetpoint()),
       new DownShootAmpTimed(intakeSub),
-      new LeaveAmpSensor(driveSub),
-      new AutoLog("Done")
+      new ParallelCommandGroup(
+        new LeaveAmpSensor(driveSub).andThen(new AutoLog("Done")),
+        new ArmMobile(armSub, () -> false)
+      )
     );
   }
 }

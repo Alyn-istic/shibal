@@ -23,28 +23,29 @@ public class LeaveAmpSensor extends SequentialCommandGroup {
     addCommands(
       new AutoLog("Leaving the amp."),
       new TankDrivePIDCmd(driveSub,
-        () -> driveSub.getLeftDistance() - 0.25,
-        () -> driveSub.getRightDistance() - 0.25,
+        () -> driveSub.getLeftDistance() + 0.5,
+        () -> driveSub.getRightDistance() + 0.5,
         () -> 0.05,
         () -> false,
         () -> true,
         () -> driveSub.isDriveControllersAtSetpoint()
-        ),
+        ).withTimeout(3),
       new AutoLog("Turning away from the amp"),
       new TurnPIDCmd(driveSub,
-        () -> 90,
+        () -> 260,
         () -> 10,
         () -> false,
         () -> driveSub.getTurnController().atSetpoint()
-      ),
+      ).withTimeout(5),
+      new AutoLog("Moving out of zone"),
       new TankDrivePIDCmd(driveSub,
-        () -> driveSub.getLeftDistance() + 3,
-        () -> driveSub.getRightDistance() + 3,
+        () -> driveSub.getLeftDistance() + 2,
+        () -> driveSub.getRightDistance() + 2,
         () -> 0.05,
         () -> false,
-        () -> true,
+        () -> false,
         () -> driveSub.isDriveControllersAtSetpoint()
-      )
+      ).withTimeout(5)
     );
   }
 }

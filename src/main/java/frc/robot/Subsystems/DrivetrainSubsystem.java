@@ -138,6 +138,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   /** Creates a new DrivetrainSubsystem. */
   public DrivetrainSubsystem() {
+    new Thread(() -> {
+      try {
+        Thread.sleep(1000);
+        resetGyro();
+      } catch (Exception e) {}
+    }).start();
+
     // frontLeft.configFactoryDefault();
     // backLeft.configFactoryDefault();
     // frontRight.configFactoryDefault();
@@ -225,6 +232,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
       () -> false,
       this
     );
+
+    turnController.enableContinuousInput(0, 360);
   }
 
   @Override
@@ -381,6 +390,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
     rightEncoder.setPosition(0);
    
     // Resetting gyro
+    resetGyro();
+  }
+
+  public void resetGyro() {
     gyro.reset();
   }
 }
