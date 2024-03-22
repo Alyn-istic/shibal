@@ -13,9 +13,9 @@ import frc.robot.Subsystems.DrivetrainSubsystem;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class LeaveAmpSensor extends SequentialCommandGroup {
-  /** Creates a new LeaveAmpSensor. */
-  public LeaveAmpSensor(
+public class LeaveAmpSensorRed extends SequentialCommandGroup {
+  /** Creates a new LeaveAmpSensorRed. */
+  public LeaveAmpSensorRed(
     DrivetrainSubsystem driveSub
   ) {
     // Add your commands in the addCommands() call, e.g.
@@ -32,7 +32,7 @@ public class LeaveAmpSensor extends SequentialCommandGroup {
         ).withTimeout(3),
       new AutoLog("Turning away from the amp"),
       new TurnPIDCmd(driveSub,
-        () -> 260,
+        () -> 100,
         () -> 10,
         () -> false,
         () -> driveSub.getTurnController().atSetpoint()

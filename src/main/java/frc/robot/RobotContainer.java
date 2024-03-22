@@ -26,7 +26,8 @@ import frc.robot.CommandGroups.ArmAutos.ArmZero;
 // import frc.robot.CommandGroups.DrivetrainAutos.Timed.MoveOutOfZoneTimed.MoveOutOfZoneTimed1;
 import frc.robot.CommandGroups.MainAutos.AutoLog;
 import frc.robot.CommandGroups.MainAutos.Sensor.ExitZoneSensor;
-import frc.robot.CommandGroups.MainAutos.Sensor.ScoreInAmpSensor1;
+import frc.robot.CommandGroups.MainAutos.Sensor.ScoreInAmpSensor1Blue;
+import frc.robot.CommandGroups.MainAutos.Sensor.ScoreInAmpSensor1Red;
 // import frc.robot.CommandGroups.MainAutos.Sensor.ScoreInAmpSensor1;
 import frc.robot.CommandGroups.MainAutos.Timed.ExitZoneTimed;
 import frc.robot.CommandGroups.MainAutos.Timed.ScoreInAmpTimed.ScoreInAmpTimedBlue1;
@@ -113,14 +114,15 @@ public class RobotContainer {
 
     autoChooser.setDefaultOption("NONE", new AutoLog("No auto selected."));
     autoChooser.addOption("CALIBRATE ARM", new ArmZero(armSub));
-    autoChooser.addOption("SCORE IN AMP TEST SENSOR", new ScoreInAmpSensor1(driveSub, armSub, intakeShooterSub, led));
+    autoChooser.addOption("SCORE IN AMP ONLY (TIMED)", new ScoreInAmpTimedOnly(driveSub, intakeShooterSub, led, armSub));
+    autoChooser.addOption("SCORE IN AMP HUG WALL BLUE (SENSOR) ", new ScoreInAmpSensor1Blue(driveSub, armSub, intakeShooterSub, led));
+    autoChooser.addOption("SCORE IN AMP HUG WALL RED (SENSOR)", new ScoreInAmpSensor1Red(driveSub, armSub, intakeShooterSub, led));
     autoChooser.addOption("SCORE IN AMP HUG WALL BLUE (TIMED)", new ScoreInAmpTimedWallBlue(driveSub, intakeShooterSub, led, armSub));
     autoChooser.addOption("SCORE IN AMP HUG WALL RED (TIMED)", new ScoreInAmpTimedWallRed(driveSub, intakeShooterSub, led, armSub));
 
     //autoChooser.addOption("MOVE OUT OF ZONE (TIMED)", new ExitZoneTimed(driveSub, armSub));
     //autoChooser.addOption("MOVE OUT OF ZONE (SENSOR)", new ExitZoneSensor(driveSub, armSub));
     //autoChooser.addOption("SCORE IN AMP (SENSORS)", new ScoreInAmpSensor1(driveSub, armSub, intakeShooterSub, led));
-    // autoChooser.addOption("SCORE IN AMP ONLY (TIMED)", new ScoreInAmpTimedOnly(driveSub, intakeShooterSub, led, armSub));
     // autoChooser.addOption("SCORE IN AMP 1 BLUE (TIMED)", new ScoreInAmpTimedBlue1(driveSub, intakeShooterSub, led, armSub));
     // autoChooser.addOption("SCORE IN AMP 2 BLUE (TIMED)", new ScoreInAmpTimedBlue2(driveSub, intakeShooterSub, led, armSub));
     // autoChooser.addOption("SCORE IN AMP 3 BLUE (TIMED)", new ScoreInAmpTimedBlue3(driveSub, intakeShooterSub, led, armSub));
@@ -164,7 +166,7 @@ public class RobotContainer {
     commandDriver.leftBumper().onTrue(new ArmCommandSelector(armSub, -1));
     commandDriver.rightBumper().onTrue(new ArmCommandSelector(armSub, 1));
 
-    commandDriver.a().whileTrue(new ScoreInAmpSensor1(driveSub, armSub, intakeShooterSub, led));
+    //commandDriver.a().whileTrue(new ScoreInAmpSensor1(driveSub, armSub, intakeShooterSub, led));
 
     // //Intake: Drop into intake angle.//
     // commandDriver.povDown().whileTrue(new ArmIntake(armSub));
