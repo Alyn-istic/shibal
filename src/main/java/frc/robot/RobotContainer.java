@@ -26,6 +26,7 @@ import frc.robot.CommandGroups.ArmAutos.ArmZero;
 // import frc.robot.CommandGroups.DrivetrainAutos.Timed.MoveOutOfZoneTimed.MoveOutOfZoneTimed1;
 import frc.robot.CommandGroups.MainAutos.AutoLog;
 import frc.robot.CommandGroups.MainAutos.Sensor.ExitZoneSensor;
+import frc.robot.CommandGroups.MainAutos.Sensor.ScoreInAmpOnlySensor;
 import frc.robot.CommandGroups.MainAutos.Sensor.ScoreInAmpSensor1Blue;
 import frc.robot.CommandGroups.MainAutos.Sensor.ScoreInAmpSensor1Red;
 // import frc.robot.CommandGroups.MainAutos.Sensor.ScoreInAmpSensor1;
@@ -114,11 +115,12 @@ public class RobotContainer {
 
     autoChooser.setDefaultOption("NONE", new AutoLog("No auto selected."));
     autoChooser.addOption("CALIBRATE ARM", new ArmZero(armSub));
-    autoChooser.addOption("SCORE IN AMP ONLY (TIMED)", new ScoreInAmpTimedOnly(driveSub, intakeShooterSub, led, armSub));
+    autoChooser.addOption("SCORE IN AMP (SENSOR)", new ScoreInAmpOnlySensor(driveSub, armSub, intakeShooterSub, led));
+    // autoChooser.addOption("SCORE IN AMP ONLY (TIMED)", new ScoreInAmpTimedOnly(driveSub, intakeShooterSub, led, armSub));
     autoChooser.addOption("SCORE IN AMP HUG WALL BLUE (SENSOR) ", new ScoreInAmpSensor1Blue(driveSub, armSub, intakeShooterSub, led));
     autoChooser.addOption("SCORE IN AMP HUG WALL RED (SENSOR)", new ScoreInAmpSensor1Red(driveSub, armSub, intakeShooterSub, led));
-    autoChooser.addOption("SCORE IN AMP HUG WALL BLUE (TIMED)", new ScoreInAmpTimedWallBlue(driveSub, intakeShooterSub, led, armSub));
-    autoChooser.addOption("SCORE IN AMP HUG WALL RED (TIMED)", new ScoreInAmpTimedWallRed(driveSub, intakeShooterSub, led, armSub));
+    // autoChooser.addOption("SCORE IN AMP HUG WALL BLUE (TIMED)", new ScoreInAmpTimedWallBlue(driveSub, intakeShooterSub, led, armSub));
+    // autoChooser.addOption("SCORE IN AMP HUG WALL RED (TIMED)", new ScoreInAmpTimedWallRed(driveSub, intakeShooterSub, led, armSub));
 
     //autoChooser.addOption("MOVE OUT OF ZONE (TIMED)", new ExitZoneTimed(driveSub, armSub));
     //autoChooser.addOption("MOVE OUT OF ZONE (SENSOR)", new ExitZoneSensor(driveSub, armSub));
@@ -232,9 +234,11 @@ public class RobotContainer {
       )
     );
     // While the raise limit switch is pressed, reset arm position to shoot angle, and reset setpoint offset to 0.
-    new Trigger(() -> armSub.raiseLimitSwitchHit()).whileTrue(
+    new Trigger(() -> (armSub.raiseLimitSwitchHit() && armSub.getmotorSpeed() < 0)).onTrue(
       new RunCommand(
-        () -> armSub.setSensorPosition(armSub.toPosition(ArmConstants.shootAngle))
+        () -> {
+          armSub.setSensorPosition(armSub.toPosition(ArmConstants.limitSwitchAngle));
+        }
       ).alongWith(
         new RunCommand(
           () -> SmartDashboard.putNumber("Arm Setpoint Offset", 0)

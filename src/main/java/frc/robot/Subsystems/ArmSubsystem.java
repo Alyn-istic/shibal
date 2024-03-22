@@ -111,10 +111,10 @@ public class ArmSubsystem extends SubsystemBase {
       leftMotor.setSelectedSensorPosition(toPosition(ArmConstants.intakeAngle));
       SmartDashboard.putNumber("Arm Setpoint Offset", 0);
     }
-    if ((raiseLimitSwitchHit() && (Math.abs(leftMotor.get()) >= 0.3)) || (raiseLimitSwitchHit() && currentPositionindex == ArmConstants.angles.length-1)) {
-      leftMotor.setSelectedSensorPosition(toPosition(ArmConstants.shootAngle));
-      SmartDashboard.putNumber("Arm Setpoint Offset", 0);
-    }
+    // if ((raiseLimitSwitchHit() && (Math.abs(leftMotor.get()) >= 0.3))) {
+    //   leftMotor.setSelectedSensorPosition(toPosition(ArmConstants.limitSwitchAngle));
+    //   SmartDashboard.putNumber("Arm Setpoint Offset", 0);
+    // }
 
     // System.out.println("Arm angle: " + getAngle() + "Drop lim: " + dropLimitSwitchHit() + "Raise lim: " + raiseLimitSwitchHit());
   }
@@ -134,6 +134,10 @@ public class ArmSubsystem extends SubsystemBase {
     leftMotor.set(
       clampedSpeed
     ); //defining public method to just the left motor, takes doubles, -> speed
+  }
+
+  public double getmotorSpeed() {
+    return leftMotor.get();
   }
 
   public double getAngle() {

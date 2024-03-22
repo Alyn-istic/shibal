@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.CommandGroups.MainAutos.AutoLog;
 import frc.robot.Commands.Drivetrain.TankDrivePIDCmd;
 import frc.robot.Commands.Drivetrain.TurnPIDCmd;
+import frc.robot.Constants.AutonomousConstants.MoveOutOfZoneConstants;
 import frc.robot.Subsystems.DrivetrainSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -32,7 +33,7 @@ public class LeaveAmpSensorRed extends SequentialCommandGroup {
         ).withTimeout(3),
       new AutoLog("Turning away from the amp"),
       new TurnPIDCmd(driveSub,
-        () -> 100,
+        () -> (MoveOutOfZoneConstants.LEAVE_AMP_ANGLE) % 360,
         () -> 10,
         () -> false,
         () -> driveSub.getTurnController().atSetpoint()

@@ -24,7 +24,7 @@ public class RamIntoAmpSensor extends SequentialCommandGroup {
     addCommands(
       new AutoLog("Ramming into amp"),
       new TankDrivePIDCmd(driveSub,
-        () -> driveSub.getLeftDistance() - 1.2,
+        () -> driveSub.getLeftDistance() - 1.4,
         () -> driveSub.getRightDistance() - 1.4,
         () -> 0.2,
         () -> false,

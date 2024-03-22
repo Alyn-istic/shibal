@@ -35,9 +35,7 @@ public class ArmManualCmd extends Command {
   @Override
   public void execute() {
     double speed = speedInput.getAsDouble();
-    if ((speed < 0) && armSub.raiseLimitSwitchHit()) {
-      speed = 0;
-    } else if ((speed > 0) && armSub.dropLimitSwitchHit()) {
+    if ((speed > 0) && armSub.dropLimitSwitchHit()) {
       speed = 0;
     }
     armSub.setMotor(speed);

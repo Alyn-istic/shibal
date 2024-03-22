@@ -42,6 +42,8 @@ public class Constants {
         public class MoveOutOfZoneConstants {
             public static final double TIME_MOVE_OUT_OF_ZONE1 = 3; // In seconds. Was 1.4s
             public static final double SPEED_MOVE_OUT_OF_ZONE1 = -0.5; // Motor speed. Was -0.4
+
+            public static final double LEAVE_AMP_ANGLE = 100;
         }
     }
 
@@ -122,6 +124,7 @@ public class Constants {
         public static final double drivingUnderStage = 30; // The angle of the position of the arm while the robot is driving under stage
         public static final double shootInsideAngle = 90; // The angle of the arm inside the perimeter preparing to move to shoot position.
         public static final double intakeAngle = 0; // The angle of the arm in intaking position
+        public static final double limitSwitchAngle = 110;
         public static final double[] angles = {
             intakeAngle,
             drivingUnderStage,

@@ -13,38 +13,7 @@
         "tiles": {
           "0,6": {
             "size": [
-              3,
-              1
-            ],
-            "content": {
-              "_type": "Grid Layout",
-              "_title": "Intake-Shooter",
-              "_glyph": 149,
-              "_showGlyph": false,
-              "Layout/Number of columns": 2,
-              "Layout/Number of rows": 1,
-              "Layout/Label position": "LEFT",
-              "_children": {
-                "0,0": {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Intake/Shooter Motor 1 Speed",
-                  "_title": "Motor 1",
-                  "_glyph": 148,
-                  "_showGlyph": false
-                },
-                "1,0": {
-                  "_type": "Text View",
-                  "_source0": "network_table:///SmartDashboard/Intake/Shooter Motor 2 Speed",
-                  "_title": "Motor2",
-                  "_glyph": 148,
-                  "_showGlyph": false
-                }
-              }
-            }
-          },
-          "3,6": {
-            "size": [
-              2,
+              5,
               2
             ],
             "content": {
@@ -449,9 +418,9 @@
               "_showGlyph": false
             }
           },
-          "5,6": {
+          "13,7": {
             "size": [
-              1,
+              2,
               1
             ],
             "content": {
@@ -497,6 +466,19 @@
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/Drivetrain Gyro Error Correction",
               "_title": "Drivetrain Gyro Error Correction",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "14,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Gyro P",
+              "_title": "Gyro P",
               "_glyph": 148,
               "_showGlyph": false
             }

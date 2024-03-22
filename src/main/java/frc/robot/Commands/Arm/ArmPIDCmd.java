@@ -64,11 +64,7 @@ public class ArmPIDCmd extends Command {
     // armSub.setMotor(speed);
     //System.out.println("Arm velocity recieved (experimenting, currently does nothing):" + armSub.getSensorVelocity());
     if ((speed < 0)) { // Raising
-      if (!armSub.raiseLimitSwitchHit()) {
-        armSub.setMotor(speed);
-      } else {
-        armSub.setMotor(0);
-      }
+      armSub.setMotor(speed);
       controller.setP(ArmConstants.raiseP);
       controller.setI(ArmConstants.raiseI);
       controller.setD(ArmConstants.raiseD);
