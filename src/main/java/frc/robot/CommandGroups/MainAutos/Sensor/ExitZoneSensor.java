@@ -24,15 +24,17 @@ public class ExitZoneSensor extends ParallelCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new TankDrivePIDCmd(driveSub, 
-        () -> driveSub.getLeftDistance() + 7,
-        () -> driveSub.getRightDistance() + 7,
-        () -> 0.1,
-        () -> false,
-        () -> true,
-        () -> false
-      ),
-      new ArmZero(armSub).andThen(new ArmIntakePerimeter(armSub, () -> armSub.getController().atSetpoint()))
+      new ParallelCommandGroup(
+        new TankDrivePIDCmd(driveSub, 
+          () -> driveSub.getLeftDistance() + 7,
+          () -> driveSub.getRightDistance() + 7,
+          () -> 0.1,
+          () -> false,
+          () -> true,
+          () -> false
+        ),
+        new ArmZero(armSub).andThen(new ArmIntakePerimeter(armSub, () -> armSub.getController().atSetpoint()))
+      )
     );
   }
 }

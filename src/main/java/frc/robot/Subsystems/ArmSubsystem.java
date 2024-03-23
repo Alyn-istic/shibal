@@ -37,7 +37,6 @@ public class ArmSubsystem extends SubsystemBase {
   private final DigitalInput dropSwitch1 = new DigitalInput(ArmConstants.dropLimitSwitchChannel1);
   private final DigitalInput dropSwitch2 = new DigitalInput(ArmConstants.dropLimitSwitchChannel2);
   private final DigitalInput raiseSwitch1 = new DigitalInput(ArmConstants.raiseLimitSwitchChannel1);
-  private final DigitalInput raiseSwitch2 = new DigitalInput(ArmConstants.raiseLimitSwitchChannel2);
 
   // Controllers
   private final PIDController pidcontroller = new PIDController(ArmConstants.raiseP, ArmConstants.raiseI, ArmConstants.raiseD);
@@ -100,12 +99,14 @@ public class ArmSubsystem extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("Arm Motor Speed", leftMotor.get());
 
-    SmartDashboard.putBoolean("Arm raise limit", raiseLimitSwitchHit());
+    // SmartDashboard.putBoolean("Arm raise limit", raiseLimitSwitchHit());
     SmartDashboard.putBoolean("Arm drop limit", dropLimitSwitchHit());
     //System.out.println(dropLimitSwitch());
 
     SmartDashboard.putNumber("Arm Angle", getAngle());
     SmartDashboard.putNumber("Arm Position", getSensorPosition());
+
+    // System.out.println(getVelocity());
 
     if ((dropLimitSwitchHit() && (Math.abs(leftMotor.get()) >= 0.3)) || (dropLimitSwitchHit() && currentPositionindex == 0)) { // The following has been ported to RobotContainer
       leftMotor.setSelectedSensorPosition(toPosition(ArmConstants.intakeAngle));
@@ -170,11 +171,12 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public boolean raiseLimitSwitchHit() { // True when one or both are clicked, false when not
-    return (!raiseSwitch1.get() || !raiseSwitch2.get());
+    // return (raiseSwitch1.get());
+    return false;
   }
 
   public boolean dropLimitSwitchHit() { // True when one or both are clicked, false when not
-    return (dropSwitch1.get() || dropSwitch2.get());
+    return (dropSwitch1.get() && dropSwitch2.get());
   }
 
   public PIDController getController() {

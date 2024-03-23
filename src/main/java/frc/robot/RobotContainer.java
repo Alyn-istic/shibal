@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.CommandGroups.ArmAutos.ArmZero;
+import frc.robot.CommandGroups.DrivetrainAutos.Sensor.MoveOutOfZoneSensor;
 // import frc.robot.CommandGroups.ArmAutos.ArmIntake;
 // import frc.robot.CommandGroups.ArmAutos.ArmIntakePerimeter;
 // import frc.robot.CommandGroups.ArmAutos.ArmIntakeSource;
@@ -97,7 +98,7 @@ public class RobotContainer {
 
     armSub.setDefaultCommand(
       new ArmManualCmd(armSub,
-        () -> -MathUtil.applyDeadband(operator.getRawAxis(DriverConstants.rightJoystickAxis) * ArmConstants.armManualSpeed, DriverConstants.joystickDeadband)
+        () -> MathUtil.applyDeadband(operator.getRawAxis(DriverConstants.rightJoystickAxis) * ArmConstants.armManualSpeed, DriverConstants.joystickDeadband)
       )
     );
     // led.setDefaultCommand(
@@ -115,6 +116,7 @@ public class RobotContainer {
 
     autoChooser.setDefaultOption("NONE", new AutoLog("No auto selected."));
     autoChooser.addOption("CALIBRATE ARM", new ArmZero(armSub));
+    autoChooser.addOption("MOVE OUT OF ZONE", new ExitZoneSensor(driveSub, armSub));
     autoChooser.addOption("SCORE IN AMP (SENSOR)", new ScoreInAmpOnlySensor(driveSub, armSub, intakeShooterSub, led));
     // autoChooser.addOption("SCORE IN AMP ONLY (TIMED)", new ScoreInAmpTimedOnly(driveSub, intakeShooterSub, led, armSub));
     autoChooser.addOption("SCORE IN AMP HUG WALL BLUE (SENSOR) ", new ScoreInAmpSensor1Blue(driveSub, armSub, intakeShooterSub, led));
@@ -234,18 +236,18 @@ public class RobotContainer {
       )
     );
     // While the raise limit switch is pressed, reset arm position to shoot angle, and reset setpoint offset to 0.
-    new Trigger(() -> (armSub.raiseLimitSwitchHit() && armSub.getmotorSpeed() < 0)).onTrue(
-      new RunCommand(
-        () -> {
-          System.out.println("Upper limit switch detected at angle " + armSub.getAngle());
-          armSub.setSensorPosition(armSub.toPosition(ArmConstants.limitSwitchAngle));
-        }
-      ).alongWith(
-        new RunCommand(
-          () -> SmartDashboard.putNumber("Arm Setpoint Offset", 0)
-        )
-      )
-    );
+    // new Trigger(() -> (armSub.raiseLimitSwitchHit() && armSub.getVelocity() > 0)).onTrue(
+    //   new RunCommand(
+    //     () -> {
+    //       System.out.println("Upper limit switch detected at angle " + armSub.getAngle());
+    //       armSub.setSensorPosition(armSub.toPosition(ArmConstants.limitSwitchAngle));
+    //     }
+    //   ).alongWith(
+    //     new RunCommand(
+    //       () -> SmartDashboard.putNumber("Arm Setpoint Offset", 0)
+    //     )
+    //   )
+    // );
 
     //////////////////////////////////////// Sys ID /////////////////////////////////////////////////////////
     // commandTester.y().whileTrue(driveSub.sysIdDynamic(SysIdRoutine.Direction.kForward));

@@ -7,6 +7,7 @@ package frc.robot.Commands.Drivetrain;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DrivetrainConstants;
@@ -18,6 +19,8 @@ public class TankDrivePIDCmd extends Command {
   private DoubleSupplier leftDriveSetpoint, rightDriveSetpoint, driveTolerance; //driveP, driveI, driveD, turnP, turnI, turnD;
   private PIDController leftDriveController, rightDriveController;
   private BooleanSupplier periodicalUpdate, correctGyroError, endSupplier;
+
+  private SlewRateLimiter leftLimiter, rightLimiter;
 
   private double initialGyroAngle;
 
@@ -48,6 +51,9 @@ public class TankDrivePIDCmd extends Command {
     this.driveTolerance = driveTolerance;
     this.correctGyroError = correctGyroError;
     this.endSupplier = end;
+
+    this.leftLimiter = driveSub.getLeftSlewRateLimiter();
+    this.rightLimiter = driveSub.getRightSlewRateLimiter();
 
     this.initialGyroAngle = driveSub.getGyroAngle();
 
@@ -92,8 +98,10 @@ public class TankDrivePIDCmd extends Command {
     }
   
     driveSub.tankDriveSpeed(
-      (leftSpeed),
-      (rightSpeed)
+      // leftLimiter.calculate(leftSpeed),
+      // rightLimiter.calculate(rightSpeed)
+      leftSpeed,
+      rightSpeed
     );
 
     if (periodicalUpdate.getAsBoolean()) {
