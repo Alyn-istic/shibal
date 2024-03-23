@@ -40,8 +40,8 @@ public class Constants {
             public static final double SPEED_MOVE_TO_AMP3 = -0.4; // Motor speed
         }
         public class MoveOutOfZoneSensorConstants {
-            //public static final double leaveAmpDistance;
-            //p
+            public static final double LEAVE_AMP_DISTANCE = 0.75;
+            public static final double LEAVE_AMP_ZONE_DISTANCE = 1.75;//WAS 1
         }
         public class MoveOutOfZoneConstants {
             public static final double TIME_MOVE_OUT_OF_ZONE1 = 3; // In seconds. Was 1.4s
@@ -92,7 +92,7 @@ public class Constants {
         public static final double gyroTolerance = 1; // Tolerance for turning PID command
         public static final double kS = 1.4796; // 
         public static final double kV = 0.6432; // 
-        
+
     }
 
     public class ArmConstants {

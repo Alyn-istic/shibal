@@ -9,6 +9,7 @@ import frc.robot.CommandGroups.MainAutos.AutoLog;
 import frc.robot.Commands.Drivetrain.TankDrivePIDCmd;
 import frc.robot.Commands.Drivetrain.TurnPIDCmd;
 import frc.robot.Constants.AutonomousConstants.MoveOutOfZoneConstants;
+import frc.robot.Constants.AutonomousConstants.MoveOutOfZoneSensorConstants;
 import frc.robot.Subsystems.DrivetrainSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -24,8 +25,8 @@ public class LeaveAmpSensorBlue extends SequentialCommandGroup {
     addCommands(
       new AutoLog("Leaving the amp."),
       new TankDrivePIDCmd(driveSub,
-        () -> driveSub.getLeftDistance() + 0.75,
-        () -> driveSub.getRightDistance() + 0.75,
+        () -> driveSub.getLeftDistance() + MoveOutOfZoneSensorConstants.LEAVE_AMP_DISTANCE,
+        () -> driveSub.getRightDistance() + MoveOutOfZoneSensorConstants.LEAVE_AMP_DISTANCE,
         () -> 0.05,
         () -> false,
         () -> true,
@@ -40,8 +41,8 @@ public class LeaveAmpSensorBlue extends SequentialCommandGroup {
       ).withTimeout(5),
       new AutoLog("Moving out of zone"),
       new TankDrivePIDCmd(driveSub,
-        () -> driveSub.getLeftDistance() + 1.75,
-        () -> driveSub.getRightDistance() + 1.75,
+        () -> driveSub.getLeftDistance() + MoveOutOfZoneSensorConstants.LEAVE_AMP_ZONE_DISTANCE,
+        () -> driveSub.getRightDistance() + MoveOutOfZoneSensorConstants.LEAVE_AMP_ZONE_DISTANCE,
         () -> 0.05,
         () -> false,
         () -> false,
