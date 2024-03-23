@@ -86,6 +86,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private Field2d field = new Field2d();
   private DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(DrivetrainConstants.distLeftRight));
 
+  private double speedMultiplier = 1;
+
   /* Mutable holders
     The idea behind a mutable object is that you can modify its value.
     For example, you can create a variable called x, and assign it's value with integer 1.
@@ -282,15 +284,15 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public void tankDriveSpeed(double leftSpeed, double rightSpeed) { // Tankdrive using speed.
     drive.tankDrive(
-      MathUtil.clamp(leftSpeed, -DrivetrainConstants.motorClamp, DrivetrainConstants.motorClamp),
-      MathUtil.clamp(rightSpeed, -DrivetrainConstants.motorClamp, DrivetrainConstants.motorClamp)
+      MathUtil.clamp(leftSpeed * speedMultiplier, -DrivetrainConstants.motorClamp, DrivetrainConstants.motorClamp),
+      MathUtil.clamp(rightSpeed * speedMultiplier, -DrivetrainConstants.motorClamp, DrivetrainConstants.motorClamp)
     );
   }
 
   public void arcadeDriveSpeed(double forwardSpeed, double turnSpeed) {
     drive.tankDrive(
-      MathUtil.clamp(forwardSpeed, -DrivetrainConstants.motorClamp, DrivetrainConstants.motorClamp),
-      MathUtil.clamp(turnSpeed, -DrivetrainConstants.motorClamp, DrivetrainConstants.motorClamp)
+      MathUtil.clamp(forwardSpeed * speedMultiplier, -DrivetrainConstants.motorClamp, DrivetrainConstants.motorClamp),
+      MathUtil.clamp(turnSpeed * speedMultiplier, -DrivetrainConstants.motorClamp, DrivetrainConstants.motorClamp)
     );
   }
 
@@ -395,5 +397,26 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public void resetGyro() {
     gyro.reset();
+  }
+
+  public void setCoast(){
+    frontLeft.setIdleMode(IdleMode.kCoast);
+    backLeft.setIdleMode(IdleMode.kCoast);
+    frontRight.setIdleMode(IdleMode.kCoast);
+    backRight.setIdleMode(IdleMode.kCoast);
+  }
+
+  public void setBrake() {
+    frontLeft.setIdleMode(IdleMode.kBrake);
+    backLeft.setIdleMode(IdleMode.kBrake);
+    frontRight.setIdleMode(IdleMode.kBrake);
+    backRight.setIdleMode(IdleMode.kBrake);
+
+    
+  }
+
+  public void setSpeedMultiplier(double multiplier) {
+    speedMultiplier = multiplier;
+    System.out.println("Changed robot speed multiplier to " + multiplier);
   }
 }

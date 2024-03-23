@@ -47,7 +47,7 @@ public class Constants {
             public static final double TIME_MOVE_OUT_OF_ZONE1 = 3; // In seconds. Was 1.4s
             public static final double SPEED_MOVE_OUT_OF_ZONE1 = -0.5; // Motor speed. Was -0.4
 
-            public static final double LEAVE_AMP_ANGLE = 100;
+            public static final double LEAVE_AMP_ANGLE = 90;
         }
     }
 
@@ -68,6 +68,7 @@ public class Constants {
         public static final Port gyroPort = Port.kOnboard; // The port that the gyro is connected to.
 
         public static final double speed = 1; // hello world
+        public static final double slowerSpeedMult = 0.8;
 
         public static final double startPosX = 2; //
         public static final double startPosY = 7; //
@@ -77,7 +78,7 @@ public class Constants {
         public static final double driveD = 0; // 
         public static final double driveTolerance = 0; // 
 
-        public static final double motorClamp = 1; //
+        public static final double motorClamp = 1.0; // 41
         public static final double autoSlewRate = 0.1; // Slewrate for open-looped autonomous routines. was 0.3
 
         public static final double minAngle = 0; // 
@@ -85,12 +86,13 @@ public class Constants {
 
         public static final double gyroErrorCorrectionFactor = 0.0021;
 
-        public static final double turnP = 0.4; // P value for turning PID command. Was 0.4
+        public static final double turnP = 0.05; // P value for turning PID command. Was 0.4
         public static final double turnI = 0; // I value for turning PID command
-        public static final double turnD = 0; // D value for turning PID command
+        public static final double turnD = 0.005; // D value for turning PID command
         public static final double gyroTolerance = 1; // Tolerance for turning PID command
         public static final double kS = 1.4796; // 
         public static final double kV = 0.6432; // 
+        
     }
 
     public class ArmConstants {
@@ -103,7 +105,7 @@ public class Constants {
         public static final double gearRatio = 4; // The gear ratio of the arm
         public static final double startingAngle = 90; // 
 
-        public static final int raiseLimitSwitchChannel1 = 6; // 
+        public static final int raiseLimitSwitchChannel1 = 7; // 
         public static final int raiseLimitSwitchChannel2 = 2; //
         public static final int dropLimitSwitchChannel1 = 9; // 
         public static final int dropLimitSwitchChannel2 = 8; // 
@@ -128,7 +130,7 @@ public class Constants {
         public static final double drivingUnderStage = 30; // The angle of the position of the arm while the robot is driving under stage
         public static final double shootInsideAngle = 90; // The angle of the arm inside the perimeter preparing to move to shoot position.
         public static final double intakeAngle = 0; // The angle of the arm in intaking position
-        public static final double limitSwitchAngle = 90;
+        public static final double limitSwitchAngle = 95;
         public static final double[] angles = {
             intakeAngle,
             drivingUnderStage,

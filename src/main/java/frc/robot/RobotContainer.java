@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import java.sql.Time;
+import java.time.LocalDateTime;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -12,11 +15,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.CommandGroups.ArmAutos.ArmZero;
+import frc.robot.CommandGroups.ArmAutos.ArmZeroUp;
 import frc.robot.CommandGroups.DrivetrainAutos.Sensor.MoveOutOfZoneSensor;
 // import frc.robot.CommandGroups.ArmAutos.ArmIntake;
 // import frc.robot.CommandGroups.ArmAutos.ArmIntakePerimeter;
@@ -49,6 +55,7 @@ import frc.robot.Commands.Climber.ClimberCmd;
 // import frc.robot.Commands.Arm.LimitSwitchSimulation;
 import frc.robot.Commands.Drivetrain.TankDriveCmd;
 import frc.robot.Commands.Drivetrain.TankDrivePIDCmd;
+import frc.robot.Commands.Drivetrain.TurnPIDCmd;
 import frc.robot.Commands.IntakeShooter.IntakeCmd;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.AutonomousConstants;
@@ -84,6 +91,8 @@ public class RobotContainer {
   // Stuff for ArmPID
   private final SendableChooser<Command> autoChooser = new SendableChooser<>();
 
+  private boolean bButtonToggle = false;
+
   public RobotContainer() {
     // Telling the robot to run the TankDrive command when no other command is using the Drivetrain.
     driveSub.setDefaultCommand(
@@ -95,7 +104,6 @@ public class RobotContainer {
         () -> MathUtil.applyDeadband(driver.getRawAxis(DriverConstants.rightJoystickAxis), DriverConstants.joystickDeadband)
       )
     );
-
     armSub.setDefaultCommand(
       new ArmManualCmd(armSub,
         () -> MathUtil.applyDeadband(operator.getRawAxis(DriverConstants.rightJoystickAxis) * ArmConstants.armManualSpeed, DriverConstants.joystickDeadband)
@@ -115,12 +123,18 @@ public class RobotContainer {
     // SmartDashboard.putNumber("Arm Setpoint Offset", ArmConstants.setpointOffset);
 
     autoChooser.setDefaultOption("NONE", new AutoLog("No auto selected."));
-    autoChooser.addOption("CALIBRATE ARM", new ArmZero(armSub));
-    autoChooser.addOption("MOVE OUT OF ZONE", new ExitZoneSensor(driveSub, armSub));
-    autoChooser.addOption("SCORE IN AMP (SENSOR)", new ScoreInAmpOnlySensor(driveSub, armSub, intakeShooterSub, led));
+    autoChooser.addOption("CALIBRATE ARM", new ArmZeroUp(armSub));
+    autoChooser.addOption("MOVE OUT OF ZONE (SENSOR)", new ExitZoneSensor(driveSub, armSub));
+    autoChooser.addOption("SCORE IN AMP ONLY (SENSOR)", new ScoreInAmpOnlySensor(driveSub, armSub, intakeShooterSub, led));
     // autoChooser.addOption("SCORE IN AMP ONLY (TIMED)", new ScoreInAmpTimedOnly(driveSub, intakeShooterSub, led, armSub));
     autoChooser.addOption("SCORE IN AMP HUG WALL BLUE (SENSOR) ", new ScoreInAmpSensor1Blue(driveSub, armSub, intakeShooterSub, led));
     autoChooser.addOption("SCORE IN AMP HUG WALL RED (SENSOR)", new ScoreInAmpSensor1Red(driveSub, armSub, intakeShooterSub, led));
+    autoChooser.addOption("TURN 90", new TurnPIDCmd(driveSub,
+        () -> 90,
+        () -> 10,
+        () -> false,
+        () -> false
+      ));
     // autoChooser.addOption("SCORE IN AMP HUG WALL BLUE (TIMED)", new ScoreInAmpTimedWallBlue(driveSub, intakeShooterSub, led, armSub));
     // autoChooser.addOption("SCORE IN AMP HUG WALL RED (TIMED)", new ScoreInAmpTimedWallRed(driveSub, intakeShooterSub, led, armSub));
 
@@ -163,12 +177,27 @@ public class RobotContainer {
     );
 
     // Run the climber motors using y and b
-    commandDriver.y().whileTrue(new ClimberCmd(climbSub, () -> ClimberConstants.climberSpeed)); // Extending Climber (This will depend on how arm works)
-    commandDriver.b().whileTrue(new ClimberCmd(climbSub, () -> ClimberConstants.climberSpeed * -1)); // Retracting climber
+    // commandDriver.y().whileTrue(new ClimberCmd(climbSub, () -> ClimberConstants.climberSpeed)); // Extending Climber (This will depend on how arm works)
+    // commandDriver.b().whileTrue(new ClimberCmd(climbSub, () -> ClimberConstants.climberSpeed * -1)); // Retracting climber
 
     // Using left/right bumpers to jump between setpoints for PID
     commandDriver.leftBumper().onTrue(new ArmCommandSelector(armSub, -1));
     commandDriver.rightBumper().onTrue(new ArmCommandSelector(armSub, 1));
+
+    commandDriver.b().onTrue(new InstantCommand(
+      () -> {
+        bButtonToggle = !bButtonToggle;
+        if(bButtonToggle)
+          {driveSub.setSpeedMultiplier(DrivetrainConstants.slowerSpeedMult);}
+        else{
+          driveSub.setSpeedMultiplier(1);
+        }
+      }
+    ));
+
+    // commandOperator.y().whileTrue(
+      
+    // );
 
     //commandDriver.a().whileTrue(new ScoreInAmpSensor1(driveSub, armSub, intakeShooterSub, led));
 
@@ -227,8 +256,11 @@ public class RobotContainer {
 
     // While the drop limit switch is pressed, reset arm position to intake angle, and reset setpoint offset to 0.
     new Trigger(() -> armSub.dropLimitSwitchHit()).whileTrue(
-      new RunCommand(
-        () -> armSub.setSensorPosition(armSub.toPosition(ArmConstants.intakeAngle))
+      new InstantCommand(
+        () -> {
+          System.out.println("Drop limit switch hit. Time: " + LocalDateTime.now() + "Arm index: " +  armSub.getCurrentPositionIndex());   
+          // armSub.setSensorPosition(armSub.toPosition(ArmConstants.intakeAngle));
+        }
       ).alongWith(
         new RunCommand(
           () -> SmartDashboard.putNumber("Arm Setpoint Offset", 0)
@@ -236,18 +268,19 @@ public class RobotContainer {
       )
     );
     // While the raise limit switch is pressed, reset arm position to shoot angle, and reset setpoint offset to 0.
-    // new Trigger(() -> (armSub.raiseLimitSwitchHit() && armSub.getVelocity() > 0)).onTrue(
-    //   new RunCommand(
-    //     () -> {
-    //       System.out.println("Upper limit switch detected at angle " + armSub.getAngle());
-    //       armSub.setSensorPosition(armSub.toPosition(ArmConstants.limitSwitchAngle));
-    //     }
-    //   ).alongWith(
-    //     new RunCommand(
-    //       () -> SmartDashboard.putNumber("Arm Setpoint Offset", 0)
-    //     )
-    //   )
-    // );
+    new Trigger(() -> (armSub.raiseLimitSwitchHit() && armSub.getVelocity() > 0)).onTrue(
+      new InstantCommand(
+        () -> {
+          System.out.println("Raise limit switch hit. Time:" + LocalDateTime.now() + "Arm index: " + armSub.getCurrentPositionIndex());   
+          //System.out.println("Upper limit switch detected at angle " + armSub.getAngle());
+          armSub.setSensorPosition(armSub.toPosition(ArmConstants.limitSwitchAngle));
+        }
+      ).alongWith(
+        new InstantCommand(
+          () -> SmartDashboard.putNumber("Arm Setpoint Offset", 0)
+        )
+      )
+    );
 
     //////////////////////////////////////// Sys ID /////////////////////////////////////////////////////////
     // commandTester.y().whileTrue(driveSub.sysIdDynamic(SysIdRoutine.Direction.kForward));
@@ -267,5 +300,9 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     return new WaitCommand(AutonomousConstants.waitBeforeExecRoutine).andThen(autoChooser.getSelected());
+  }
+
+  public DrivetrainSubsystem getDriveSub() {
+    return driveSub;
   }
 }

@@ -31,6 +31,7 @@ public class TankDrivePIDCmd extends Command {
    * @param rightDriveSetpoint Returns the setpoint for the right encoders in meters
    * @param driveTolerance Returns the tolerance for the PID controllers
    * @param periodicalUpdate Returns if the controllers's gains should be periodically updated
+   * @param correctGyroError If the chassis will try to creect using gyro
    * @param end Returns true when the command should end
    */
   public TankDrivePIDCmd(
@@ -89,8 +90,8 @@ public class TankDrivePIDCmd extends Command {
 
     double gyroErrorCorrection = gyroError * SmartDashboard.getNumber("Gyro P", DrivetrainConstants.gyroErrorCorrectionFactor);
 
-    double leftSpeed = leftDriveController.calculate(driveSub.getLeftDistance()) + (gyroErrorCorrection);
-    double rightSpeed = rightDriveController.calculate(driveSub.getRightDistance()) + (-gyroErrorCorrection);
+    double leftSpeed = leftDriveController.calculate(driveSub.getLeftDistance());
+    double rightSpeed = rightDriveController.calculate(driveSub.getRightDistance());
 
     if (correctGyroError.getAsBoolean()) {
       leftSpeed += (gyroErrorCorrection);

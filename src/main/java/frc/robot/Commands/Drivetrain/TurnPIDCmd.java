@@ -6,6 +6,8 @@ package frc.robot.Commands.Drivetrain;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DrivetrainConstants;
@@ -62,8 +64,8 @@ public class TurnPIDCmd extends Command {
     double turn = turnController.calculate(driveSub.getGyroAngle() % 360);
   
     driveSub.tankDriveSpeed(
-      (- turn),
-      (+ turn)
+      MathUtil.clamp(- turn, -0.5, 0.5),
+      MathUtil.clamp(+ turn, -0.5, 0.5)
     );
 
     if (periodicalUpdate.getAsBoolean()) {

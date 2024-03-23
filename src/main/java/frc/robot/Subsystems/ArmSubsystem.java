@@ -99,7 +99,7 @@ public class ArmSubsystem extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("Arm Motor Speed", leftMotor.get());
 
-    // SmartDashboard.putBoolean("Arm raise limit", raiseLimitSwitchHit());
+    SmartDashboard.putBoolean("Arm raise limit", raiseLimitSwitchHit());
     SmartDashboard.putBoolean("Arm drop limit", dropLimitSwitchHit());
     //System.out.println(dropLimitSwitch());
 
@@ -171,12 +171,11 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public boolean raiseLimitSwitchHit() { // True when one or both are clicked, false when not
-    // return (raiseSwitch1.get());
-    return false;
+    return (!raiseSwitch1.get());
   }
 
   public boolean dropLimitSwitchHit() { // True when one or both are clicked, false when not
-    return (dropSwitch1.get() && dropSwitch2.get());
+    return (!dropSwitch1.get() && !dropSwitch2.get());
   }
 
   public PIDController getController() {

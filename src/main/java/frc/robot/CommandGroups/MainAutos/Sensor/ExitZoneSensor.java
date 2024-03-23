@@ -6,7 +6,11 @@ package frc.robot.CommandGroups.MainAutos.Sensor;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.CommandGroups.ArmAutos.ArmIntakePerimeter;
+import frc.robot.CommandGroups.ArmAutos.ArmMobile;
+import frc.robot.CommandGroups.ArmAutos.ArmShootPerimeter;
 import frc.robot.CommandGroups.ArmAutos.ArmZero;
+import frc.robot.CommandGroups.ArmAutos.ArmZeroUp;
+import frc.robot.CommandGroups.DrivetrainAutos.Sensor.MoveOutOfZoneSensor;
 import frc.robot.Commands.Drivetrain.TankDrivePIDCmd;
 import frc.robot.Commands.Drivetrain.TankDriveVisionPIDCmd;
 import frc.robot.Subsystems.ArmSubsystem;
@@ -25,15 +29,8 @@ public class ExitZoneSensor extends ParallelCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new ParallelCommandGroup(
-        new TankDrivePIDCmd(driveSub, 
-          () -> driveSub.getLeftDistance() + 7,
-          () -> driveSub.getRightDistance() + 7,
-          () -> 0.1,
-          () -> false,
-          () -> true,
-          () -> false
-        ),
-        new ArmZero(armSub).andThen(new ArmIntakePerimeter(armSub, () -> armSub.getController().atSetpoint()))
+        new MoveOutOfZoneSensor(driveSub),
+        new ArmZero(armSub).andThen(new ArmShootPerimeter(armSub, () -> false))
       )
     );
   }

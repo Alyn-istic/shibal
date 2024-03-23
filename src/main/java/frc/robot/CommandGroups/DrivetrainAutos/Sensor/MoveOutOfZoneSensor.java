@@ -23,11 +23,11 @@ public class MoveOutOfZoneSensor extends SequentialCommandGroup {
     addCommands(
       new AutoLog("Driving out of zone"),
       new TankDrivePIDCmd(driveSub,
-        () -> driveSub.getLeftDistance() + 3,
-        () -> driveSub.getRightDistance() + 3,
+        () -> driveSub.getLeftDistance() + 1.5,
+        () -> driveSub.getRightDistance() + 1.5,
         () -> 0.1,
         () -> false,
-        () -> true,
+        () -> false,
         () -> driveSub.isDriveControllersAtSetpoint()
       )
     );

@@ -10,6 +10,7 @@ import frc.robot.CommandGroups.ArmAutos.ArmIntake;
 import frc.robot.CommandGroups.ArmAutos.ArmMobile;
 import frc.robot.CommandGroups.ArmAutos.ArmShoot;
 import frc.robot.CommandGroups.ArmAutos.ArmZero;
+import frc.robot.CommandGroups.ArmAutos.ArmZeroUp;
 import frc.robot.CommandGroups.DrivetrainAutos.Sensor.LeaveAmpSensorBlue;
 import frc.robot.CommandGroups.DrivetrainAutos.Sensor.RamIntoAmpSensor;
 import frc.robot.CommandGroups.IntakeShooterAutos.DownShootAmpTimed;
@@ -37,7 +38,7 @@ public class ScoreInAmpSensor1Blue extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new ParallelCommandGroup(
-        new ArmZero(armSub),
+        new ArmZeroUp(armSub),
         new RamIntoAmpSensor(driveSub).withTimeout(1)
       ),
       new ArmShoot(armSub, () -> armSub.getController().atSetpoint()),
