@@ -135,6 +135,16 @@ public class RobotContainer {
         () -> false,
         () -> false
       ));
+    autoChooser.addOption("MOVE 1 METER", new TankDrivePIDCmd(driveSub,
+      () -> driveSub.getLeftDistance() + 2,
+      () -> driveSub.getRightDistance() + 2,
+      () -> 0,
+      () -> false,
+      () -> false,
+      () -> driveSub.isDriveControllersAtSetpoint()
+    )
+
+    );  
     // autoChooser.addOption("SCORE IN AMP HUG WALL BLUE (TIMED)", new ScoreInAmpTimedWallBlue(driveSub, intakeShooterSub, led, armSub));
     // autoChooser.addOption("SCORE IN AMP HUG WALL RED (TIMED)", new ScoreInAmpTimedWallRed(driveSub, intakeShooterSub, led, armSub));
 
@@ -271,12 +281,11 @@ public class RobotContainer {
     new Trigger(() -> (armSub.raiseLimitSwitchHit() && armSub.getVelocity() > 0)).onTrue(
       new InstantCommand(
         () -> {
-          System.out.println("Raise limit switch hit. Time:" + LocalDateTime.now() + "Arm index: " + armSub.getCurrentPositionIndex());   
+          System.out.println("Raise limit switch hit. Time:" + LocalDateTime.now() + "Arm angle: " + armSub.getSensorPosition());   
           //System.out.println("Upper limit switch detected at angle " + armSub.getAngle());
           armSub.setSensorPosition(armSub.toPosition(ArmConstants.limitSwitchAngle));
         }
-      ).alongWith(
-        new InstantCommand(
+      ).alongWith(        new InstantCommand(
           () -> SmartDashboard.putNumber("Arm Setpoint Offset", 0)
         )
       )
