@@ -40,14 +40,7 @@ public class LeaveAmpSensorRed extends SequentialCommandGroup {
         () -> driveSub.getTurnController().atSetpoint()
       ).withTimeout(5),
       new AutoLog("Moving out of zone"),
-      new TankDrivePIDCmd(driveSub,
-        () -> driveSub.getLeftDistance() + MoveOutOfZoneSensorConstants.LEAVE_AMP_ZONE_DISTANCE,
-        () -> driveSub.getRightDistance() + MoveOutOfZoneSensorConstants.LEAVE_AMP_ZONE_DISTANCE,
-        () -> 0.05,
-        () -> false,
-        () -> false,
-        () -> driveSub.isDriveControllersAtSetpoint()
-      ).withTimeout(5)
+      new MoveOutOfZoneSensor(driveSub)
     );
   }
 }

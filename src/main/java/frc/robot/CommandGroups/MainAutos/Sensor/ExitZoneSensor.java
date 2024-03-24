@@ -30,7 +30,7 @@ public class ExitZoneSensor extends ParallelCommandGroup {
     addCommands(
       new ParallelCommandGroup(
         new MoveOutOfZoneSensor(driveSub),
-        new ArmZero(armSub).andThen(new ArmShootPerimeter(armSub, () -> false))
+        new ArmZeroUp(armSub).andThen(new ArmMobile(armSub, () -> false))
       )
     );
   }

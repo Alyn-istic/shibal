@@ -7,6 +7,7 @@ package frc.robot.CommandGroups.DrivetrainAutos.Sensor;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.CommandGroups.MainAutos.AutoLog;
 import frc.robot.Commands.Drivetrain.TankDrivePIDCmd;
 import frc.robot.Subsystems.DrivetrainSubsystem;
@@ -31,7 +32,8 @@ public class RamIntoAmpSensor extends SequentialCommandGroup {
         () -> false,
         () -> driveSub.isDriveControllersAtSetpoint()
       ).withTimeout(3),
-      Commands.runOnce(() -> driveSub.resetGyro(), driveSub)
+      Commands.runOnce(() -> driveSub.resetGyro(), driveSub),
+      new WaitCommand(1)
     );
   }
 }

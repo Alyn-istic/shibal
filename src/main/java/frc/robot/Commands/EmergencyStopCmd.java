@@ -44,7 +44,7 @@ public class EmergencyStopCmd extends InstantCommand {
     armSub.setMotor(0);
     intakeSub.setMotors(0);
 
-    System.out.println("EmergencyStopCmd - Stopped all running commands.");
+    System.out.println("EmergencyStopCmd - Human controller stopped all running commands.");
 
   }
 }

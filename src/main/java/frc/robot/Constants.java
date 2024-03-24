@@ -41,7 +41,7 @@ public class Constants {
         }
         public class MoveOutOfZoneSensorConstants {
             public static final double LEAVE_AMP_DISTANCE = 0.75;
-            public static final double LEAVE_AMP_ZONE_DISTANCE = 1.75;//WAS 1
+            public static final double LEAVE_ZONE_DISTANCE = 1.75;//WAS 1
         }
         public class MoveOutOfZoneConstants {
             public static final double TIME_MOVE_OUT_OF_ZONE1 = 3; // In seconds. Was 1.4s

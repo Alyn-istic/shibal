@@ -4,12 +4,15 @@
 
 package frc.robot;
 
+import java.time.LocalDateTime;
+
 import edu.wpi.first.cameraserver.CameraServer;
 // import edu.wpi.first.wpilibj.AddressableLED;
 // import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 // import edu.wpi.first.wpilibj.DriverStation;
 // import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 // import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -52,6 +55,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+    SmartDashboard.putString("Time", LocalDateTime.now().toString());
     // m_led.setData(m_ledBuffer);
   }
 
