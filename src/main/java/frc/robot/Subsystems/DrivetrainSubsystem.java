@@ -185,17 +185,20 @@ public class DrivetrainSubsystem extends SubsystemBase {
     frontRight.setInverted(false);
     backRight.setInverted(false);
 
+    // // These are being updated in robot.java
     // frontLeft.setIdleMode(IdleMode.kCoast);
     // backLeft.setIdleMode(IdleMode.kCoast);
     // frontRight.setIdleMode(IdleMode.kCoast);
     // backRight.setIdleMode(IdleMode.kCoast);
-    frontLeft.setIdleMode(IdleMode.kBrake);
-    backLeft.setIdleMode(IdleMode.kBrake);
-    frontRight.setIdleMode(IdleMode.kBrake);
-    backRight.setIdleMode(IdleMode.kBrake);
+    // frontLeft.setIdleMode(IdleMode.kBrake);
+    // backLeft.setIdleMode(IdleMode.kBrake);
+    // frontRight.setIdleMode(IdleMode.kBrake);
+    // backRight.setIdleMode(IdleMode.kBrake);
 
     backLeft.follow(frontLeft);
     backRight.follow(frontRight);
+
+    
 
     leftEncoder = frontLeft.getEncoder();
     leftEncoder.setPosition(0);
