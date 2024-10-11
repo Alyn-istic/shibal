@@ -5,11 +5,11 @@
 package frc.robot.Subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.util.ReplanningConfig;
+// import com.pathplanner.lib.auto.AutoBuilder;
+// import com.pathplanner.lib.commands.PathPlannerAuto;
+// import com.pathplanner.lib.path.PathConstraints;
+// import com.pathplanner.lib.path.PathPlannerPath;
+// import com.pathplanner.lib.util.ReplanningConfig;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -79,7 +79,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final SlewRateLimiter rightSlewRateLimiter = new SlewRateLimiter(DrivetrainConstants.autoSlewRate);
 
   // Path planner constraints
-  PathConstraints constraints = new PathConstraints(3.0, 2.0, Units.degreesToRadians(540), Units.degreesToRadians(720));
+  // PathConstraints constraints = new PathConstraints(3.0, 2.0, Units.degreesToRadians(540), Units.degreesToRadians(720));
 
   // Kinematics
   private DifferentialDrivePoseEstimator poseEstimator;
@@ -228,15 +228,15 @@ public class DrivetrainSubsystem extends SubsystemBase {
     );
     // SmartDashboard.putData("Field ", field);
 
-    AutoBuilder.configureRamsete(
-      this::getBotPose,
-      this::resetBotPose,
-      this::getChassisSpeeds,
-      this::setChassisSpeed,
-      new ReplanningConfig(),
-      () -> false,
-      this
-    );
+    // AutoBuilder.configureRamsete(
+    //   this::getBotPose,
+    //   this::resetBotPose,
+    //   this::getChassisSpeeds,
+    //   this::setChassisSpeed,
+    //   new ReplanningConfig(),
+    //   () -> false,
+    //   this
+    // );
 
     turnController.enableContinuousInput(0, 360);
   }
@@ -368,24 +368,24 @@ public class DrivetrainSubsystem extends SubsystemBase {
     return rightSlewRateLimiter;
   }
 
-  public Command testPath0() {
-    PathPlannerPath path = PathPlannerPath.fromPathFile("TestPath1");
-    return AutoBuilder.pathfindThenFollowPath(path, constraints); 
-  }
+  // public Command testPath0() {
+  //   PathPlannerPath path = PathPlannerPath.fromPathFile("TestPath1");
+  //   return AutoBuilder.pathfindThenFollowPath(path, constraints); 
+  // }
 
-  public Command testPath1() {
-    PathPlannerPath path = PathPlannerPath.fromPathFile("toNote1");
-    return AutoBuilder.pathfindThenFollowPath(path, constraints);
-  }
+  // public Command testPath1() {
+  //   PathPlannerPath path = PathPlannerPath.fromPathFile("toNote1");
+  //   return AutoBuilder.pathfindThenFollowPath(path, constraints);
+  // }
 
-  public Command testPath2() {
-    PathPlannerPath path = PathPlannerPath.fromPathFile("toAmp");
-    return AutoBuilder.pathfindThenFollowPath(path, constraints);
-  }
+  // public Command testPath2() {
+  //   PathPlannerPath path = PathPlannerPath.fromPathFile("toAmp");
+  //   return AutoBuilder.pathfindThenFollowPath(path, constraints);
+  // }
 
-  public Command testAuto1() {
-    return new PathPlannerAuto("AmpToNote1");
-  }
+  // public Command testAuto1() {
+  //   return new PathPlannerAuto("AmpToNote1");
+  // }
 
   public void operatorReset() {
 
