@@ -293,7 +293,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public void arcadeDriveSpeed(double forwardSpeed, double turnSpeed) {
-    drive.tankDrive(
+    drive.arcadeDrive(
       MathUtil.clamp(forwardSpeed * speedMultiplier, -DrivetrainConstants.motorClamp, DrivetrainConstants.motorClamp),
       MathUtil.clamp(turnSpeed * speedMultiplier, -DrivetrainConstants.motorClamp, DrivetrainConstants.motorClamp)
     );

@@ -1,3 +1,4 @@
+
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
@@ -52,6 +53,7 @@ import frc.robot.Commands.Arm.ArmManualCmd;
 import frc.robot.Commands.Arm.ArmCommandSelector;
 import frc.robot.Commands.Arm.ArmSetpointOffset;
 import frc.robot.Commands.Climber.ClimberCmd;
+import frc.robot.Commands.Drivetrain.ArcadeDriveCmd;
 // import frc.robot.Commands.Arm.LimitSwitchSimulation;
 import frc.robot.Commands.Drivetrain.TankDriveCmd;
 import frc.robot.Commands.Drivetrain.TankDrivePIDCmd;
@@ -96,13 +98,20 @@ public class RobotContainer {
   public RobotContainer() {
     // Telling the robot to run the TankDrive command when no other command is using the Drivetrain.
     driveSub.setDefaultCommand(
-      new TankDriveCmd(
+      new ArcadeDriveCmd(
         driveSub,
         /** The following two lines are just getting the controller's left and right joysticks, and applying a deadzone to them.
          * This can all be configurated in Constants.java */
         () -> MathUtil.applyDeadband(driver.getRawAxis(DriverConstants.leftJoystickAxis), DriverConstants.joystickDeadband),
-        () -> MathUtil.applyDeadband(driver.getRawAxis(DriverConstants.rightJoystickAxis), DriverConstants.joystickDeadband)
+        () -> MathUtil.applyDeadband(driver.getRawAxis(4), DriverConstants.joystickDeadband)
       )
+      // new TankDriveCmd(
+      //   driveSub,
+      //   /** The following two lines are just getting the controller's left and right joysticks, and applying a deadzone to them.
+      //    * This can all be configurated in Constants.java */
+      //   () -> MathUtil.applyDeadband(driver.getRawAxis(DriverConstants.leftJoystickAxis), DriverConstants.joystickDeadband),
+      //   () -> MathUtil.applyDeadband(driver.getRawAxis(DriverConstants.rightJoystickAxis), DriverConstants.joystickDeadband)
+      // )
     );
     armSub.setDefaultCommand(
       new ArmManualCmd(armSub,

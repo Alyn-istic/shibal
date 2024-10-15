@@ -68,6 +68,7 @@ public class Constants {
         public static final Port gyroPort = Port.kOnboard; // The port that the gyro is connected to.
 
         public static final double speed = 1; // hello world
+        public static final double turnSpeed = 0.75;
         public static final double slowerSpeedMult = 0.8;
 
         public static final double startPosX = 2; //
